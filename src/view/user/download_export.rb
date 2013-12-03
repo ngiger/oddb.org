@@ -248,11 +248,11 @@ class DownloadExportInnerComposite < HtmlGrid::Composite
     compendium_ch.oddb.org.firefox.epub compendium_ch.oddb.org.htc.prc
     compendium_ch.oddb.org.kindle.mobi compendium_ch.oddb.org.stanza.epub
     generics.xls patents.xls swissdrug_update.xls
-    oddbdat s31x
+    oddbdat s31x 
   ).each do |file|
     name = "directlink_#{file.gsub(/\./, '_')}".intern
-    define_method(name) do |model, session|
-		  link = HtmlGrid::Link.new(name, model, session, self)
+    define_method(name) do |model|
+		  link = HtmlGrid::Link.new(name, model, @session, self)
 		  args = { 'buy' => file }
 		  link.href = @lookandfeel._event_url(:data, args)
 		  link.label = false
@@ -260,55 +260,55 @@ class DownloadExportInnerComposite < HtmlGrid::Composite
 		  link
     end
   end
-  def compression_label(model, session)
-    HtmlGrid::LabelText.new(:compression, model, session, self)
+  def compression_label(model)
+    HtmlGrid::LabelText.new(:compression, model, @session, self)
   end
-  def csv_export(model, session)
+  def csv_export(model)
     checkbox_with_filesize("oddb.csv")
   end
-  def csv_export2(model, session)
+  def csv_export2(model)
     checkbox_with_filesize("oddb2.csv")
   end
-  def csv_analysis_export(model, session)
+  def csv_analysis_export(model)
     checkbox_with_filesize("analysis.csv")
   end
-  def csv_analysis_price(model, session)
+  def csv_analysis_price(model)
     once('analysis.csv')
   end
-  def csv_doctors_export(model, session)
+  def csv_doctors_export(model)
     checkbox_with_filesize("doctors.csv")
   end
-  def csv_doctors_price(model, session)
+  def csv_doctors_price(model)
     once('doctors.csv')
   end
-  def csv_migel_export(model, session)
+  def csv_migel_export(model)
     checkbox_with_filesize('migel.csv')
   end
-  def csv_migel_price(model, session)
+  def csv_migel_price(model)
     once('migel.csv')
   end
-  def csv_narcotics_export(model, session)
+  def csv_narcotics_export(model)
     checkbox_with_filesize('narcotics.csv')
   end
-  def csv_price_history_export(model, session)
+  def csv_price_history_export(model)
     checkbox_with_filesize("price_history.csv")
   end
-  def csv_price_history_price_1(model, session)
+  def csv_price_history_price_1(model)
     radio_price('price_history.csv', 1)
   end
-  def csv_price_history_price_12(model, session)
+  def csv_price_history_price_12(model)
     radio_price('price_history.csv', 12)
   end
-  def datadesc_analysis_csv(model, session)
+  def datadesc_analysis_csv(model)
     datadesc('analysis.csv')
   end
-  def datadesc_doctors_csv(model, session)
+  def datadesc_doctors_csv(model)
     datadesc('doctors.csv')
   end
-  def datadesc_doctors_yaml(model, session)
+  def datadesc_doctors_yaml(model)
     datadesc('doctors.yaml')
   end
-  def datadesc_epub(model, session)
+  def datadesc_epub(model)
     link = HtmlGrid::Link.new(:data_description, @model, @session, self)
     link.href = "http://www.openebook.org/specs.htm"
     link.css_class = 'small'
@@ -316,7 +316,7 @@ class DownloadExportInnerComposite < HtmlGrid::Composite
   end
   alias :datadesc_compendium_ch_oddb_org_firefox_epub :datadesc_epub
   alias :datadesc_compendium_ch_oddb_org_stanza_epub :datadesc_epub
-  def datadesc_kindle(model, session)
+  def datadesc_kindle(model)
     link = HtmlGrid::Link.new(:data_description, @model, @session, self)
     link.href = "http://www.mobipocket.com/dev/article.asp?BaseFolder=prcgen&File=mobiformat.htm"
     link.css_class = 'small'
@@ -324,44 +324,44 @@ class DownloadExportInnerComposite < HtmlGrid::Composite
   end
   alias :datadesc_compendium_ch_oddb_org_kindle_mobi :datadesc_kindle
   alias :datadesc_compendium_ch_oddb_org_htc_prc :datadesc_kindle
-  def datadesc_fachinfo_yaml(model, session)
+  def datadesc_fachinfo_yaml(model)
     datadesc('fachinfo.yaml')
   end
-  def datadesc_generics_xls(model, session)
+  def datadesc_generics_xls(model)
     datadesc('generics.xls')
   end
-  def datadesc_index_therapeuticus(model, session)
+  def datadesc_index_therapeuticus(model)
     datadesc('index_therapeuticus')
   end
-  def datadesc_interactions_yaml(model, session)
+  def datadesc_interactions_yaml(model)
     datadesc('interactions.yaml')
   end
-  def datadesc_swissdrug_update_xls(model, session)
+  def datadesc_swissdrug_update_xls(model)
     datadesc('swissdrug-update.xls')
   end
-  def datadesc_migel_csv(model, session)
+  def datadesc_migel_csv(model)
     datadesc('migel.csv')
   end
-  def datadesc_narcotics_csv(model, session)
+  def datadesc_narcotics_csv(model)
     datadesc('narcotics.csv')
   end
-  def datadesc_narcotics_yaml(model, session)
+  def datadesc_narcotics_yaml(model)
     datadesc('narcotics.yaml')
   end
-  def datadesc_oddb_csv(model, session)
+  def datadesc_oddb_csv(model)
     datadesc('oddb.csv')
   end
-  def datadesc_oddb2_csv(model, session)
+  def datadesc_oddb2_csv(model)
     datadesc('oddb2.csv')
   end
-  def datadesc_oddb_yaml(model, session)
+  def datadesc_oddb_yaml(model)
     datadesc('oddb.yaml')
   end
-  def datadesc_oddbdat(model, session)
+  def datadesc_oddbdat(model)
     datadesc('oddbdat')
   end
-  def datadesc_oddb2tdat(model, session)
-    link = HtmlGrid::Link.new(:data_description, model, session, self)
+  def datadesc_oddb2tdat(model)
+    link = HtmlGrid::Link.new(:data_description, model, @session, self)
     link.href      = 'http://dev.ywesee.com/ODDB/Oddb2tdat'
     link.css_class = 'small'
     link.set_attribute('target', '_blank')
@@ -369,45 +369,45 @@ class DownloadExportInnerComposite < HtmlGrid::Composite
   end
   alias :datadesc_oddb_dat :datadesc_oddb2tdat
   alias :datadesc_oddb_with_migel_dat :datadesc_oddb2tdat
-  def datadesc_patents_xls(model, session)
+  def datadesc_patents_xls(model)
     datadesc('patents.xls')
   end
-  def datadesc_patinfo_yaml(model, session)
+  def datadesc_patinfo_yaml(model)
     datadesc('patinfo.yaml')
   end
-  def datadesc_price_history_csv(model, session)
+  def datadesc_price_history_csv(model)
     datadesc('price_history.csv')
   end
-  def datadesc_price_history_yaml(model, session)
+  def datadesc_price_history_yaml(model)
     datadesc('price_history.yaml')
   end
-  def datadesc_s31x(model, session)
+  def datadesc_s31x(model)
     datadesc('s31x')
   end
-  def example_doctors_csv(model, session)
+  def example_doctors_csv(model)
     example('doctors.csv')
   end
-  def example_analysis_csv(model, session)
+  def example_analysis_csv(model)
     example('analysis.csv')
   end
-  def example_doctors_yaml(model, session)
+  def example_doctors_yaml(model)
     example('doctors.yaml')
   end
   # TODO
   # replace method name with new alias
-  def example_fachinfo_firefox_epub(model, session)
+  def example_fachinfo_firefox_epub(model)
     example('compendium_ch.oddb.org.firefox.epub')
   end
   alias :example_compendium_ch_oddb_org_firefox_epub :example_fachinfo_firefox_epub
-  def example_fachinfo_htc(model, session)
+  def example_fachinfo_htc(model)
     example('compendium_ch.oddb.org.htc.prc')
   end
   alias :example_compendium_ch_oddb_org_htc_prc :example_fachinfo_htc
-  def example_fachinfo_kindle(model, session)
+  def example_fachinfo_kindle(model)
     example('compendium_ch.oddb.org.kindle.mobi')
   end
   alias :example_compendium_ch_oddb_org_kindle_mobi :example_fachinfo_kindle
-  def example_fachinfo_stanza_epub(model, session)
+  def example_fachinfo_stanza_epub(model)
     link = example('compendium_ch.oddb.org.stanza.epub')
     url = URI.parse link.href
     url.scheme = 'stanza'
@@ -415,262 +415,262 @@ class DownloadExportInnerComposite < HtmlGrid::Composite
     link
   end
   alias :example_compendium_ch_oddb_org_stanza_epub :example_fachinfo_stanza_epub
-  def example_fachinfo_yaml(model, session)
+  def example_fachinfo_yaml(model)
     example('fachinfo.yaml')
   end
-  def example_fachinfos_de_pdf(model, session)
+  def example_fachinfos_de_pdf(model)
     example('fachinfos_de.pdf')
   end
-  def example_fachinfos_fr_pdf(model, session)
+  def example_fachinfos_fr_pdf(model)
     example('fachinfos_fr.pdf')
   end
-  def example_generics_xls(model, session)
+  def example_generics_xls(model)
     example('generics.xls')
   end
-  def example_index_therapeuticus(model, session)
+  def example_index_therapeuticus(model)
     example('index_therapeuticus.tar.gz')
   end
-  def example_interactions_yaml(model, session)
+  def example_interactions_yaml(model)
     example('interactions.yaml')
   end
-  def example_swissdrug_update_xls(model, session)
+  def example_swissdrug_update_xls(model)
     example('swissdrug-update.xls')
   end
-  def example_migel_csv(model, session)
+  def example_migel_csv(model)
     example('migel.csv')
   end
-  def example_narcotics_csv(model, session)
+  def example_narcotics_csv(model)
     example('narcotics.csv')
   end
-  def example_narcotics_yaml(model, session)
+  def example_narcotics_yaml(model)
     example('narcotics.yaml')
   end
-  def example_oddb_csv(model, session)
+  def example_oddb_csv(model)
     example('oddb.csv')
   end
-  def example_oddb2_csv(model, session)
+  def example_oddb2_csv(model)
     example('oddb2.csv')
   end
-  def example_oddb_yaml(model, session)
+  def example_oddb_yaml(model)
     example('oddb.yaml')
   end
-  def example_oddb_dat(model, session)
+  def example_oddb_dat(model)
     example('oddb.dat.zip')
   end
-  def example_oddb_with_migel_dat(model, session)
+  def example_oddb_with_migel_dat(model)
     example('oddb_with_migel.dat.zip')
   end
-  def example_oddbdat(model, session)
+  def example_oddbdat(model)
     example('oddbdat.tar.gz')
   end
-  def example_patinfo_yaml(model, session)
+  def example_patinfo_yaml(model)
     example('patinfo.yaml')
   end
-  def example_patents_xls(model, session)
+  def example_patents_xls(model)
     example('patents.xls')
   end
-  def example_price_history_csv(model, session)
+  def example_price_history_csv(model)
     example('price_history.csv')
   end
-  def example_price_history_yaml(model, session)
+  def example_price_history_yaml(model)
     example('price_history.yaml')
   end
-  def fachinfo_epub_firefox(model, session)
+  def fachinfo_epub_firefox(model)
     checkbox_with_filesize('compendium_ch.oddb.org.firefox.epub')
   end
-  def fachinfo_htc(model, session)
+  def fachinfo_htc(model)
     checkbox_with_filesize('compendium_ch.oddb.org.htc.prc')
   end
-  def fachinfo_kindle(model, session)
+  def fachinfo_kindle(model)
     checkbox_with_filesize('compendium_ch.oddb.org.kindle.mobi')
   end
-  def fachinfo_epub_stanza(model, session)
+  def fachinfo_epub_stanza(model)
     checkbox_with_filesize('compendium_ch.oddb.org.stanza.epub')
   end
-  def fachinfos_de_pdf(model, session)
+  def fachinfos_de_pdf(model)
     checkbox_with_filesize('fachinfos_de.pdf')
   end
-  def fachinfos_fr_pdf(model, session)
+  def fachinfos_fr_pdf(model)
     checkbox_with_filesize('fachinfos_fr.pdf')
   end
-  def howto_epub_firefox(model, session)
+  def howto_epub_firefox(model)
     link = HtmlGrid::Link.new(:howto_epub_firefox, @model, @session, self)
     link.href = "http://www.ywesee.com/pmwiki.php/Main/EPUB"
     link.css_class = 'small'
     link
   end
-  def howto_epub_stanza(model, session)
+  def howto_epub_stanza(model)
     link = HtmlGrid::Link.new(:howto_epub_stanza, @model, @session, self)
     link.href = "http://www.ywesee.com/pmwiki.php/Ywesee/Stanza"
     link.css_class = 'small'
     link
   end
-  def howto_htc(model, session)
+  def howto_htc(model)
     link = HtmlGrid::Link.new(:howto_htc, @model, @session, self)
     link.href = "http://www.ywesee.com/pmwiki.php/Ywesee/HTC"
     link.css_class = 'small'
     link
   end
-  def howto_kindle(model, session)
+  def howto_kindle(model)
     link = HtmlGrid::Link.new(:howto_kindle, @model, @session, self)
     link.href = "http://www.ywesee.com/pmwiki.php/Ywesee/Kindle"
     link.css_class = 'small'
     link
   end
-  def download_index_therapeuticus(model, session)
+  def download_index_therapeuticus(model)
     checkbox_with_filesize('index_therapeuticus')
   end
-  def oddb_dat_export(model, session)
+  def oddb_dat_export(model)
     checkbox_with_filesize("oddb.dat")
   end
-  def oddb_dat_price(model, session)
+  def oddb_dat_price(model)
     once('oddb.dat')
   end
-  def oddb_with_migel_dat_export(model, session)
+  def oddb_with_migel_dat_export(model)
     checkbox_with_filesize("oddb_with_migel.dat")
   end
-  def oddb_with_migel_dat_price(model, session)
+  def oddb_with_migel_dat_price(model)
     once('oddb_with_migel.dat')
   end
-  def oddbdat_download(model, session)
+  def oddbdat_download(model)
     checkbox_with_filesize("oddbdat")
   end
-  def price_fachinfo_firefox_epub(model, session)
+  def price_fachinfo_firefox_epub(model)
     once('compendium_ch.oddb.org.firefox.epub')
   end
-  def price_fachinfo_htc(model, session)
+  def price_fachinfo_htc(model)
     once('compendium_ch.oddb.org.htc.prc')
   end
-  def price_fachinfo_kindle(model, session)
+  def price_fachinfo_kindle(model)
     once('compendium_ch.oddb.org.kindle.mobi')
   end
-  def price_fachinfo_stanza_epub(model, session)
+  def price_fachinfo_stanza_epub(model)
     once('compendium_ch.oddb.org.stanza.epub')
   end
-  def radio_fachinfos_de_pdf_1(model, session)
+  def radio_fachinfos_de_pdf_1(model)
     radio_price('fachinfos_de.pdf', 1)
   end
-  def radio_fachinfos_de_pdf_12(model, session)
+  def radio_fachinfos_de_pdf_12(model)
     radio_price('fachinfos_de.pdf', 12)
   end
-  def radio_fachinfos_fr_pdf_1(model, session)
+  def radio_fachinfos_fr_pdf_1(model)
     radio_price('fachinfos_fr.pdf', 1)
   end
-  def radio_fachinfos_fr_pdf_12(model, session)
+  def radio_fachinfos_fr_pdf_12(model)
     radio_price('fachinfos_fr.pdf', 12)
   end
-  def radio_oddb_csv_1(model, session)
+  def radio_oddb_csv_1(model)
     radio_price('oddb.csv', 1)
   end
-  def radio_oddb_csv_12(model, session)
+  def radio_oddb_csv_12(model)
     radio_price('oddb.csv', 12)
   end
-  def radio_oddb2_csv_1(model, session)
+  def radio_oddb2_csv_1(model)
     radio_price('oddb2.csv', 1)
   end
-  def radio_oddb2_csv_12(model, session)
+  def radio_oddb2_csv_12(model)
     radio_price('oddb2.csv', 12)
   end
-  def radio_fachinfo_yaml_1(model, session)
+  def radio_fachinfo_yaml_1(model)
     radio_price('fachinfo.yaml', 1)
   end
-  def radio_fachinfo_yaml_12(model, session)
+  def radio_fachinfo_yaml_12(model)
     radio_price('fachinfo.yaml', 12)
   end
-  def radio_generics_xls_1(model, session)
+  def radio_generics_xls_1(model)
     radio_price('generics.xls', 1)
   end
-  def radio_generics_xls_12(model, session)
+  def radio_generics_xls_12(model)
     radio_price('generics.xls', 12)
   end
-  def radio_index_therapeuticus_1(model, session)
+  def radio_index_therapeuticus_1(model)
     radio_price('index_therapeuticus', 1)
   end
-  def radio_index_therapeuticus_12(model, session)
+  def radio_index_therapeuticus_12(model)
     radio_price('index_therapeuticus', 12)
   end
-  def radio_interactions_yaml_1(model, session)
+  def radio_interactions_yaml_1(model)
     radio_price('interactions.yaml', 1)
   end
-  def radio_interactions_yaml_12(model, session)
+  def radio_interactions_yaml_12(model)
     radio_price('interactions.yaml', 12)
   end
-  def radio_swissdrug_update_xls_1(model, session)
+  def radio_swissdrug_update_xls_1(model)
     radio_price('swissdrug-update.xls', 1)
   end
-  def radio_swissdrug_update_xls_12(model, session)
+  def radio_swissdrug_update_xls_12(model)
     radio_price('swissdrug-update.xls', 12)
   end
-  def radio_narcotics_csv(model, session)
+  def radio_narcotics_csv(model)
     once_or_year('narcotics.csv')
   end
-  def radio_narcotics_yaml(model, session)
+  def radio_narcotics_yaml(model)
     once_or_year('narcotics.yaml')
   end
-  def radio_oddbdat_1(model, session)
+  def radio_oddbdat_1(model)
     radio_price('oddbdat', 1)
   end
-  def radio_oddbdat_12(model, session)
+  def radio_oddbdat_12(model)
     radio_price('oddbdat', 12)
   end
-  def radio_oddb_yaml_1(model, session)
+  def radio_oddb_yaml_1(model)
     radio_price('oddb.yaml', 1)
   end
-  def radio_oddb_yaml_12(model, session)
+  def radio_oddb_yaml_12(model)
     radio_price('oddb.yaml', 12)
   end
-  def radio_patents_xls(model, session)
+  def radio_patents_xls(model)
     once('patents.xls')
   end
-  def radio_s31x_1(model, session)
+  def radio_s31x_1(model)
     radio_price('s31x', 1)
   end
-  def radio_s31x_12(model, session)
+  def radio_s31x_12(model)
     radio_price('s31x', 12)
   end
-  def s31x(model, session)
+  def s31x(model)
     checkbox_with_filesize("s31x")
   end
-  def xls_generics(model, session)
+  def xls_generics(model)
     checkbox_with_filesize('generics.xls')
   end
-  def xls_patents(model, session)
+  def xls_patents(model)
     checkbox_with_filesize('patents.xls')
   end
-  def xls_swissdrug_update(model, session)
+  def xls_swissdrug_update(model)
     checkbox_with_filesize('swissdrug-update.xls')
   end
-  def yaml_doctors_export(model, session)
+  def yaml_doctors_export(model)
     checkbox_with_filesize("doctors.yaml")
   end
-  def yaml_doctors_price(model, session)
+  def yaml_doctors_price(model)
     once('doctors.yaml')
   end
-  def yaml_export(model, session)
+  def yaml_export(model)
     checkbox_with_filesize("oddb.yaml")
   end
-  def yaml_fachinfo_export(model, session)
+  def yaml_fachinfo_export(model)
     checkbox_with_filesize("fachinfo.yaml")
   end
-  def yaml_interactions_export(model, session)
+  def yaml_interactions_export(model)
     checkbox_with_filesize("interactions.yaml")
   end
-  def yaml_narcotics_export(model, session)
+  def yaml_narcotics_export(model)
     checkbox_with_filesize('narcotics.yaml')
   end
-  def yaml_patinfo_export(model, session)
+  def yaml_patinfo_export(model)
     checkbox_with_filesize("patinfo.yaml")
   end
-  def yaml_patinfo_price(model, session)
+  def yaml_patinfo_price(model)
     once('patinfo.yaml')
   end
-  def yaml_price_history_export(model, session)
+  def yaml_price_history_export(model)
     checkbox_with_filesize("price_history.yaml")
   end
-  def yaml_price_history_price_1(model, session)
+  def yaml_price_history_price_1(model)
     radio_price('price_history.yaml', 1)
   end
-  def yaml_price_history_price_12(model, session)
+  def yaml_price_history_price_12(model)
     radio_price('price_history.yaml', 12)
   end
 end
@@ -695,7 +695,7 @@ class DownloadExportComposite < Form
   SYMBOL_MAP = {
     :yaml_link => HtmlGrid::Link,
   }
-  def download_export_descr(model, session)
+  def download_export_descr(model)
     pages = {
       'de' => 'Stammdaten',
       'en' => 'MasterData',

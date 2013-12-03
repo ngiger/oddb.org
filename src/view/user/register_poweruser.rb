@@ -26,7 +26,6 @@ class RegisterPowerUserForm < Form
 	CSS_CLASS = 'component'
 	EVENT = :checkout
 	LABELS = true
-  LEGACY_INTERFACE = false
 	CSS_MAP = {
 		[0,0,4,6]	=>	'list',
 	}
@@ -63,7 +62,6 @@ class RegisterPowerUserComposite < HtmlGrid::Composite
 		[0,1] => 2,
 		[0,2] => 2,
 	}
-	LEGACY_INTERFACE = false
 end
 class RegisterPowerUser < View::ResultTemplate
   JAVASCRIPTS = ['autofill']
@@ -102,7 +100,6 @@ class RenewPowerUserComposite < HtmlGrid::Composite
 		[0,0] => 2,
 		[0,1] => 2,
 	}
-	LEGACY_INTERFACE = false
 	def renew_poweruser_form(model)
 		RenewPowerUserForm.new(@session.user, @session, self)
 	end

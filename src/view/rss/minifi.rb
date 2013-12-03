@@ -19,7 +19,6 @@ class MiniFiItem < View::Drugs::MiniFiChapter
   end
 end
 class MiniFiTemplate < HtmlGrid::Template
-  LEGACY_INTERFACE = false
   COMPONENTS = {
     [0,0] => MiniFiItem, 
   }

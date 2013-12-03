@@ -34,7 +34,6 @@ module AddressFormMethods
 	}
 	EVENT = :accept
 	LABELS = true
-	LEGACY_INTERFACE = false
 	SYMBOL_MAP = {
 		:address_type				=> HtmlGrid::Select,
 		:canton							=> HtmlGrid::Select,
@@ -78,7 +77,6 @@ class AddressSuggestionInnerComposite < HtmlGrid::Composite
 		[0,2]	=>	:address_message,
 		[1,2]	=>	:message,
 	}
-	LEGACY_INTERFACE = false
 	LABELS = true
 	SYMBOL_MAP = {
 		:address_message => HtmlGrid::LabelText,
@@ -108,7 +106,6 @@ class ActiveAddress < View::SuggestedAddress
 		[1,0]	=>	'subheading bold',
 	}
 	YPOS = 1
-	LEGACY_INTERFACE = false
 	def parent_class(model)
 		parent = model.pointer.parent.resolve(@session)
 		@lookandfeel.lookup(parent.class)
@@ -124,7 +121,6 @@ class AddressSuggestionComposite < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0,3]	=>	'list top',
 	}
-	LEGACY_INTERFACE = false
 	def address(model)
 		if(addr = @session.state.active_address)
 			ActiveAddress.new(addr, @session, self)
@@ -142,7 +138,6 @@ class AddressSuggestionOuterComposite < HtmlGrid::Composite
 	}
 	CSS_CLASS = 'composite'
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 end
 class AddressSuggestion < PrivateTemplate
 	CONTENT = AddressSuggestionOuterComposite

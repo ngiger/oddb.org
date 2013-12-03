@@ -22,16 +22,16 @@ class OddbDatDownloadInnerComposite < HtmlGrid::Composite
 		[0,0,1,4]	=>	'list',
 	}
 	EXPORT_FILE = 'oddbdat'
-	def oddbdat_download_tar_gz(model, session)
+	def oddbdat_download_tar_gz(model, session = @session)
 		link_with_filesize("oddbdat.tar.gz")
 	end
-	def oddbdat_download_zip(model, session)
+	def oddbdat_download_zip(model, session = @session)
 		link_with_filesize("oddbdat.zip")
 	end
-	def s31x_tar_gz(model, session)
+	def s31x_tar_gz(model, session = @session)
 		link_with_filesize("s31x.gz")
 	end
-	def s31x_zip(model, session)
+	def s31x_zip(model, session = @session)
 		link_with_filesize("s31x.zip")
 	end
 end

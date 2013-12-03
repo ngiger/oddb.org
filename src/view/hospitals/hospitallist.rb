@@ -62,7 +62,6 @@ class HospitalList < HtmlGrid::List
 	}
 	SORT_DEFAULT = :name
 	SORT_REVERSE = false	
-	LEGACY_INTERFACE = false
 	def plz(model)
 		if(addr = model.addresses.first)
 			addr.plz
@@ -116,7 +115,7 @@ class HospitalsComposite < Form
 	SYMBOL_MAP = {
 		:search_query		=>	View::SearchBar,	
 	}
-	def hospital_list(model, session)
+	def hospital_list(model, session = @session)
 		HospitalList.new(model, session, self)
 	end
 end
@@ -142,7 +141,7 @@ class EmptyResultForm < HtmlGrid::Form
 	SYMBOL_MAP = {
 		:search_query		=>	View::SearchBar,	
 	}
-	def title_none_found(model, session)
+	def title_none_found(model, session = @session)
 		query = session.persistent_user_input(:search_query)
 		@lookandfeel.lookup(:title_none_found, query)
 	end

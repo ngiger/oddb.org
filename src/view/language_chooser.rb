@@ -7,12 +7,12 @@ require 'view/navigation'
 module ODDB
 	module View
 module UserSettings
-	def language_chooser(model, session)
+	def language_chooser(model, session=@session)
 		if(@lookandfeel.enabled?(:language_switcher))
 			LanguageChooser.new(@lookandfeel.languages, session, self)
 		end
 	end
-	def language_chooser_short(model, session)
+	def language_chooser_short(model, session = @session)
 		if(@lookandfeel.enabled?(:language_switcher))
 			LanguageChooserShort.new(@lookandfeel.languages, session, self)
 		end

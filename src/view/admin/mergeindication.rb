@@ -24,7 +24,7 @@ class MergeIndicationForm < View::Form
 		super
 		error_message()
 	end
-	def description(model, offset)
+	def description(model, session= @session)
 		model.description(@lookandfeel.language)
 	end
 end
@@ -38,7 +38,7 @@ class MergeIndicationComposite < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0]	=>	'th',
 	}
-	def merge_indication(model, session)
+	def merge_indication(model, session= @session)
 		@lookandfeel.lookup(:merge_indication, @model.registration_count)
 	end
 end

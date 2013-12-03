@@ -24,7 +24,7 @@ class OffsetPager < View::Pager
 	def compose_footer(offset)
 		offset
 	end
-	def offset_link(model, session)
+	def offset_link(model, session = @session)
 		page_link(:content, model)
 	end
 	def resolve_suffix(model, bg_flag=false)
@@ -56,7 +56,6 @@ class SequenceList < HtmlGrid::List
 	SYMBOL_MAP = {
 		:iksnr	=>	PointerLink,
 	}
-	LEGACY_INTERFACE = false
 	include AlphaHeader
   include LookandfeelComponents
   def init
@@ -108,7 +107,6 @@ class SequencesComposite < HtmlGrid::Composite
 		[0,1]	=> 2,
 		[0,2]	=> 2,
 	}
-	LEGACY_INTERFACE = false
 	def title_sequences(model)
 		unless(model.empty?)
 			@lookandfeel.lookup(:title_sequences, 

@@ -25,7 +25,6 @@ class DivExportCSV < HtmlGrid::DivForm
 		[1,0]	=>	:example,
 		[2,0]	=>	:submit,
 	}
-  LEGACY_INTERFACE = false
 	EVENT = :export_csv
 	def init
 		super
@@ -150,7 +149,7 @@ class ResultComposite < HtmlGrid::Composite
     span3.value = '&ndash;'
     breadcrumbs.push span2, span3
   end
-	def dsp_sort(model, session)
+	def dsp_sort(model, session = @session)
 		url = @lookandfeel.event_url(:sort, {:sortvalue => :dsp})
 		link = HtmlGrid::Link.new(:dsp_sort, model, @session, self)
 		link.href = url
@@ -198,7 +197,7 @@ class EmptyResultComposite < HtmlGrid::Composite
 		[0,2,1,2]	=>	'list atc',
 	}
 	CSS_CLASS = 'composite'
-	def title_none_found(model, session)
+	def title_none_found(model, session = @session)
 		query = session.persistent_user_input(:search_query)
 		@lookandfeel.lookup(:title_none_found, query)
 	end

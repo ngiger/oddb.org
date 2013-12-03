@@ -52,7 +52,6 @@ class HospitalInnerComposite < HtmlGrid::Composite
 		[0,4,1,2] => 'list',
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def mapsearch_format(*args)
 		args.compact.join('-').gsub(/\s+/u, '-')
 	end		
@@ -97,7 +96,6 @@ class HospitalForm < HtmlGrid::Form
 	}
 	EVENT = :update
 	LABELS = true
-	LEGACY_INTERFACE = false
 	SYMBOL_MAP = {
 		:ean13	=>	HtmlGrid::Value,
 	}
@@ -159,7 +157,6 @@ class HospitalComposite < HtmlGrid::Composite
 	}
 	CSS_CLASS = 'composite'
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 end
 class RootHospitalComposite < HospitalComposite
 	COMPONENTS = {

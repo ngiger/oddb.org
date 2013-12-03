@@ -29,7 +29,6 @@ class AdditionalInfoComposite < HtmlGrid::Composite
 		[0,0]	=> 2,
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	LABELS = true
 	def init
 		counter = 1
@@ -104,7 +103,6 @@ class PositionInnerComposite < HtmlGrid::Composite
 	}
 	LABELS = true
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def description(model, key = :description)
 		value = HtmlGrid::Value.new(key, model, @session, self)
 		if(model && (str = model.send(@session.language)))
@@ -156,7 +154,6 @@ class PositionComposite < HtmlGrid::Composite
 		[0,1]		=>	'list',
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 end
 
 class PointerSteps < ODDB::View::PointerSteps

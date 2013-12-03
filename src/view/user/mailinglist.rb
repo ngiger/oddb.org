@@ -23,10 +23,10 @@ class MailingListForm < View::Form
 	SYMBOL_MAP = {
 		:email	=>	HtmlGrid::InputText,
 	}
-	def subscribe(model, session)
+	def subscribe(model, session = @session)
 		submit(model, session, :subscribe)
 	end
-	def unsubscribe(model, session)
+	def unsubscribe(model, session = @session)
 		submit(model, session, :unsubscribe)
 	end
 end
@@ -53,7 +53,7 @@ class MailingListComposite < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0]	=>	'th',
 	}
-	def score(model, session)
+	def score(model, session = @session)
 		'&nbsp;-&nbsp;'
 	end
 end

@@ -37,7 +37,7 @@ class TestDownloadExportInnerComposite <Minitest::Test
     @composite = ODDB::View::User::DownloadExportInnerComposite.new(@model, @session)
   end
   def test_compression_label
-    assert_kind_of(HtmlGrid::LabelText, @composite.compression_label(@model, @session))
+    assert_kind_of(HtmlGrid::LabelText, @composite.compression_label(@model))
   end
 end
 
@@ -64,6 +64,6 @@ class TestDownloadExportComposite <Minitest::Test
     @composite = ODDB::View::User::DownloadExportComposite.new(@model, @session)
   end
   def test_download_export_descr
-    assert_kind_of(HtmlGrid::Link, @composite.download_export_descr(@model, @session))
+    assert_kind_of(HtmlGrid::Link, @composite.download_export_descr(@model))
   end
 end

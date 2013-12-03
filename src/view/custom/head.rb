@@ -20,7 +20,6 @@ class OekkHead < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0]	=>	'oekk-head',
 	}
-	LEGACY_INTERFACE = false
 	def language_chooser(model)
 		LanguageChooser.new(@lookandfeel.languages, @session, self)
 	end

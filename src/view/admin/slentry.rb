@@ -49,7 +49,7 @@ class SlEntryForm < View::Form
 		super
 		error_message()
 	end
-	def limitation_points(model, session)
+	def limitation_points(model, session = @session)
 		input = HtmlGrid::InputText.new(:limitation_points, model, session, self)
 		input.set_attribute('class', 'small' )
 		input.label = false
@@ -65,7 +65,7 @@ class SlEntryComposite < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0]	=>	'th',
 	}
-	def package_name(model, session)
+	def package_name(model, session = @session)
 		package = model.parent(session.app)
 		[
 			package.name_base, 

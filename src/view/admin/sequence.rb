@@ -38,7 +38,6 @@ class ActiveAgents < HtmlGrid::List
   STRIPED_BG = false
   SORT_DEFAULT = nil
 	SORT_HEADER = false
-  LEGACY_INTERFACE = false
   LABELS = false
   CSS_HEAD_MAP = {
     [1,0] => 'right',
@@ -249,7 +248,7 @@ class RootDivisionComposite < HtmlGrid::Composite
   }
   LABELS = true
   DEFAULT_CLASS = HtmlGrid::Value
-  def divisable(model, session)
+  def divisable(model, session = @session)
     input = HtmlGrid::InputText.new(:division_divisable, model, @session, self)
     input.set_attribute('size', 71)
     if model
@@ -257,7 +256,7 @@ class RootDivisionComposite < HtmlGrid::Composite
     end
     input
   end
-  def dissolvable(model, session)
+  def dissolvable(model, session = @session)
     input = HtmlGrid::InputText.new(:division_dissolvable, model, @session, self)
     input.set_attribute('size', 40)
     if model
@@ -265,7 +264,7 @@ class RootDivisionComposite < HtmlGrid::Composite
     end
     input
   end
-  def crushable(model, session)
+  def crushable(model, session = @session)
     input = HtmlGrid::InputText.new(:division_crushable, model, @session, self)
     input.set_attribute('size', 40)
     if model
@@ -273,7 +272,7 @@ class RootDivisionComposite < HtmlGrid::Composite
     end
     input
   end
-  def openable(model, session)
+  def openable(model, session = @session)
     input = HtmlGrid::InputText.new(:division_openable, model, @session, self)
     input.set_attribute('size', 40)
     if model
@@ -281,7 +280,7 @@ class RootDivisionComposite < HtmlGrid::Composite
     end
     input
   end
-  def notes(model, session)
+  def notes(model, session = @session)
     input = HtmlGrid::InputText.new(:division_notes, model, @session, self)
     input.set_attribute('size', 71)
     if model
@@ -289,7 +288,7 @@ class RootDivisionComposite < HtmlGrid::Composite
     end
     input
   end
-  def source(model, session)
+  def source(model, session = @session)
     textarea = HtmlGrid::Textarea.new(:division_source, model, @session, self)
     textarea.label = false
     textarea.set_attribute('class', 'huge')
@@ -298,7 +297,7 @@ class RootDivisionComposite < HtmlGrid::Composite
     end
     textarea
   end
-  def assign_division(model, session)
+  def assign_division(model, session = @session)
     link = HtmlGrid::Link.new(:assign_division, model, session, self)
     link.href = @lookandfeel.event_url(:assign_division)
     if model
@@ -371,10 +370,10 @@ class RootSequencePackages < View::FormList
 	EMPTY_LIST_KEY = :empty_package_list
 end
 module SequenceDisplay
-	def atc_class(model, session)
+	def atc_class(model, session = @session)
 		self::class::DEFAULT_CLASS.new(:code, model.atc_class, session, self)
 	end	
-	def atc_descr(model, session)
+	def atc_descr(model, session = @session)
 		if(atc = model.atc_class)
 			txt = HtmlGrid::Text.new(:atc_descr, model, session, self)
 			txt.label = true
@@ -382,7 +381,7 @@ module SequenceDisplay
 			txt
 		end
 	end
-	def atc_request(model, session)
+	def atc_request(model, session = @session)
 		if(time = model.atc_request_time)
 			days = ((((Time.now - @model.atc_request_time) / 60) / 60) / 24)
 			output = "#{@lookandfeel.lookup(:atc_request_time)}"
@@ -623,17 +622,17 @@ class SequenceComposite < HtmlGrid::Composite
   def compositions(model, session=@session)
     Compositions.new(model.compositions, @session, self)
   end
-  def division(model, session)
+  def division(model, session = @session)
     View::Drugs::DivisionComposite.new(model.division, session, self)
   end
-	def sequence_name(model, session)
+	def sequence_name(model, session = @session)
 		[ 
 			(model.company.name if model.company),
 			model.name,
 		].compact.join('&nbsp;-&nbsp;')
 		#HtmlGrid::Value.new('name', model, session, self)
 	end
-	def sequence_packages(model, session)
+	def sequence_packages(model, session = @session)
 		if(packages = model.packages)
 			values = ODDB::PointerArray.new(packages.values, model.pointer)
 			self::class::PACKAGES.new(values, session, self)

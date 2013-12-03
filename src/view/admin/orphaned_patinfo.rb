@@ -30,7 +30,7 @@ class OrphanedPatinfoListInnerComposite < HtmlGrid::Composite
 		[0,0]	=>	'list',
 		[1,0]	=>	'small',
 	}
-	def meaning_index(model, session)
+	def meaning_index(model, session = @session)
 		link = HtmlGrid::Link.new(:choice, model, session, self)
 		hash = { 
 			:meaning_index	=> @container.list_index , 
@@ -71,10 +71,10 @@ class OrphanedPatinfoComposite < HtmlGrid::Composite
 	CSS_CLASS = 'composite'
 	DEFAULT_CLASS = HtmlGrid::Value
 	DEFAULT_HEAD_CLASS = 'th'
-	def reason(model, session)
+	def reason(model, session = @session)
 		@lookandfeel.lookup(model.reason)
 	end
-	def meanings(model, session)
+	def meanings(model, session = @session)
 		View::Admin::OrphanedPatinfoList.new(model.meanings, session, self)
 	end
 end

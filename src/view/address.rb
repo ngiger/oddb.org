@@ -57,7 +57,6 @@ class SuggestedAddress < HtmlGrid::Composite
 		[1,1]	=>	'top',
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	YPOS = 0
 	CSS_CLASS = 'component'
 	def init

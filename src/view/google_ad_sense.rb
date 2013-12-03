@@ -6,7 +6,7 @@
 module ODDB
 	module View
 		module GoogleAdSenseMethods
-			def ad_sense(model, session)
+			def ad_sense(model, session = @session)
 				if(@lookandfeel.enabled?(:google_adsense) \
 					&& !(@session.user.valid? || active_sponsor?))
 					google = GoogleAdSense.new(model, session, self)
@@ -67,7 +67,7 @@ google_color_text = "003399";
 			GOOGLE_FORMAT = '250x250_as'
 			GOOGLE_WIDTH = '250'
 			GOOGLE_HEIGHT = '250'
-			def content(model, session)
+			def content(model, session = @session)
 				self::class::CONTENT.new(model, @session, self)
 			end
       # as template

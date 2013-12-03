@@ -87,7 +87,6 @@ class RegisterDownloadComposite < HtmlGrid::Composite
 		[0,1] => 2,
 		[0,2] => 2,
 	}
-	LEGACY_INTERFACE = false
 end
 class RegisterDownload < View::ResultTemplate
   JAVASCRIPTS = ['autofill']
@@ -125,7 +124,6 @@ class RegisterInvoicedDownloadComposite < HtmlGrid::Composite
 		[0,1] => 2,
 		[0,2] => 2,
 	}
-	LEGACY_INTERFACE = false
 	def invoice_descr(model)
 		date = if(@@today.day < 15) 
 			Date.new(@@today.year, @@today.month, 15)

@@ -59,7 +59,7 @@ module ODDB
         @additional_javascripts = []
         super
       end
-			def content(model, session)
+			def content(model, session = @session)
 				self::class::CONTENT.new(model, session, self)
 			end
 			def css_link(context, path=nil)
@@ -109,10 +109,10 @@ require(['dojo/ready'], function(ready) {
         }
         headers
       end
-			def foot(model, session)
+			def foot(model, session=@session)
 				self::class::FOOT.new(model, session, self) unless self::class::FOOT.nil?
 			end
-			def head(model, session)
+			def head(model, session=@session)
 				self::class::HEAD.new(model, session, self) unless self::class::HEAD.nil?
 			end
       def javascripts(context)

@@ -23,7 +23,6 @@ class FachinfoItem < HtmlGrid::DivComposite
   end
 end
 class FachinfoTemplate < HtmlGrid::Template
-  LEGACY_INTERFACE = false
   COMPONENTS = {
     [0,0] => FachinfoItem, 
     [0,1] => :fachinfo_feed_link,

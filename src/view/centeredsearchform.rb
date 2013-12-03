@@ -41,7 +41,7 @@ module ODDB
 			HTML_ATTRIBUTES = {
 				#'width'				=>	'100%',
 			}
-			def donation_logo(model, session)
+			def donation_logo(model, session = @session)
 				image = HtmlGrid::Input.new(:submit, nil, session, self)
 				image.attributes['src'] = @lookandfeel.resource_global(:paypal_donate)
 				image.attributes['type'] = 'image'
@@ -88,7 +88,7 @@ module ODDB
 				self.onload = "document.getElementById('searchbar').focus();"
 				super
 			end
-			def search_help(model, session)
+			def search_help(model, session = @session)
 				button = HtmlGrid::Button.new(:search_help, model, session, self)
 				url = @lookandfeel._event_url(:help)
 				props = "scrollbars=yes,resizable=no,toolbar=yes,menubar=no,locationbar=no,width=600,height=500";
@@ -96,7 +96,7 @@ module ODDB
 				button.set_attribute('onClick', script)
 				button
 			end
-			def search_reset(model, session)
+			def search_reset(model, session = @session)
 				if(@lookandfeel.enabled?(:search_reset))
 					button = HtmlGrid::Button.new(:search_reset, model, session, self)
 					button.set_attribute("type", "reset")
@@ -138,66 +138,66 @@ module ODDB
 				:sequences				=>	CenteredNavigationLink,
 				:software_feedback=>	HtmlGrid::Link,
 			}
-			def atc_chooser(model, session)
+			def atc_chooser(model, session = @session)
 				if(@lookandfeel.enabled?(:atc_chooser))
 					CenteredNavigationLink.new(:atc_chooser, model, @session, self)
 				end
 			end
-			def atc_ddd_size(mode, session)
+			def atc_ddd_size(model, session = @session)
 				@session.app.atc_ddd_count.to_s << '&nbsp;'
 			end
-			def beta(model, session)
+			def beta(model, session = @session)
 				link = HtmlGrid::Link.new(:beta, model, session, self)
 				link.href = @lookandfeel.lookup(:ywesee_contact_href)
 				link.set_attribute('style','text-decoration: none; color: red; margin: 5px;')
 				link
 			end
-			def database_size(model, session)
+			def database_size(model, session = @session)
 				@session.app.package_count.to_s << '&nbsp;'
 			end
 			def database_last_updated(model, session=@session)
 				HtmlGrid::DateValue.new(:last_medication_update, 
 																@session.app, @session, self)
 			end
-			def ddd_count_text(model, session)
+			def ddd_count_text(model, session = @session)
 				link = HtmlGrid::Link.new(:ddd_count_text, model, session, self)
 				link.href = @lookandfeel.event_url(:ddd_count_text)
 				link.label = true
 				link.set_attribute('class', 'list-b')
 				link
 			end
-			def divider(model, session)
+			def divider(model, session = @session)
 				span = HtmlGrid::Span.new(model, session, self)
 				span.value = '&nbsp;|&nbsp;'
 				span.set_attribute('style','color: black;')
 				span
 			end
-      def download_ebook(model, session)
+      def download_ebook(model, session = @session)
         link = HtmlGrid::Link.new(:download_ebook, model, session, self)
         link.set_attribute('class', 'list')
         link.href = @lookandfeel.lookup(:download_ebook_link)
         link
       end
-      def download_app(model, session)
+      def download_app(model, session = @session)
         link = HtmlGrid::Link.new(:download_app, model, session, self)
         link.set_attribute('class', 'list')
         link.href = 'http://itunes.apple.com/us/app/generika/id520038123?ls=1&mt=8'
         link
       end
-      def download_amiko(model, session)
+      def download_amiko(model, session = @session)
         link = HtmlGrid::Link.new(:download_amiko, model, session, self)
         link.set_attribute('class', 'list')
         link.href = @lookandfeel.lookup(:download_amiko_link)
         link
       end
-			def download_export(model, session)
+			def download_export(model, session = @session)
 				link = HtmlGrid::Link.new(:download_export, model, session, self)
 				link.href = @lookandfeel._event_url(:download_export)
 				link.label = true
 				link.set_attribute('class', 'list')
 				link
 			end
-			def download_generics(model, session)
+			def download_generics(model, session = @session)
 				link = HtmlGrid::Link.new(:download_generics, 
 																	model, session, self)
 				args = {'download[generics.xls]' => 1}
@@ -205,69 +205,69 @@ module ODDB
 				link.set_attribute('class', 'list')
 				link
 			end
-			def fipi_offer(model, session)
+			def fipi_offer(model, session = @session)
 				link = HtmlGrid::Link.new(:fipi_offer, model, session, self)
 				link.href = @lookandfeel._event_url(:fipi_offer_input)
 				link.label = true
 				link.set_attribute('class', 'list')
 				link
 			end
-			def fachinfo_size(model, session)
+			def fachinfo_size(model, session = @session)
 				@session.app.fachinfo_count.to_s << '&nbsp;'
 			end
-			def export_divider(model, session)
-				divider(model, session)
+			def export_divider(model, session = @session)
+				divider(model, session = @session)
 			end
-			def interactions(model, session)
+			def interactions(model, session = @session)
 				link = HtmlGrid::Link.new(:interactions, model, session, self)
 				link.href = @lookandfeel._event_url(:interactions_home)
 				link.label = true
 				link.set_attribute('class', 'list')
 				link
 			end
-			def mailinglist(model, session)
+			def mailinglist(model, session = @session)
 				link = HtmlGrid::Link.new(:mailinglist, model, session, self)
 				link.href = @lookandfeel._event_url(:mailinglist)
 				link.label = true
 				link.set_attribute('class', 'list')
 				link
 			end
-			def limitation_size(mode, session)
+			def limitation_size(model, session = @session)
 				@session.app.limitation_text_count.to_s << '&nbsp;'
 			end
-			def narcotics_size(model, session)
+			def narcotics_size(model, session = @session)
         @session.app.narcotics.length.to_s << '&nbsp;'
 			end
-			def new_feature(model, session)
+			def new_feature(model, session = @session)
 				span = HtmlGrid::Span.new(model, session, self)
 				span.value = @lookandfeel.lookup(:new_feature)
 				span.set_attribute('style','color: red; margin: 5px; font-size: 8pt;')
 				#span.set_attribute('style','color: red; margin: 5px; font-size: 11pt;')
 				span
 			end
-			def recent_registrations(model, session)
+			def recent_registrations(model, session = @session)
 				link = HtmlGrid::Link.new(:new_registrations, model, session, self)
 				link.href = @lookandfeel._event_url(:recent_registrations)
 				link.set_attribute('class', 'list')
 				count = @session.app.recent_registration_count
 				[database_last_updated(model), ',&nbsp;', count, '&nbsp;', link]
 			end
-			def paypal(model, session)
+			def paypal(model, session = @session)
 				if(@lookandfeel.enabled?(:paypal))
 					PayPalForm.new(model, session, self)
 				end
 			end
-			def plugin(model, session)
+			def plugin(model, session = @session)
 				link = HtmlGrid::Link.new(:plugin, model, session, self)
 				link.href = @lookandfeel._event_url(:plugin)
 				link.label = true
 				link.set_attribute('class', 'list')
 				link
 			end
-			def patinfo_size(model, session)
+			def patinfo_size(model, session = @session)
 				@session.app.patinfo_count.to_s << '&nbsp;'
 			end
-			def vaccines_size(model, session)
+			def vaccines_size(model, session = @session)
 				@session.app.vaccine_count.to_s << '&nbsp;'
 			end
 		end

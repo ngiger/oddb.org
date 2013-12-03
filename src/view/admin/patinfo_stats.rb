@@ -30,7 +30,7 @@ class CompanyHeader < HtmlGrid::Composite
 	SYMBOL_MAP = {
 		:name =>	View::PointerLink,
 	}
-  def name(model, session)
+  def name(model, session = @session)
     link = View::PointerLink.new(:name, model, session)
     args = unless model.ean13.to_s.strip.empty?
              {:ean => model.ean13}
@@ -59,7 +59,7 @@ class PatinfoStatsCompanyList < HtmlGrid::List
 		:date					=>	:patinfo_stats,
 		:email				=>	:nbsp,
 	}
-	def date(model, session)
+	def date(model, session = @session)
 		time = model.time
 		time.strftime("%A %d.%m.%Y &nbsp;&nbsp;-&nbsp;&nbsp;%H.%M Uhr %Z")
 	end

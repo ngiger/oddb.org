@@ -13,13 +13,13 @@ module ODDB
 		module Migel
 class LimitationTextInnerComposite < View::Drugs::LimitationTextInnerComposite
 	DEFAULT_CLASS = HtmlGrid::Value
-	def subgroup(model, session)
+	def subgroup(model, session = @session)
 		product = model.parent(@session.app)
 		if(lim = product.subgroup.limitation_text)
 			lim.send(@session.language)
 		end
 	end
-	def group(model, session)
+	def group(model, session = @session)
 		product = model.parent(@session.app)
 		if(lim = product.group.limitation_text)
 			lim.send(@session.language)
@@ -36,7 +36,7 @@ class LimitationTextComposite < HtmlGrid::Composite
 		[0,0] => 'th',
 		[0,1] => 'list',
 	}	
-	def limitation_text_title(model, session)
+	def limitation_text_title(model, session = @session)
 		if(parent = model.parent(@session.app))
 			@lookandfeel.lookup(:limitation_text_title, 
 				parent.send(@session.language))

@@ -97,57 +97,57 @@ class FiPiCalculations < HtmlGrid::Composite
 		css_map.update(css)
 		super
 	end
-	def calculate_total(model, session)
+	def calculate_total(model, session = @session)
 		prize = model.calculate_total
 		@lookandfeel.lookup(:swiss_francs, prize.to_s)
 	end
-	def calculate_total_charges(model, session)
+	def calculate_total_charges(model, session = @session)
 		prize = model.calculate_total_charges
 		@lookandfeel.lookup(:swiss_francs, prize.to_s)
 	end
-	def fi_charge(model, session)
+	def fi_charge(model, session = @session)
 		@lookandfeel.lookup(:fi_charge, model.fi_charge)
 	end
-	def calculate_fi_charge(model, session)
+	def calculate_fi_charge(model, session = @session)
 		prize = model.calculate_fi_charge
 		@lookandfeel.lookup(:swiss_francs, prize.to_s)
 	end
-	def fi_update(model, session)
+	def fi_update(model, session = @session)
 		@lookandfeel.lookup(model.fi_update.intern, model.fi_update_charge)
 	end
-	def fi_update_value(model, session)
+	def fi_update_value(model, session = @session)
 		prize = model.calculate_fi_update
 		@lookandfeel.lookup(:swiss_francs, prize.to_s)
 	end
-	def fi_activation_count(model, session)
+	def fi_activation_count(model, session = @session)
 		model.fi_activation_count
 	end
-	def pi_activation_count(model, session)
+	def pi_activation_count(model, session = @session)
 		model.pi_activation_count
 	end
-	def fipi_activation_charge_value(model, session)
+	def fipi_activation_charge_value(model, session = @session)
 		prize = model.fi_calculate_activation_charge + model.pi_calculate_activation_charge
 		@lookandfeel.lookup(:swiss_francs, prize.to_s)
 	end
-	def fi_activation_charge_value(model, session)
+	def fi_activation_charge_value(model, session = @session)
 		prize = model.fi_calculate_activation_charge
 		@lookandfeel.lookup(:swiss_francs, prize.to_s)
 	end
-	def pi_activation_charge_value(model, session)
+	def pi_activation_charge_value(model, session = @session)
 		prize = model.pi_calculate_activation_charge
 		@lookandfeel.lookup(:swiss_francs, prize.to_s)
 	end
-	def pi_charge(model, session)
+	def pi_charge(model, session = @session)
 		@lookandfeel.lookup(:pi_charge, model.pi_charge)
 	end
-	def calculate_pi_charge(model, session)
+	def calculate_pi_charge(model, session = @session)
 		prize = model.calculate_pi_charge
 		@lookandfeel.lookup(:swiss_francs, prize.to_s)
 	end
-	def pi_update(model, session)
+	def pi_update(model, session = @session)
 		@lookandfeel.lookup(model.pi_update.intern, model.pi_update_charge)
 	end
-	def pi_update_value(model, session)
+	def pi_update_value(model, session = @session)
 		prize = model.calculate_pi_update
 		@lookandfeel.lookup(:swiss_francs, prize.to_s)
 	end
@@ -172,28 +172,28 @@ class FiPiOfferConfirmComposite < HtmlGrid::Composite
 		[0,3]	=>	'list',
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	def amzv_link(model, session)
+	def amzv_link(model, session = @session)
 		link = HtmlGrid::Link.new(:azmv, model, session, self)
 		link.href = @lookandfeel.lookup(:amzv_href)
 		link.value = @lookandfeel.lookup(:amzv)
 		link.set_attribute('class', 'th')
 		link
 	end
-	def amzv_article13_link(model, session)
+	def amzv_article13_link(model, session = @session)
 		link = HtmlGrid::Link.new(:azmv_article13, model, session, self)
 		link.href = @lookandfeel.lookup(:amzv_article13_href)
 		link.value = @lookandfeel.lookup(:amzv_article13)
 		link.set_attribute('class', 'th')
 		link
 	end
-	def amzv_article14_link(model, session)
+	def amzv_article14_link(model, session = @session)
 		link = HtmlGrid::Link.new(:azmv_article14, model, session, self)
 		link.href = @lookandfeel.lookup(:amzv_article14_href)
 		link.value = @lookandfeel.lookup(:amzv_article14)
 		link.set_attribute('class', 'th')
 		link
 	end
-	def fipi_offer_disclaimer(model, session)
+	def fipi_offer_disclaimer(model, session = @session)
 		today = Time.now()
 		date = today.strftime(@lookandfeel.lookup(:date_format))
 		@lookandfeel.lookup(:fipi_offer_disclaimer, date)

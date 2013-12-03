@@ -30,7 +30,6 @@ class PaymentMethodForm < Form
 		[0,0,2,3]	=>	'standard',
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	SYMBOL_MAP = {
 		:payment_method	=>	HtmlGrid::Select,
 	}
@@ -69,7 +68,6 @@ class PaymentMethodComposite < HtmlGrid::Composite
 		[0,0]	=>	'th',
 		[0,1]	=>	'list',
 	}
-	LEGACY_INTERFACE = false
 end
 class PaymentMethod < View::ResultTemplate
 	CONTENT = PaymentMethodComposite

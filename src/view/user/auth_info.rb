@@ -18,7 +18,6 @@ class AuthInfoComposite < HtmlGrid::Composite
 		[0,0]	=>	'th',
 		[0,1,1,2]	=>	'list',
 	}
-	LEGACY_INTERFACE = false
 	def auth_info(model)
 		@lookandfeel.lookup(:auth_info, model.email)
 	end

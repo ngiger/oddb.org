@@ -17,7 +17,6 @@ class ReturnDownloads < HtmlGrid::List
 		[0,0,2]	=>	'list',
 	}
   DEFAULT_HEAD_CLASS = 'subheading'
-	LEGACY_INTERFACE = false
 	OMIT_HEADER = false
 	STRIPED_BG = false
   SORT_HEADER = false
@@ -69,7 +68,6 @@ class ReturnComposite < HtmlGrid::Composite
 		[0,0]	=>	'th',
 		[0,1]	=>	'list',
 	}
-	LEGACY_INTERFACE = false
 	def init
 		if(@model.nil?)
 			components.update({

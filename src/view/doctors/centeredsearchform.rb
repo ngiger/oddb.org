@@ -29,10 +29,10 @@ class CenteredSearchComposite < View::CenteredSearchComposite
 		[0,0,1,8]		=>	'list center',
 	}
 	COMPONENT_CSS_MAP = { }
-	def doctor_count(model, session)
+	def doctor_count(model, session = @session)
 		@session.doctor_count.to_s << '&nbsp;'
 	end
-	def download_doctors(model, session)
+	def download_doctors(model, session = @session)
 		link = HtmlGrid::Link.new(:download_doctors1, model, session, self)
 		link.href = @lookandfeel._event_url(:download_export)
 		link

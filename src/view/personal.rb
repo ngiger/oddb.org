@@ -12,7 +12,7 @@ require 'view/sponsorlogo'
 module ODDB
   module View
     module Personal
-      def welcome(model, session)
+      def welcome(model, session=@session)
         parts = []
         user = session.user
         div = HtmlGrid::Div.new(model, session, self)

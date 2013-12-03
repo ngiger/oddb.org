@@ -23,7 +23,7 @@ class NotifyConfirmComposite < HtmlGrid::Composite
 		[0,1] => 'th',
 		[0,2] => 'confirm',
 	}	
-	def notify_sent(model, session)
+	def notify_sent(model, session = @session)
     last, *mails = model.notify_recipient.reverse
     string = if(mails.empty?) 
                last

@@ -14,7 +14,6 @@ class DateChooser < HtmlGrid::Composite
 		[0,0,2]	=>	:years,
 	}
 	CSS_CLASS = 'composite'
-	LEGACY_INTERFACE = false
 	def years(model)
 		date = @session.state.date
 		cyear = date.year
@@ -62,7 +61,6 @@ class DateHeader < HtmlGrid::Composite
   CSS_MAP = {
     [0,0] => 'atc list',
   }
-	LEGACY_INTERFACE = false
 	def date_packages(model)
 		date = model.date
 		[

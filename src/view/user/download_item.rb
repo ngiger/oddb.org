@@ -50,7 +50,6 @@ class DownloadItemForm < Form
     :pass          => HtmlGrid::Pass,
     :set_pass_2    => HtmlGrid::Pass,
   }
-  LEGACY_INTERFACE = false
   def init
     unless @session.logged_in?
       hash_insert_row(components, [0,1], :pass)
@@ -103,7 +102,6 @@ class DownloadItemComposite < View::User::DownloadExportInnerComposite
     [0,1] => 2,
     [0,2] => 2,
   }
-  LEGACY_INTERFACE = false
   def register_download_form(model)
     if(@session.logged_in?)
       model = @session.user

@@ -103,11 +103,11 @@ class FiChapterChooser < HtmlGrid::Composite
 		colspan_map.store(pos, xwidth - pos.at(0))
 		super
 	end
-	def changelog(model, session)
+	def changelog(model, session = @session)
 		View::Drugs::FiChapterChooserLink.new(:changelog, 
 			model, session, self)
 	end
-	def ddd(model, session)
+	def ddd(model, session = @session)
 		if(atc = model.atc_class)			
 			View::Drugs::FiChapterChooserLink.new(:ddd, 
 				model, session, self)
@@ -123,7 +123,7 @@ class FiChapterChooser < HtmlGrid::Composite
     end
     names
   end
-	def full_text(model, session)
+	def full_text(model, session = @session)
 		if(@model.pointer.skeleton == [:create])
 			@lookandfeel.lookup(:fachinfo_all)
 		else
@@ -230,7 +230,7 @@ class FachinfoPreviewComposite < HtmlGrid::Composite
 		[1,0]	=> 'th right',
 	}	
 	DEFAULT_CLASS = HtmlGrid::Value
-	def fachinfo_name(model, session)
+	def fachinfo_name(model, session = @session)
 		@lookandfeel.lookup(:fachinfo_name, model.name) if model
 	end
 end
@@ -288,7 +288,7 @@ class FachinfoComposite < View::Drugs::FachinfoPreviewComposite
     end
     super
   end
-	def chapter_chooser(model, session)
+	def chapter_chooser(model, session = @session)
 		if(klass = self.class.const_get(:CHOOSER_CLASS))
 			klass.new(model, session, self)
 		end
@@ -312,7 +312,7 @@ class FachinfoComposite < View::Drugs::FachinfoPreviewComposite
       View::Chapter.new(chapter, @document, @session, self)
     end
   end
-	def description(model, session)
+	def description(model, session = @session)
 		chapter = session.user_input(:chapter)
 		if(chapter == 'ddd')
 			View::Drugs::DDDTree.new(model.atc_class, session, self)
@@ -325,7 +325,7 @@ class FachinfoComposite < View::Drugs::FachinfoPreviewComposite
 			View::Drugs::FachinfoInnerComposite.new(@document, session, self)
 		end
 	end
-	def fachinfo_name(model, session)
+	def fachinfo_name(model, session = @session)
 		super(@document, session)
 	end
 end

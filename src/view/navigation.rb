@@ -12,7 +12,6 @@ module ODDB
 	module View
 		class Navigation < HtmlGrid::Composite
 			COMPONENTS = {}
-			LEGACY_INTERFACE = false
 			NAV_LINK_CLASS = NavigationLink
 			NAV_LINK_CSS = 'subheading'
 			NAV_METHOD = :navigation
@@ -74,7 +73,6 @@ module ODDB
         [1,0] => 'navigation_divider',
         [2,0] => :oddb_chde,
       }
-      LEGACY_INTERFACE = false
       def link(key, model)
         link = HtmlGrid::Link.new('oddb_%s' % key, model, @session, self)
         link.href = "http://%s.oddb.org/" % key

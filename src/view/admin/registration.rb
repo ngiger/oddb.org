@@ -390,7 +390,7 @@ class RegistrationComposite < HtmlGrid::Composite
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
 	SEQUENCES = View::Admin::RegistrationSequences
-	def registration_sequences(model, session)
+	def registration_sequences(model, session = @session)
 		if(sequences = model.sequences)
 			values = PointerArray.new(sequences.values, model.pointer)
 			self::class::SEQUENCES.new(values, session, self)

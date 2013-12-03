@@ -28,7 +28,7 @@ class CenteredSearchComposite < View::CenteredSearchComposite
 	COMPONENT_CSS_MAP = {
 		[0,5]	=>	'legal-note',
 	}
-	def company_count(model, session)
+	def company_count(model, session = @session)
 		@session.app.company_count.to_s << '&nbsp;'
 	end
 end	

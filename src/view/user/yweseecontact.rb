@@ -21,7 +21,7 @@ class YweseeContactForm < HtmlGrid::Form
 		[0,1]	=>	'list',
 		[0,2]	=>	'list',
 	}
-	def ywesee_contact_email(model, session)
+	def ywesee_contact_email(model, session=@session)
 		link = HtmlGrid::Link.new(:ywesee_contact_email, model, session, self)
 		link.href = @lookandfeel.lookup(:ywesee_contact_href)
 		link.attributes['class'] = 'list'

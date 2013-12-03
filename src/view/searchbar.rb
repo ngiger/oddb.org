@@ -270,7 +270,6 @@ class SelectSearchForm < HtmlGrid::DivForm
   SYMBOL_MAP = {
     :search_query => View::SearchBar,
   }
-  LEGACY_INTERFACE = false
   EVENT = :search
   FORM_METHOD = 'GET'
 end

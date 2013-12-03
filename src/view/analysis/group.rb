@@ -41,7 +41,6 @@ class GroupHeader < HtmlGrid::Composite
 		[0,0]			=>	:analysis_positions,
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	LABELS = true
 	def analysis_positions(model)
 		[@lookandfeel.lookup(:analysis_positions), model.groupcd].join(' ')
@@ -58,7 +57,6 @@ class GroupComposite < HtmlGrid::Composite
 	}
 	LABELS = true
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def positionlist(model)
 		pos = model.positions.values
 		if(!pos.empty?)

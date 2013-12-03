@@ -37,7 +37,6 @@ class AssignFachinfoForm < View::FormList
 	}
 	CSS_CLASS = 'composite'
 	DEFAULT_HEAD_CLASS = 'subheading'
-	LEGACY_INTERFACE = false
 	SORT_DEFAULT = nil
 	EVENT = :assign
 	def compose_list(model, offset)

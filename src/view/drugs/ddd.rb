@@ -57,16 +57,16 @@ class DDDComposite < HtmlGrid::Composite
 	def chapter(model)
 		View::Chapter.new(:en, model, @session, self)
 	end
-	def description(model, session)
+	def description(model, session = @session)
 		[ model.code, model.en ].join('&nbsp;-&nbsp;')
 	end
-	def ddds(model, session)
+	def ddds(model, session = @session)
 		View::Drugs::DDDList.new(model.ddds.values, session, self)
 	end
-	def ddd_guidelines(model, session)
+	def ddd_guidelines(model, session = @session)
 		chapter(model.ddd_guidelines)
 	end
-	def guidelines(model, session)
+	def guidelines(model, session = @session)
 		chapter(model.guidelines)
 	end
 end
@@ -108,17 +108,17 @@ class DDDTree < HtmlGrid::Composite
 		end
 		super
 	end
-	def ddd_version(model, session)
+	def ddd_version(model, session = @session)
 		if(atc = model.last)
 			@lookandfeel.lookup(:ddd_version)
 		end
 	end
-	def description(model, session)
+	def description(model, session = @session)
 		if(atc = model.last)
 			[ atc.code, atc.en ].join('&nbsp;-&nbsp;')
 		end
 	end
-	def source(model, session)
+	def source(model, session = @session)
 		if(atc = model.last)
 			link = external_link(atc, :ddd_source)
 			href = "http://www.whocc.no/atcddd/indexdatabase/index.php?query="

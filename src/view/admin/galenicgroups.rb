@@ -28,12 +28,12 @@ class GalenicGroupsList < View::DescriptionList
 		:description	=>	View::PointerLink,
 		:oid					=>	View::PointerLink,
 	}
-  def oid(model, session)
+  def oid(model, session= @session)
     link = View::PointerLink.new(:oid, model, session)
     link.href = @lookandfeel._event_url(:galenic_group, {:oid => model.oid})
     link
   end
-  def description(model, session)
+  def description(model, session= @session)
     link = View::PointerLink.new(:description, model, session)
     link.href = @lookandfeel._event_url(:galenic_group, {:oid => model.oid})
     link

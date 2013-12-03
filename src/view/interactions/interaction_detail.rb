@@ -36,7 +36,6 @@ class InteractionDetailInnerComposite < HtmlGrid::Composite
   LABELS = true
   DEFAULT_CLASS = HtmlGrid::Value
 	SUBHEADER = View::Interactions::InteractionDetailHeader
-  LEGACY_INTERFACE = false
   def mechanism(model, session=@session)
     value = HtmlGrid::Value.new(:mechanism, model, @session)
     value.value = model[:mechanism]
@@ -102,7 +101,6 @@ class InteractionDetailComposite < HtmlGrid::Composite
     [0,2] =>  'list',
   }
   DEFAULT_CLASS = HtmlGrid::Value
-  LEGACY_INTERFACE = false
   def references(model, session=@session)
     ReferenceList.new(model[:references], session, self)
   end

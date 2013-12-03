@@ -33,7 +33,7 @@ class SponsorHead < CommonLogoHead
 	}
 end
 module SponsorMethods
-	def head(model, session)
+	def head(model, session = @session)
 		if(@lookandfeel.enabled?(:sponsorlogo))
 			View::SponsorHead.new(model, session, self)
 		else

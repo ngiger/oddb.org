@@ -27,7 +27,7 @@ module ODDB
 				:search_query			=>	SearchBar,	
 				:exception_header	=>	HtmlGrid::Text,
 			}
-			def exception(model, session)
+			def exception(model, session = @session)
 				HtmlGrid::Text.new(model.message, model, session, self)
 			end
 		end

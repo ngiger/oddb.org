@@ -78,7 +78,6 @@ class FiPiOverviewList < HtmlGrid::List
   DEFAULT_HEAD_CLASS = 'subheading'
   SORT_DEFAULT = :name_base
   SORT_HEADER = false
-  LEGACY_INTERFACE = false
 end
 class FiPiOverviewComposite < HtmlGrid::Composite
   COMPONENTS = {
@@ -101,7 +100,6 @@ class FiPiOverviewComposite < HtmlGrid::Composite
   }
   CSS_CLASS = 'composite'
   DEFAULT_CLASS = HtmlGrid::Value
-  LEGACY_INTERFACE = false
   def counts(model)
     @lookandfeel.lookup(:fipi_counts, model.fi_count, model.pi_count)
   end

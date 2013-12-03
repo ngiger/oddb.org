@@ -15,7 +15,7 @@ class FachinfoPDFDownloadInnerComposite < HtmlGrid::Composite
 		[0,0]	=>	'list',
 	}
 	EXPORT_FILE = 'fachinfo'
-	def fachinfo_pdf_download(model, session)
+	def fachinfo_pdf_download(model, session = @session)
 		link_with_filesize("Fachinfos_Version_3.3.pdf")
 	end
 end

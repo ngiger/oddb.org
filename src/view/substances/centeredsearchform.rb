@@ -28,7 +28,7 @@ class CenteredSearchComposite < View::CenteredSearchComposite
 	COMPONENT_CSS_MAP = {
 		[0,6]	=>	'legal-note',
 	}
-	def substance_count(model, session)
+	def substance_count(model, session = @session)
 		@session.app.substance_count
 	end
 end

@@ -25,7 +25,7 @@ class CommercialFormsList < View::DescriptionList
   SYMBOL_MAP = {
     :oid => View::PointerLink,
   }
-  def oid(model, session)
+  def oid(model, session= @session)
     link = View::PointerLink.new(:oid, model, session)
     link.href = @lookandfeel._event_url(:commercial_form, {:oid => model.oid})
     link

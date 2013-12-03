@@ -44,7 +44,6 @@ class AtcHeader < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0,2]	=>	'atc list',
 	}
-  LEGACY_INTERFACE = false
 	def init
     @link_separators = 0
 		if(@session.allowed?('edit', 'org.oddb.model.!atc_class.*'))

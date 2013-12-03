@@ -38,22 +38,22 @@ class DivisionComposite < HtmlGrid::Composite
   }
   LABELS = true
   DEFAULT_CLASS = HtmlGrid::Value
-  def divisable(model, session)
+  def divisable(model, session = @session)
     HtmlGrid::Value.new(:divisable, model, session, self)
   end
-  def dissolvable(model, session)
+  def dissolvable(model, session = @session)
     HtmlGrid::Value.new(:dissolvable, model, session, self)
   end
-  def crushable(model, session)
+  def crushable(model, session = @session)
     HtmlGrid::Value.new(:crushable, model, session, self)
   end
-  def openable(model, session)
+  def openable(model, session = @session)
     HtmlGrid::Value.new(:openable, model, session, self)
   end
-  def notes(model, session)
+  def notes(model, session = @session)
     HtmlGrid::Value.new(:notes, model, session, self)
   end
-  def source(model, session)
+  def source(model, session = @session)
     text = HtmlGrid::Value.new(:source, model, session, self)
     text.label = false
     text

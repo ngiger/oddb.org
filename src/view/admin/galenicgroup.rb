@@ -30,12 +30,12 @@ class GalenicForms < View::DescriptionList
 		:description	=>	View::PointerLink,
 		:oid					=>	View::PointerLink,
 	}
-  def oid(model, session)
+  def oid(model, session = @session)
     link = View::PointerLink.new(:oid, model, session)
     link.href = @lookandfeel._event_url(:galenic_form, [:goid, model.galenic_group.oid, :foid, model.oid])
     link
   end
-  def description(model, session)
+  def description(model, session = @session)
     link = View::PointerLink.new(:description, model, session)
     link.href = @lookandfeel._event_url(:galenic_form, [:goid, model.galenic_group.oid, :foid, model.oid])
     link
@@ -63,7 +63,7 @@ class GalenicGroupComposite < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0]	=>	'th',
 	}
-	def galenic_forms(model, session)
+	def galenic_forms(model, session = @session)
 		forms = if(galforms = model.galenic_forms)
 			galforms.values
 		else

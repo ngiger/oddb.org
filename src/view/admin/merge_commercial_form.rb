@@ -22,7 +22,7 @@ class MergeCommercialFormForm < View::Form
     super
     error_message()
   end
-  def description(model, offset)
+  def description(model, session= @session)
     model.description(@lookandfeel.language)
   end
 end
@@ -37,7 +37,7 @@ class MergeCommercialFormComposite < HtmlGrid::Composite
     [0,0]  =>  'th',
   }
   LABELS = true
-  def merge_commercial_form(model, session)
+  def merge_commercial_form(model, session= @session)
     @lookandfeel.lookup(:merge_commercial_form, @model.package_count)
   end
 end

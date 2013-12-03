@@ -1,6 +1,7 @@
 .bundle
 .rbenv-version
 .ruby-version
+.idea
 
 data/csv/
 data/downloads/

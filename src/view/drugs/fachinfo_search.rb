@@ -237,7 +237,6 @@ class FachinfoSearchTermHitList < HtmlGrid::List
   SORT_HEADER  = false
   OMIT_HEADER  = true
   BACKGROUND_SUFFIX = ''
-  LEGACY_INTERFACE = false
   def drug(model, session=@session)
     drugs = @session.persistent_user_input(:drugs)
     if pac = drugs[model[:ean13]]

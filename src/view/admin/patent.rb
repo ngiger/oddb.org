@@ -45,7 +45,6 @@ class PatentInnerComposite < HtmlGrid::Composite
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
 	LABELS = true
-	LEGACY_INTERFACE = false
 	SYMBOL_MAP = {
 		:base_patent_date		=>	HtmlGrid::DateValue,
 		:deletion_date			=>	HtmlGrid::DateValue,
@@ -76,7 +75,6 @@ class PatentForm < HtmlGrid::Form
 	}
 	EVENT = :update
 	LABELS = true
-	LEGACY_INTERFACE = false
 	SYMBOL_MAP = {
 		:base_patent_date		=>	HtmlGrid::InputDate,
 		:deletion_date			=>	HtmlGrid::InputDate,
@@ -96,7 +94,6 @@ class ReadonlyPatentComposite < HtmlGrid::Composite
 		[0,0]	=>	'th',
 	}
 	CSS_CLASS = 'composite'
-	LEGACY_INTERFACE = false
 	def registration_name(model, session=@session)
 		registration = model.parent(@session.app)
 		[

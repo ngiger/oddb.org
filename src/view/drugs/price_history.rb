@@ -34,7 +34,6 @@ class PriceHistoryList < HtmlGrid::List
     [6,0,2] => 'list',
   }
   DEFAULT_HEAD_CLASS = 'subheading'
-  LEGACY_INTERFACE = false
   SORT_DEFAULT = :valid_from
   SORT_REVERSE = true
   SYMBOL_MAP = {
@@ -100,7 +99,6 @@ class PriceHistoryComposite < HtmlGrid::Composite
   CSS_MAP = {
     [0,0]	=>	'th',
   }
-  LEGACY_INTERFACE = false
   def article_24(model)
     link = HtmlGrid::Link.new(:article_24, model, @session, self)
     link.href = @lookandfeel.lookup(:article_24_url)

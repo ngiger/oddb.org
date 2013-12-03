@@ -63,13 +63,13 @@ class ResultLimitList < HtmlGrid::List
 			super
 		end
 	end
-  def prescription(model, session)
+  def prescription(model, session = @session)
     super(model, session, 'list important')
   end
-	def fachinfo(model, session)
+	def fachinfo(model, session = @session)
 		super(model, session, 'square important infos')
 	end	
-	def name_base(model, session)
+	def name_base(model, session = @session)
 		model.name_base
 	end
   def most_precise_dose(model, session=@session)
@@ -85,7 +85,6 @@ class ResultLimitComposite < HtmlGrid::Composite
 		[0,2] => ResultLimitList, 
 		[0,3]	=> View::LimitComposite,
 	}
-	LEGACY_INTERFACE = false
   CSS_MAP = {
     [0,0] => 'right',
     [0,1] => 'right',

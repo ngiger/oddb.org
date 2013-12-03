@@ -82,7 +82,6 @@ class PackageInnerComposite < HtmlGrid::Composite
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
 	LABELS = true
-  LEGACY_INTERFACE = false
   LOOKANDFEEL_MAP = {
     :descr  =>  :description,
   }
@@ -303,14 +302,14 @@ class PackageComposite < HtmlGrid::Composite
   def compositions(model, session=@session)
     View::Admin::Compositions.new(model.compositions, @session, self)
   end
-  def division(model, session)
+  def division(model, session = @session)
     division = nil
     if sequence = model.sequence
       division = sequence.division
     end
     View::Drugs::DivisionComposite.new(division, session, self)
   end
-	def package_name(model, session)
+	def package_name(model, session = @session)
 		[model.name, model.size].compact.join('&nbsp;-&nbsp;')
 	end
   def parts(model, session=@session)

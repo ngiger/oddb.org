@@ -25,7 +25,7 @@ class ActiveAgentInnerComposite < HtmlGrid::Composite
 	}
 	DEFAULT_CLASS = HtmlGrid::Value	
 	LABELS = true
-	def substance(model, session)
+	def substance(model, session = @session)
 		model.substance.send(@lookandfeel.language)
 	end
 end
@@ -54,7 +54,7 @@ class ActiveAgentForm < View::Form
 		super
 		error_message()
 	end
-	def new_active_agent_button(model, session)
+	def new_active_agent_button(model, session = @session)
 		unless(@model.is_a? Persistence::CreateItem)
 			post_event_button(:new_active_agent)
 		end
@@ -69,8 +69,8 @@ class ActiveAgentComposite < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0]	=>	'th',
 	}
-	def agent_name(model, session)
-		sequence = model.parent(session.app)
+	def agent_name(model, session = @session)
+		sequence = model.parent(@session.app)
 		[sequence.name, model.pointer_descr].compact.join('&nbsp;-&nbsp;')	
 	end
 end
@@ -87,10 +87,10 @@ class RootActiveAgentComposite < View::Admin::ActiveAgentComposite
 		[0,0]	=>	'th',
 		[0,3]	=>	'subheading',
 	}
-	def active_agents(model, session=@session)
+	def active_agents(model, session = @session)
 		RootSequenceAgents.new(model.sequence.active_agents, @session, self)
 	end
-  def source(model, session=@session)
+  def source(model, session = @session)
     val = HtmlGrid::Value.new(:source, model, @session, self)
     val.value = sequence_source(model.sequence) if model
     val

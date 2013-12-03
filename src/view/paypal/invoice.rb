@@ -17,7 +17,6 @@ class InvoiceItems < HtmlGrid::List
 		[1,0]	=>	'list',
 		[2,0]	=>	'list right',
 	}
-	LEGACY_INTERFACE = false
 	OMIT_HEADER = true
 	STRIPED_BG = false
 	def compose_footer(matrix)

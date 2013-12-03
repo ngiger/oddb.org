@@ -26,7 +26,6 @@ class LimitationTextList < HtmlGrid::List
 	}
 	SORT_DEFAULT = false
 	SORT_HEADER = false
-	LEGACY_INTERFACE = false
 	LOOKANDFEEL_MAP = {
 		:limitation_text	=>	:ltext,
 	}
@@ -59,7 +58,6 @@ class LimitationTextsComposite < HtmlGrid::Composite
 		[0,1]	=> 2,
 		[0,2]	=> 2,
 	}
-	LEGACY_INTERFACE = false
 	def title_limitation_texts(model)
 		unless(model.empty?)
 			@lookandfeel.lookup(:title_limitation_texts, 

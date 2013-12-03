@@ -50,7 +50,6 @@ class MiniFiComposite < HtmlGrid::Composite
     [0,0] => 'th',
     [0,1]	=> 'list',
   }	
-  LEGACY_INTERFACE = false
   def document(model)
     if(model and chapter = model.send(@session.language))
       MiniFiChapter.new(model, @session, self)

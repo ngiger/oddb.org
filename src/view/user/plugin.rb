@@ -20,28 +20,28 @@ class PluginInnerComposite < HtmlGrid::Composite
 	}
 	LABELS = false
 	DEFAULT_CLASS = HtmlGrid::Value
-	def plugin_javascript(model, session)
+	def plugin_javascript(model, session = @session)
 		link = HtmlGrid::Link.new(:plugin_javascript, model, session, self)
 		link.href = "javascript:addEngine('oddb.org','gif','Health')"
 		link.label = true
 		link.set_attribute('class', 'list')
 		link
 	end
-	def plugin_download_src(model, session)
+	def plugin_download_src(model, session = @session)
 		link = HtmlGrid::Link.new(:plugin_download_src, model, session, self)
 		link.href = @lookandfeel.resource_global(:plugin_download_src)
 		link.label = true
 		link.set_attribute('class', 'list')
 		link
 	end
-	def plugin_download_gif(model, session)
+	def plugin_download_gif(model, session = @session)
 		link = HtmlGrid::Link.new(:plugin_download_gif, model, session, self)
 		link.href = @lookandfeel.resource_global(:plugin_download_gif)
 		link.label = true
 		link.set_attribute('class', 'list')
 		link
 	end
-				def plugin_description(model, session)
+				def plugin_description(model, session = @session)
 					link = HtmlGrid::Link.new(:plugin_description, model, @session, self)
 					if(@lookandfeel.language == 'de')
 					link.href =  "http://wiki.oddb.org/wiki.php?pagename=ODDB.Direktsuche"

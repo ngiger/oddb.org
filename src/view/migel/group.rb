@@ -50,7 +50,6 @@ class GroupInnerComposite < HtmlGrid::Composite
 	}
 	LABELS = true
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def description(model, key = :descr)
 		value = HtmlGrid::Value.new(key, model, @session, self)
 		if(model)
@@ -74,7 +73,6 @@ class GroupComposite < HtmlGrid::Composite
 		[0,2]	=>	'list',
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def subgroups(model)
 		sub = model.subgroups.values
 		if(!sub.empty?)

@@ -23,7 +23,7 @@ module SubstrateList
 	DEFAULT_CLASS = HtmlGrid::Value
 	DEFAULT_HEAD_CLASS = 'subheading'
 	SORT_HEADER = false
-	def substrates(model, session)
+	def substrates(model, session = @session)
 		txt = HtmlGrid::Text.new(:substrates, model, session, self)
 		txt.label = false 
 		txt.value = model.cyp_id 
@@ -75,7 +75,6 @@ class ActiveFormForm < View::Form
 	}
 	EVENT = :assign
 	LABELS = false
-	LEGACY_INTERFACE = false
 	def effective_label(model)
 		if(model.is_effective_form?)
 			@lookandfeel.lookup(:effective_form_self)
@@ -103,7 +102,7 @@ class DescriptionForm < View::DescriptionForm
 	def languages
 		@lookandfeel.languages + ['lt', 'synonym_list']
 	end
-	def synonym_list(model, session)
+	def synonym_list(model, session = @session)
 		input = DEFAULT_CLASS.new(:synonym_list, model, session, self)
 		input.value = model.synonyms.join(', ')
 		input
@@ -118,7 +117,6 @@ class ConnectionKeys < HtmlGrid::List
 		[0,0]	=>	'list',
 	}	
 	CSS_CLASS = 'composite'
-	LEGACY_INTERFACE = false
 	DEFAULT_HEAD_CLASS = 'subheading'
 	SORT_HEADER = false
 	def connection_key(model)
@@ -164,23 +162,23 @@ class OuterComposite < HtmlGrid::Composite
 		[0,6]	=>	2,
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	def connection_keys(model, session)
+	def connection_keys(model, session = @session)
 		conn_keys = model.connection_keys
 		unless(conn_keys.empty?)
 			View::Substances::ConnectionKeys.new(conn_keys, session, self)
 		end
 	end
-	def substance_name(model, session)
+	def substance_name(model, session = @session)
 		model.name
 	end
-	def substrate_connections(model, session)
+	def substrate_connections(model, session = @session)
 		unless(model.substrate_connections.nil?)
 			connections = model.substrate_connections.values
 			values = PointerArray.new(connections, model.pointer)
 			View::Substances::Substrates.new(values, session, self)
 		end
 	end
-	def sequences(model, session)
+	def sequences(model, session = @session)
 		sequences = model.sequences
 		Sequences.new(sequences, session, self)
 	end

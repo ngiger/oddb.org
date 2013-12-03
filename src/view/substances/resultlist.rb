@@ -45,7 +45,7 @@ class ResultList < View::FormList
 	SORT_DEFAULT = :name
 	SORT_REVERSE = false
 	SORT_HEADER = false
-	def name(model, session)
+	def name(model, session = @session)
 		link = View::PointerLink.new(:name, model, session, self)
     link.href = @lookandfeel._event_url(:substance, {:oid => model.oid })
 		link

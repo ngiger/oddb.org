@@ -32,7 +32,6 @@ class VaccinesComposite < HtmlGrid::Composite
 		[0,1]	=> 2,
 		[0,2]	=> 2,
 	}
-	LEGACY_INTERFACE = false
 	def title_vaccines(model)
 		unless(model.empty?)
 			@lookandfeel.lookup(:title_vaccines, 

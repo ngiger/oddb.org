@@ -221,7 +221,6 @@ module ODDB
         [1,2]  =>  :submit,
       }
       LABELS = true
-      LEGACY_INTERFACE = false
       SYMBOL_MAP = { }
       CSS_CLASS = 'composite tundra'
       CSS_MAP = {
@@ -289,7 +288,7 @@ module ODDB
         offset = super(model, offset)
         offset
       end
-      def add(model, session)
+      def add(model, session = @session)
         link = HtmlGrid::Link.new(:plus, model, session, self)
         link.set_attribute('title', @lookandfeel.lookup(:create_part))
         link.css_class = 'create square'
@@ -297,7 +296,7 @@ module ODDB
         link.onclick = "replace_element('#{css_id}', '#{url}');"
         link
       end
-      def delete(model, session)
+      def delete(model, session = @session)
         link = HtmlGrid::Link.new(:minus, model, session, self)
         link.set_attribute('title', @lookandfeel.lookup(:delete))
         link.css_class = 'delete square'
@@ -306,14 +305,14 @@ module ODDB
         link.onclick = "replace_element('#{css_id}', '#{url}');"
         link
       end
-      def link_name(model, session)
+      def link_name(model, session = @session)
         input = HtmlGrid::Input.new("fi_link_name[#{@list_index}]", model, session, self)
         input.set_attribute('title', 'Link Name')
         input.set_attribute('style', 'width:300px;')
         input.value = model.send(:name) if model
         input
       end
-      def link_url(model, session)
+      def link_url(model, session = @session)
         input = HtmlGrid::Input.new("fi_link_url[#{@list_index}]", model, session, self)
         input.set_attribute('title', 'Link')
         input.set_attribute('style', 'width:600px;')
@@ -324,7 +323,7 @@ module ODDB
         end
         input
       end
-      def link_created(model, session)
+      def link_created(model, session = @session)
         input = HtmlGrid::Input.new("fi_link_created[#{@list_index}]", model, session, self)
         input.set_attribute('type', 'hidden')
           input.value = model.send(:created)
@@ -350,14 +349,14 @@ module ODDB
       }
       CSS_ID = 'paths'
       DEFAULT_CLASS = HtmlGrid::InputText
-      def shorten_path(model, session)
+      def shorten_path(model, session = @session)
         input = HtmlGrid::Input.new("fi_path_shorten_path", model, session, self)
         input.set_attribute('title', 'Path')
         input.set_attribute('style', 'width:300px;')
         input.value = model.send(:shorten_path)
         input
       end
-      def origin_path(model, session)
+      def origin_path(model, session = @session)
         text = HtmlGrid::Value.new('origin_path', model, session)
         text.value = ' => ' + model.send(:origin_path)
         input = HtmlGrid::Input.new("fi_path_origin_path", model, session, self)
@@ -365,7 +364,7 @@ module ODDB
         input.value = model.send(:origin_path)
         [text, input]
       end
-      def path_created(model, session)
+      def path_created(model, session = @session)
         input = HtmlGrid::Input.new("fi_path_created", model, session, self)
         input.set_attribute('type', 'hidden')
         input.value = model.send(:created)
@@ -373,7 +372,6 @@ module ODDB
       end
     end
     class EditLinkForm < Form
-      LEGACY_INTERFACE = false
       COMPONENTS = {
         [0,0] => Links,
         [0,1] => :submit,
@@ -395,7 +393,6 @@ module ODDB
     end
     class EditPathForm < Form
 	    include HtmlGrid::ErrorMessage
-      LEGACY_INTERFACE = false
       COMPONENTS = {
         [0,0] => Path,
         [0,1] => :submit,

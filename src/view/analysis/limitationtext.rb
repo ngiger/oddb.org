@@ -14,7 +14,7 @@ class LimitationTextInnerComposite < HtmlGrid::Composite
     [0,0] => :limitation_text
   }
 	DEFAULT_CLASS = View::Chapter
-  def limitation_text(model, session)
+  def limitation_text(model, session = @session)
     lang = @session.language.intern
     if model and model.respond_to?(lang.to_sym) and lim = model.send(lang) and lim.respond_to?(:gsub)
       lim.gsub(/^Limitation: /,'')
@@ -31,7 +31,7 @@ class LimitationTextComposite < HtmlGrid::Composite
 		[0,0] => 'th',
 		[0,1] => 'list',
 	}	
-	def limitation_text_title(model, session)
+	def limitation_text_title(model, session = @session)
     if model and model.respond_to?(:pointer) and lim_ptr = model.pointer\
       and pos_ptr = lim_ptr.parent and position = pos_ptr.resolve(@session.app)\
       and position.respond_to?(:description)

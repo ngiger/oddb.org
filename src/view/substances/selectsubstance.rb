@@ -41,7 +41,6 @@ class SelectSubstanceComposite < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0]	=>	'th',
 	}
-	LEGACY_INTERFACE = false
 	def source_name(model)
 		model.source.name
 	end

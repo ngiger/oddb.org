@@ -11,7 +11,6 @@ module ODDB
 		module Ajax
 class SwissmedicCat < HtmlGrid::Composite
 	COMPONENTS = {}
-	LEGACY_INTERFACE = false
 	DEFAULT_CLASS = HtmlGrid::Value
 	SYMBOL_MAP = {
 		:registration_date	=>	HtmlGrid::DateValue,

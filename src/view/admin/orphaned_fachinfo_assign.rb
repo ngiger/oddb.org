@@ -37,7 +37,7 @@ class OrphanedFachinfoRegistrations < View::FormList
 		super
 		error_message()
 	end
-	def checkbox(model, session)
+	def checkbox(model, session = @session)
 		name = "pointers[#{@list_index}]" 
 		check = HtmlGrid::InputCheckbox.new(name, model, session, self)
 		check.value = model.pointer
@@ -78,10 +78,10 @@ class OrphanedFachinfoAssignComposite < HtmlGrid::Composite
 	CSS_CLASS = 'composite'
 	DEFAULT_CLASS = HtmlGrid::Value
 	DEFAULT_HEAD_CLASS = 'th'
-	def registrations(model, session)
+	def registrations(model, session = @session)
 		View::Admin::OrphanedFachinfoRegistrations.new(@model.registrations, session, self)
 	end
-	def languages(model, session)
+	def languages(model, session = @session)
 		begin 
 			super(model.languages, session) 
 		rescue StandardError => e

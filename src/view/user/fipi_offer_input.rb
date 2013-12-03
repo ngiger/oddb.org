@@ -27,7 +27,7 @@ class FiPiRadioButtons < HtmlGrid::List
 	SORT_HEADER = false 
 	SORT_REVERSE = false
 	STRIPED_BG = false 
-	def radio_text(model, session)
+	def radio_text(model, session = @session)
 		case model.name[0,2]
 		when 'fi'
 			price = FI_UPLOAD_PRICES[:processing]
@@ -40,7 +40,7 @@ class FiPiRadioButtons < HtmlGrid::List
 			@lookandfeel.lookup(model.value.intern, "0")
 		end
 	end
-	def radio_button(model, session)
+	def radio_button(model, session = @session)
 		radio = HtmlGrid::InputRadio.new(model.name, model, session)
 		radio.value = model.value
 		radio.set_attribute('checked', model.checked?)
@@ -90,7 +90,7 @@ class FiPiOfferInputForm < View::Form
 	} 
 	EVENT = :calculate_offer
 	FORM_METHOD = 'POST'
-	def fi_quantity_txt(model, session)
+	def fi_quantity_txt(model, session = @session)
 		text = HtmlGrid::RichText.new(model, session, self)
 		text << @lookandfeel.lookup(:fi_quantity0)
 		span = HtmlGrid::Span.new(model, session, self)
@@ -103,14 +103,14 @@ class FiPiOfferInputForm < View::Form
 		text << @lookandfeel.lookup(:fi_quantity2)
 		text
 	end
-	def fi_update(model, session)
+	def fi_update(model, session = @session)
 		fi_upd = 'update_autonomous' # set default
 		fi_upd = model.fi_update if(model.respond_to?(:fi_update))
 		radio1 = RadioButton.new('fi_update', 'update_ywesee', fi_upd)
 		radio2 = RadioButton.new('fi_update', 'update_autonomous', fi_upd)
 		View::User::FiPiRadioButtons.new([ radio1, radio2 ], session)	
 	end
-	def pi_quantity_txt(model, session)
+	def pi_quantity_txt(model, session = @session)
 		text = HtmlGrid::RichText.new(model, session, self)
 		text << @lookandfeel.lookup(:pi_quantity0)
 		span = HtmlGrid::Span.new(model, session, self)
@@ -123,18 +123,18 @@ class FiPiOfferInputForm < View::Form
 		text << @lookandfeel.lookup(:pi_quantity2)
 		text
 	end
-	def pi_update(model, session)
+	def pi_update(model, session = @session)
 		pi_upd = 'update_autonomous' # set default
 		pi_upd = model.pi_update if(model.respond_to?(:pi_update))
 		radio1 = RadioButton.new('pi_update', 'update_ywesee', pi_upd)
 		radio2 = RadioButton.new('pi_update', 'update_autonomous', pi_upd)
 		View::User::FiPiRadioButtons.new([ radio1, radio2 ], session)	
 	end
-	def fi_activation_charge_value(model, session)
+	def fi_activation_charge_value(model, session = @session)
 		price = FI_UPLOAD_PRICES[:activation]
 		@lookandfeel.lookup(:swiss_francs, price.to_s)
 	end
-	def pi_activation_charge_value(model, session)
+	def pi_activation_charge_value(model, session = @session)
 		price = PI_UPLOAD_PRICES[:activation]
 		@lookandfeel.lookup(:swiss_francs, price.to_s)
 	end
@@ -161,31 +161,31 @@ class FiPiOfferInputComposite < HtmlGrid::Composite
 		[0,3]	=>	'list',
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	def amzv_link(model, session)
+	def amzv_link(model, session = @session)
 		link = HtmlGrid::Link.new(:azmv, model, session, self)
 		link.href = @lookandfeel.lookup(:amzv_href)
 		link.value = @lookandfeel.lookup(:amzv)
 		link.set_attribute('class', 'th')
 		link
 	end
-	def amzv_article13_link(model, session)
+	def amzv_article13_link(model, session = @session)
 		link = HtmlGrid::Link.new(:azmv_article13, model, session, self)
 		link.href = @lookandfeel.lookup(:amzv_article13_href)
 		link.value = @lookandfeel.lookup(:amzv_article13)
 		link.set_attribute('class', 'th')
 		link
 	end
-	def amzv_article14_link(model, session)
+	def amzv_article14_link(model, session = @session)
 		link = HtmlGrid::Link.new(:azmv_article14, model, session, self)
 		link.href = @lookandfeel.lookup(:amzv_article14_href)
 		link.value = @lookandfeel.lookup(:amzv_article14)
 		link.set_attribute('class', 'th')
 		link
 	end
-	def pi_upload_link(model, session)
+	def pi_upload_link(model, session = @session)
 		create_link(:pi_upload_link, 'http://wiki.oddb.org/wiki.php?pagename=ODDB.Pi-Upload')
 	end
-	def fi_upload_link(model, session)
+	def fi_upload_link(model, session = @session)
 		create_link(:fi_upload_link, 'http://wiki.oddb.org/wiki.php?pagename=ODDB.Fi-Upload')
 	end
 	def create_link(text_key, href)
@@ -194,7 +194,7 @@ class FiPiOfferInputComposite < HtmlGrid::Composite
 		link.set_attribute('class', 'list')
 		link
 	end
-	def fipi_offer_input_explanation(model, session)
+	def fipi_offer_input_explanation(model, session = @session)
 		text = HtmlGrid::RichText.new(model, session, self)
 		link = HtmlGrid::Link.new(:ywesee, model, session, self)
 		link.href	= @lookandfeel.lookup(:fipi_cost_link)

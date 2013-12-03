@@ -29,7 +29,6 @@ class DDDPriceTable < HtmlGrid::Composite
 		[0,2,2]		=> 'list nowrap' 
 	}
 	LABELS = true
-	LEGACY_INTERFACE = false
 	DEFAULT_CLASS = HtmlGrid::Value
 	def ddd_oral(model)
 		if(model && (atc = model.atc_class) && (ddd = atc.ddd('O')) && model.dose && ddd.dose)
@@ -95,7 +94,6 @@ class DDDPriceComposite < HtmlGrid::Composite
   CSS_MAP = {
     [0,0] => 'th',
   }
-  LEGACY_INTERFACE = false
   def init
     if @lookandfeel.enabled?(:ddd_chart)
       components.store [0,2], :ddd_chart

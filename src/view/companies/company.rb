@@ -101,7 +101,6 @@ class UnknownCompanyInnerComposite < HtmlGrid::Composite
 		[0,6,2,3]	=>	'list',
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def address(model)
     Address.new(model.address(0), @session, self) if model
 	end
@@ -141,7 +140,6 @@ class UserCompanyForm < View::Form
 		[1,4,3,8]	=>	'standard',
 	}
 	LABELS = true
-	LEGACY_INTERFACE = false
 	SYMBOL_MAP = {
 		:nbsp									=>	HtmlGrid::Text,
 		:address_header				=>	HtmlGrid::Text,
@@ -440,7 +438,6 @@ class UnknownCompanyComposite < HtmlGrid::Composite
 		[0,0]	=>	'th',
 		[1,1]	=>	'logo right',
 	}
-  LEGACY_INTERFACE = false
 	def company_name(model, session=@session)
 		name = HtmlGrid::Value.new('name', model, session, self)
 	end
@@ -458,7 +455,6 @@ class CompanyComposite < HtmlGrid::Composite
 		:inactive_packages_label => HtmlGrid::LabelText,
 		:users         => HtmlGrid::LabelText,
 	}
-  LEGACY_INTERFACE = false
   def inactive_packages(model, session=@session)
     InactivePackages.new(model.inactive_packages, @session, self)
   end

@@ -21,7 +21,6 @@ module ODDB
 			}
 			OMIT_HEADER = true
 			DEFAULT_CLASS = HtmlGrid::Value
-			LEGACY_INTERFACE = false
 			SORT_HEADER = false
 			SORT_REVERSE = true
 			SORT_DEFAULT = :time

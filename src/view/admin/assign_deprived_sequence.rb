@@ -62,7 +62,7 @@ class AssignDeprivedSequenceForm < View::FormList
 		offset = resolve_offset(offset, self::class::OFFSET_STEP)
 		super(model, offset)
 	end
-	def patinfo_pointer(model, session)
+	def patinfo_pointer(model, session=@session)
 		if(model == @model.sequence \
 			&& @session.allowed?(:patinfo_shadow))
 			link = HtmlGrid::Link.new(:shadow, model, session, self)

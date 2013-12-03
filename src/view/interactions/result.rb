@@ -41,16 +41,16 @@ class ResultForm < View::Form
 		[1,1]	=>	'search',	
 		[0,3]	=>	'list bg',	
 	}
-	def interaction_basket(model, session)
+	def interaction_basket(model, session = @session)
 		get_event_button(:interaction_basket, :substance_ids => @session.interaction_basket_ids)
 	end
-	def interaction_basket_link(model, session)
+	def interaction_basket_link(model, session = @session)
 		link = HtmlGrid::Link.new(:interaction_basket, model, session, self)
 		link.href = @session.interaction_basket_link
 		link.label = true
 		link
 	end
-	def title_found(model, session)
+	def title_found(model, session = @session)
     if session.state.respond_to?(:object_count)
       query = session.persistent_user_input(:search_query)
       @lookandfeel.lookup(:title_found, query, session.state.object_count)
@@ -79,7 +79,7 @@ class EmptyResultForm < HtmlGrid::Form
 	SYMBOL_MAP = {
 		:search_query		=>	View::SearchBar,	
 	}
-	def title_none_found(model, session)
+	def title_none_found(model, session = @session)
 		query = session.persistent_user_input(:search_query)
 		@lookandfeel.lookup(:title_none_found, query)
 	end

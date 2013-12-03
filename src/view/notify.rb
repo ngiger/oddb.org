@@ -49,7 +49,6 @@ module ODDB
 			}
 			CSS_CLASS = 'component'
 			LABELS = true
-			LEGACY_INTERFACE = false
       LOOKANDFEEL_MAP = {
         :name => :name_sender,
       }
@@ -90,7 +89,6 @@ module ODDB
 		class NotifyForm < HtmlGrid::Form
       include NotifyItem
 			EVENT = :notify_send
-			LEGACY_INTERFACE = false
       COMPONENTS = {
         [0,0]	  =>	NotifyInnerComposite,
         [0,2]   =>  :notify_item,
@@ -104,7 +102,6 @@ module ODDB
     end
     class NotifyComposite < HtmlGrid::Composite
       include NotifyTitle
-			LEGACY_INTERFACE = false
       CSS_CLASS = 'composite'
       COMPONENTS = {
         [0,0]	  =>	View::SearchForm,
@@ -122,7 +119,6 @@ module ODDB
       include NotifyItem
       DEFAULT_CLASS = HtmlGrid::Value
       LABELS = false
-      LEGACY_INTERFACE = false
       COMPONENTS = {
         [0,0]	  =>	:notify_message,
         [0,2]   =>  :notify_item,

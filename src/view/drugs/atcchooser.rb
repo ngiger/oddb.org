@@ -101,7 +101,7 @@ class AtcChooserList < HtmlGrid::List
 		}
 		offset
 	end	
-	def description(mdl, session)
+	def description(mdl, session = @session)
 		link = HtmlGrid::Link.new(:atcchooser, mdl, @session, self)
 		event, args, css = if(result_link?(mdl))
 			[
@@ -122,7 +122,7 @@ class AtcChooserList < HtmlGrid::List
 		link.attributes["class"] = css + mdl.level.to_s
 		link
 	end
-	def edit(model, session)
+	def edit(model, session = @session)
 		link = View::PointerLink.new(:code, model, session, self)
 		link.value = @lookandfeel.lookup :edit_atc_class
 		link.attributes['class'] = 'small'

@@ -24,7 +24,6 @@ class LimitForm < View::Form
 		[1,0,1,4]	=>	'small top',
 	}
 	LABELS = true
-	LEGACY_INTERFACE = false
 	EVENT = :proceed_poweruser
 	def init
 		super
@@ -97,7 +96,6 @@ class LimitComposite < HtmlGrid::Composite
 		[0,11]	=>	'list',
 	}
 	CSS_CLASS = 'composite'
-	LEGACY_INTERFACE = false
 	def query_limit(model)
 		@lookandfeel.lookup(:query_limit, 
 			@session.class.const_get(:QUERY_LIMIT))

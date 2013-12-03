@@ -21,7 +21,6 @@ class ResultComposite < HtmlGrid::Composite
 		[1,0]		=>	View::SearchForm,
 		[0,1]		=>	View::Substances::ResultList,
 	}
-	LEGACY_INTERFACE = false
 	def title_found(model)
 		query = @session.persistent_user_input(:search_query)
 		@lookandfeel.lookup(:title_found, query, @session.state.object_count)
@@ -46,7 +45,6 @@ class EmptyResultForm < HtmlGrid::Form
 	CSS_CLASS = 'composite'
 	EVENT = :search
 	FORM_METHOD = 'GET'
-	LEGACY_INTERFACE = false
 	SYMBOL_MAP = {
 		:search_query		=>	View::SearchBar,	
 	}

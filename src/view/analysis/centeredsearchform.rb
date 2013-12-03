@@ -28,12 +28,12 @@ class CenteredSearchComposite < View::CenteredSearchComposite
 		[0,0,1,7]	=>	'list center',
 	}
 	COMPONENT_CSS_MAP = {}
-	def download_analysis(model, session) 
+	def download_analysis(model, session = @session) 
 		link = HtmlGrid::Link.new(:download_analysis1, model, session, self)
 #		link.href = something
 		link
 	end
-	def analysis_count(model, session)
+	def analysis_count(model, session = @session)
 		@session.analysis_count
 	end
 end

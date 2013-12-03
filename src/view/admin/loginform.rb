@@ -28,7 +28,6 @@ class LoginForm < HtmlGrid::Form
 	SYMBOL_MAP = {
 		:pass	       =>	HtmlGrid::Pass,
 	}
-	LEGACY_INTERFACE = false
 	event_link :password_lost
 	def email(model)
 		input = HtmlGrid::InputText.new(:email, model, @session, self)

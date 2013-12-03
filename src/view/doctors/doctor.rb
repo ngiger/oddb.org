@@ -104,7 +104,6 @@ class DoctorInnerComposite < HtmlGrid::Composite
     [0,0,4,8] => 'list',
   }
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def specialities(model)
 		spc = model.specialities
 		spc.join('<br>') unless spc.nil?
@@ -168,7 +167,6 @@ class DoctorForm < View::Form
     [0,2,1,2] => 'list top',
   }
   LABELS = true
-  LEGACY_INTERFACE = false
   def init
     super
     error_message
@@ -216,7 +214,7 @@ class DoctorExperienceForm < View::Form
     super
     error_message
   end
-  def title(model, session)
+  def title(model, session = @session)
     input = HtmlGrid::InputText.new(:title, model, session, self)
     title_text = session.lookandfeel.lookup(:experience_title)
     input.set_attribute('onFocus', "if (this.value == '#{title_text}') { value = '' };")
@@ -228,7 +226,7 @@ class DoctorExperienceForm < View::Form
     end
     input
   end
-  def description(model, session)
+  def description(model, session = @session)
     textarea = HtmlGrid::Textarea.new(:description, model, session, self)
     textarea_text = session.lookandfeel.lookup(:experience_text)
     textarea.set_attribute('onFocus', "if (this.value == '#{textarea_text}') { value = '' };")
@@ -240,14 +238,14 @@ class DoctorExperienceForm < View::Form
     end
     textarea
   end
-  def captcha(model, session)
+  def captcha(model, session = @session)
     input = super(model)
     captcha_text = session.lookandfeel.lookup(:captcha)
     input.set_attribute('onFocus', "if (this.value == '#{captcha_text}') { value = '' };")
     input.set_attribute('onBlur',  "if (this.value == '') { value = '#{captcha_text}' };")
     input.set_attribute('size', '30')
     input.value = captcha_text
-    button = submit(model, session)
+    button = submit(model, session = @session)
     button.set_attribute('value', session.lookandfeel.lookup(:update))
     [input, '&nbsp;', button]
   end
@@ -286,7 +284,6 @@ class DoctorComposite < HtmlGrid::Composite
   }
   CSS_CLASS = 'composite'
   DEFAULT_CLASS = HtmlGrid::Value
-  LEGACY_INTERFACE = false
 end
 class RootDoctorComposite < DoctorComposite
   COMPONENTS = {

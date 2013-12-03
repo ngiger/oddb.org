@@ -40,7 +40,7 @@ class MergeCompaniesComposite < HtmlGrid::Composite
 		[0,0]	=>	'th',
 	}
 	LABELS = true
-	def merge_companies(model, session)
+	def merge_companies(model, session = @session)
 		@lookandfeel.lookup(:merge_companies, @model.registration_count)
 	end
 end

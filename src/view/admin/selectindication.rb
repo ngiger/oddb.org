@@ -33,13 +33,13 @@ class SelectIndicationForm < HtmlGrid::Form
 		end
 		super
 	end
-	def pointer(model, session)
+	def pointer(model, session = @session)
 		HtmlGrid::InputRadio.new(:pointer, model.new_indication, session, self)
 	end
-	def	selection_list(model, session)
+	def	selection_list(model, session = @session)
 		SelectionList.new(model.selection, session, self)
 	end
-	def user_input(model, session)
+	def user_input(model, session = @session)
 		model.user_input[:indication]
 	end
 end		
@@ -54,7 +54,7 @@ class SelectIndicationComposite < HtmlGrid::Composite
 		[0,0]	=>	'th',
 		[0,1]	=>	'subheading',
 	}
-	def registration_name(model, session)
+	def registration_name(model, session = @session)
 		reg = model.registration
 		[
 			reg.name_base, 

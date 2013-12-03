@@ -83,7 +83,6 @@ class ProductInnerComposite < HtmlGrid::Composite
   }
   LABELS = true
   DEFAULT_CLASS = HtmlGrid::Value
-  LEGACY_INTERFACE = false
   @@migel_pattern = /Pos(?:ition|\.)?\s*(\d\d)(?:\.(\d\d)(?:\.(\d\d\.\d\d\.\d))?)?/u
   def description(model, key = :migel_product)
     value = HtmlGrid::Value.new(key, model, @session, self)
@@ -164,7 +163,6 @@ class ProductComposite < HtmlGrid::Composite
     [0,2] => 'list',
   }
   DEFAULT_CLASS = HtmlGrid::Value
-  LEGACY_INTERFACE = false
   def accessories(model)
     if acc = model.accessories and !acc.empty?
       AccessoryList.new(acc, @session, self)

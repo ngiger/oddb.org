@@ -37,12 +37,12 @@ class CenteredSearchComposite < View::CenteredSearchComposite
 	COMPONENT_CSS_MAP = {
 		[0,8]	=>	'legal-note',
 	}
-	def new_registration(model, session)
+	def new_registration(model, session = @session)
 		link = HtmlGrid::Link.new(:new_registration, model, @session, self)
 		link.href = @lookandfeel._event_url(:new_registration)
 		link
 	end
-	def substance_count(model, session)
+	def substance_count(model, session = @session)
 		@session.app.substance_count
 	end
 end	

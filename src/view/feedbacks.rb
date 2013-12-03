@@ -32,7 +32,6 @@ class FeedbackForm < Form
 	CSS_CLASS = 'composite top'
 	LABELS = true
 	EVENT = :update
-	LEGACY_INTERFACE = false
 	def init
     if(@session.state.passed_turing_test)
       components.update([1,15]=>:submit)
@@ -120,23 +119,23 @@ class FeedbackList < HtmlGrid::List
 	OFFSET_STEP = [0,7]
 	BACKGROUND_SUFFIX =	' bg'
   SORT_DEFAULT = nil
-	def experience(model, session)
+	def experience(model, session = @session)
 		result(model.experience)
 	end
-	def show_email(model, session)
+	def show_email(model, session = @session)
 		if(model.show_email)
 			model.email
 		else
 			@lookandfeel.lookup(:email_text)
 		end
 	end
-	def recommend(model, session)
+	def recommend(model, session = @session)
 		result(model.recommend)
 	end
-	def impression(model, session)
+	def impression(model, session = @session)
 		result(model.impression)
 	end
-	def helps(model, session)
+	def helps(model, session = @session)
 		result(model.helps)
 	end
 	def result(bool)
@@ -152,7 +151,7 @@ class FeedbackList < HtmlGrid::List
 		div.css_class = css
 		div
 	end
-	def time(model, session)
+	def time(model, session = @session)
 		model.time.strftime(@lookandfeel.lookup(:time_format))
 	end
 end
@@ -166,7 +165,6 @@ class FeedbackPager < HtmlGrid::Composite
 		[4,0]	=>  :pages,
 		[5,0]	=>  :fb_navigation_next,
 	}
-	LEGACY_INTERFACE = false
 	CSS_MAP = {
 		[0,0,6] => 'pager',
 	}	

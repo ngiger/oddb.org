@@ -25,7 +25,6 @@ class PatinfoList < HtmlGrid::List
 	}
 	SORT_DEFAULT = false
 	SORT_HEADER = false
-	LEGACY_INTERFACE = false
 	include View::AlphaHeader
 	include View::AdditionalInformation
 	include View::ResultColors
@@ -55,7 +54,6 @@ class PatinfosComposite < HtmlGrid::Composite
 		[0,1]	=> 2,
 		[0,2]	=> 2,
 	}
-	LEGACY_INTERFACE = false
 	def title_patinfos(model)
 		unless(model.empty?)
 			@lookandfeel.lookup(:title_patinfos, 

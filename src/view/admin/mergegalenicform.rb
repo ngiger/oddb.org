@@ -28,7 +28,7 @@ class MergeGalenicFormForm < View::Form
 		super
 		error_message()
 	end
-	def description(model, offset)
+	def description(model, session= @session)
 		model.description(@lookandfeel.language)
 	end
 end
@@ -43,7 +43,7 @@ class MergeGalenicFormComposite < HtmlGrid::Composite
 		[0,0]	=>	'th',
 	}
 	LABELS = true
-	def merge_galenic_form(model, session)
+	def merge_galenic_form(model, session= @session)
 		@lookandfeel.lookup(:merge_galenic_form, @model.sequence_count)
 	end
 end

@@ -16,17 +16,17 @@ class OrphanedLanguagesList < HtmlGrid::List
 		[3,0]		=>	'small',
 	}
 	SORT_DEFAULT = :language
-	def language(model, session)
+	def language(model, session = @session)
 		@lookandfeel.lookup(model.language)	
 	end
-	def name(model, session)
+	def name(model, session = @session)
 		begin
 			model.document.name
 		rescue RuntimeError => e
 			e.message
 		end
 	end
-	def preview(model, session)
+	def preview(model, session = @session)
 		link = HtmlGrid::PopupLink.new(:preview, model, session, self)
 		args = {
 			"language_select" => model.language,
@@ -48,7 +48,7 @@ module OrphanedLanguages
 			super(document)
 		end
 	end
-	def languages(model, session)
+	def languages(model, session = @session)
 		if(model.is_a?(Hash))
 			listmodel = model.collect { |lang, document|	
 				OrphanedLanguageFacade.new(lang, document)

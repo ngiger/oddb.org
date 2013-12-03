@@ -39,7 +39,7 @@ class OrphanedPatinfoSequences < View::FormList
 		super
 		error_message()
 	end
-	def checkbox(model, session)
+	def checkbox(model, session = @session)
 		name = "pointers[#{@list_index}]" 
 		check = HtmlGrid::InputCheckbox.new(name, model, session, self)
 		check.value = model.pointer
@@ -72,10 +72,10 @@ class OrphanedPatinfoAssignComposite < HtmlGrid::Composite
 	CSS_CLASS = 'composite'
 	DEFAULT_CLASS = HtmlGrid::Value
 	DEFAULT_HEAD_CLASS = 'th'
-	def sequences(model, session)
+	def sequences(model, session = @session)
 		View::Admin::OrphanedPatinfoSequences.new(@model.sequences, session, self)
 	end
-	def languages(model, session)
+	def languages(model, session = @session)
 		begin 
 			super(model.languages, session) 
 		rescue NoMethodError => e

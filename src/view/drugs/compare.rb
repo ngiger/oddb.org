@@ -77,7 +77,7 @@ class CompareList < HtmlGrid::List
 			end
 		}
 	end
-	def active_agents(model, session)
+	def active_agents(model, session = @session)
 		model.active_agents.join(',<br>')
 	end
 	def compose_empty_list(offset)
@@ -96,7 +96,7 @@ class CompareList < HtmlGrid::List
 	def package_line(offset)
 		_compose(@model.package, offset) if(@model.respond_to? :package)
 	end
-	def price_difference(model, session)
+	def price_difference(model, session = @session)
 		if(diff = model.price_difference)
 			sprintf('%+d%', diff*100.0)
 		end
@@ -211,15 +211,15 @@ class EmptyCompareComposite < HtmlGrid::Composite
 		[0,1,1,2]	=>	'list',
 	}
 	CSS_CLASS = 'composite'
-	def compare_desc0_no_atc(model, session)
+	def compare_desc0_no_atc(model, session = @session)
 		query = model.package.name_base
 		@lookandfeel.lookup(:compare_desc0_no_atc, query)
 	end
-	def compare_desc1_no_atc(model, session)
+	def compare_desc1_no_atc(model, session = @session)
 		query = model.package.name_base
 		@lookandfeel.lookup(:compare_desc1_no_atc, query)
 	end
-	def ywesee_contact_email(model, session)
+	def ywesee_contact_email(model, session = @session)
 		link = HtmlGrid::Link.new(:ywesee_contact_email, model, session, self)
 		link.href = @lookandfeel.lookup(:ywesee_contact_href)
 		link.attributes['class'] = 'text'

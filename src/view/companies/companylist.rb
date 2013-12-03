@@ -100,7 +100,6 @@ class CompaniesComposite < Form
 		[0,0]	=>	'list',
 		[1,0]	=>	'right',
 	}
-  LEGACY_INTERFACE = false
 	def company_list(model, session=@session)
 		self::class::COMPANY_LIST.new(model, @session, self)
 	end
@@ -156,7 +155,7 @@ class EmptyResultForm < HtmlGrid::Form
 	SYMBOL_MAP = {
 		:search_query		=>	View::SearchBar,	
 	}
-	def title_none_found(model, session)
+	def title_none_found(model, session = @session)
 		query = session.persistent_user_input(:search_query)
 		@lookandfeel.lookup(:title_none_found, query)
 	end

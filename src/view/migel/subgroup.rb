@@ -27,7 +27,6 @@ class ProductList < HtmlGrid::List
 	SYMBOL_MAP = {
 		:migel_code	=>	PointerLink,
 	}
-	LEGACY_INTERFACE = false
 	LOOKANDFEEL_MAP = {
 		:migel_code	=>	:title_product,
 		:description	=>	:nbsp,
@@ -74,7 +73,6 @@ class SubgroupInnerComposite < HtmlGrid::Composite
 	}
 	LABELS = true
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def description(model, key = :descr)
 		value = HtmlGrid::Value.new(key, model, @session, self)
 		if(model)
@@ -109,7 +107,6 @@ class SubgroupComposite < HtmlGrid::Composite
 		[0,2]	=>	'list',
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def products(model)
 		prod = model.products.values
 		if(!prod.empty?)

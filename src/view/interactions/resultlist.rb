@@ -42,7 +42,7 @@ class ResultList < HtmlGrid::List
 	DEFAULT_HEAD_CLASS = 'th'
 	SORT_DEFAULT = nil
 	STRIPED_BG = true
-	def interaction_basket_status(model, session)
+	def interaction_basket_status(model, session = @session)
 		if(session.interaction_basket.include?(model))
 			link = HtmlGrid::Link.new(:interaction_basket, model, session, self)
       ids = @session.interaction_basket.collect { |sub| sub.oid }
@@ -52,7 +52,7 @@ class ResultList < HtmlGrid::List
 			link
 		end
 	end
-	def name(model, session)
+	def name(model, session = @session)
 		name = model.send(@session.language)
 		if(session.interaction_basket.include?(model))
 			name
@@ -79,7 +79,7 @@ class ResultList < HtmlGrid::List
 			link
 		end
 	end
-	def search_oddb(model, session)
+	def search_oddb(model, session = @session)
     active_sequences = []
     if model.respond_to?(:sequences) and model.sequences.is_a?(Array)
       active_sequences = model.sequences.select { |seq| 

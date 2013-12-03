@@ -218,20 +218,20 @@ class CenteredSearchComposite < View::CenteredSearchComposite
 		end
 		super
 	end
-	def ddd_count_text(model, session)
+	def ddd_count_text(model, session = @session)
 		create_link(:ddd_count_text, 'http://www.whocc.no/atcddd/')
 	end
-	def sl_count_text(model, session)
+	def sl_count_text(model, session = @session)
 		create_link(:sl_count_text, 
 			'http://bag.e-mediat.net/SL2007.WEb.external/slindex.htm',
 			:limitation_texts)
 	end
-	def fi_count_text(model, session)
+	def fi_count_text(model, session = @session)
 		create_link(:fi_count_text, 
 			'http://wiki.oddb.org/wiki.php?pagename=ODDB.Fi-Upload',
 			:fachinfos)
 	end
-	def pi_count_text(model, session)
+	def pi_count_text(model, session = @session)
 		create_link(:pi_count_text, 
 			'http://wiki.oddb.org/wiki.php?pagename=ODDB.Pi-Upload', 
 			:patinfos)
@@ -253,7 +253,7 @@ class CenteredSearchComposite < View::CenteredSearchComposite
       link
     end
   end
-	def substance_count(model, session)
+	def substance_count(model, session = @session)
 		@session.app.substance_count
 	end
   def search_form(model, session=@session)
@@ -263,13 +263,13 @@ class CenteredSearchComposite < View::CenteredSearchComposite
       View::Drugs::CenteredSearchForm.new(model, session, self)
     end
   end
-	def narcotics(model, session)
+	def narcotics(model, session = @session)
 		link = HtmlGrid::Link.new(:narcotics, model, session, self)
 		link.href = @lookandfeel._event_url(:narcotics)
 		link.set_attribute('class', 'list')
 		link
 	end
-	def vaccines(model, session)
+	def vaccines(model, session = @session)
 		link = HtmlGrid::Link.new(:vaccines, model, session, self)
 		link.href = @lookandfeel._event_url(:vaccines)
 		link.set_attribute('class', 'list')

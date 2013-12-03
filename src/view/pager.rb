@@ -55,7 +55,7 @@ module ODDB
 				super
 			end
 			private
-			def number_link(model, session)
+			def number_link(model, session = @session)
 				page_link(:to_s, model)
 			end
 			def page_link(key, page)
@@ -72,7 +72,7 @@ module ODDB
 					page.send(key)
 				end
 			end
-			def page_number(model, session)
+			def page_number(model, session = @session)
 				page_now = session.state.page
 				@lookandfeel.lookup(:page_number, page_now, model.size)
 			end

@@ -45,7 +45,6 @@ class InteractionsSubstrates < HtmlGrid::List
 	DEFAULT_CLASS = HtmlGrid::Value
 #	SORT_DEFAULT = :substance
 	SUBHEADER = View::Interactions::InteractionsHeader
-  LEGACY_INTERFACE = false
   def active(model, session=@session)
     if model.is_a?(Hash)
       model[:active] + " (" + model[:substance_active] + ")"

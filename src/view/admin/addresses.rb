@@ -26,7 +26,6 @@ class AddressList < HtmlGrid::List
 	}
 	DEFAULT_CLASS = HtmlGrid::Value
 	DEFAULT_HEAD_CLASS = 'th'
-	LEGACY_INTERFACE = false
 	SORT_DEFAULT = :time
 	SORT_REVERSE = true
 	SYMBOL_MAP = {

@@ -42,13 +42,13 @@ class FachinfoConfirmForm < View::FormList
 		@grid.add(back(), *matrix)
 		@grid.set_colspan(*matrix)
 	end
-	def iksnrs (model, session)
+	def iksnrs (model, session= @session)
 		@session.state.iksnrs(model).join(",&nbsp;")
 	end
-	def language(model, session)
+	def language(model, session= @session)
 		@lookandfeel.lookup(@session.state.language)
 	end
-	def preview(model, session)
+	def preview(model, session= @session)
 		link = HtmlGrid::PopupLink.new(:preview, model, session, self)
 		link.href = @lookandfeel.event_url(:preview, \
 			{"index" => @list_index})

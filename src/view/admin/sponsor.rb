@@ -32,7 +32,6 @@ class SponsorForm < View::Form
 		[0,0,2,8]	=>	'list',
 	}
 	LABELS = true
-  LEGACY_INTERFACE = false
 	SYMBOL_MAP = {
 		:sponsor_until	=>	HtmlGrid::InputDate,
 		:logo_file			=>	HtmlGrid::InputFile,

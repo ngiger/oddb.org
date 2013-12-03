@@ -50,13 +50,13 @@ class SelectSubstanceForm < HtmlGrid::Form
 		end
 		super
 	end
-	def pointer(model, session)
+	def pointer(model, session = @session)
 		HtmlGrid::InputRadio.new(:pointer, model.new_substance, session, self)
 	end
-	def	selection_list(model, session)
+	def	selection_list(model, session = @session)
 		SelectionList.new(model.selection, session, self)
 	end
-	def user_input(model, session)
+	def user_input(model, session = @session)
 		model.user_input[:substance]
 	end
 end		
@@ -104,11 +104,11 @@ class SelectSubstanceComposite < HtmlGrid::Composite
 		end
 		super
 	end
-	def agent_name(model, session)
+	def agent_name(model, session = @session)
 		sequence = model.active_agent.sequence
 		[sequence.name, @lookandfeel.lookup(:select_substance)].compact.join('&nbsp;-&nbsp;')	
 	end
-	def assigned_list(model, session)
+	def assigned_list(model, session = @session)
 		View::Admin::AssignedList.new(model.assigned, session, self)	
 	end
 end	

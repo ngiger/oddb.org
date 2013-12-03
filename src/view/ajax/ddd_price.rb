@@ -27,7 +27,6 @@ class DDDPriceTable < HtmlGrid::Composite
 		[0,2,2]		=> 'list nowrap' 
 	}
 	LABELS = true
-	LEGACY_INTERFACE = false
 	DEFAULT_CLASS = HtmlGrid::Value
 	def ddd_oral(model)
 		if(model && (atc = model.atc_class) && (ddd = atc.ddd('O')))

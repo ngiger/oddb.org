@@ -42,7 +42,6 @@ class List < HtmlGrid::List
 		[0,0,7]	=>	'list',
 		[7,0,1]	=>	'list right',
 	}
-	LEGACY_INTERFACE = false
 	LOOKANDFEEL_MAP = {
 		:description => :analysis_description,
     :limitation_text  =>  :ltext,
@@ -97,7 +96,7 @@ class EmptyResultForm < HtmlGrid::Form
 	SYMBOL_MAP = {
 		:search_query	=>	View::SearchBar
 	}
-	def title_none_found(model, session)
+	def title_none_found(model, session = @session)
 		query = session.persistent_user_input(:search_query)
 		@lookandfeel.lookup(:title_none_found, query)
 	end

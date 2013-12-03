@@ -33,7 +33,7 @@ class LimitationTextComposite < HtmlGrid::Composite
 		[0,0] => 'th',
 		[0,1] => 'list',
 	}	
-	def limitation_text_title(model, session)
+	def limitation_text_title(model, session = @session)
 		if(model and pointer = model.pointer and sl_entry = pointer.parent)
 			parent = sl_entry.parent.resolve(session.app)
 			@lookandfeel.lookup(:limitation_text_title, 

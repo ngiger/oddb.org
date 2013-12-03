@@ -15,7 +15,6 @@ class CheckoutComposite < HtmlGrid::Composite
 	CSS_MAP = {
 		[0,0]	=>	'th',
 	}
-	LEGACY_INTERFACE = false
 end
 class Checkout < PublicTemplate
 	CONTENT = CheckoutComposite

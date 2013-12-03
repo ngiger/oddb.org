@@ -88,7 +88,6 @@ class Parts < HtmlGrid::List
   }
   OMIT_HEADER = false
   OMIT_HEAD_TAG = true
-  LEGACY_INTERFACE = false
   LOOKANDFEEL_MAP = { :delete => :example }
   DEFAULT_HEAD_CLASS = nil
   SORT_DEFAULT = nil
@@ -234,10 +233,10 @@ class PackageForm < HtmlGrid::Composite
     input
   end
 =end
-	def delete_item(model, session)
+	def delete_item(model, session = @session)
 		delete_item_warn(model, :w_delete_package)
 	end
-	def sl_entry(model, session)
+	def sl_entry(model, session = @session)
 		unless (model.is_a? Persistence::CreateItem)
 			link = nil
 			if (sl_entry = model.sl_entry)
@@ -349,7 +348,6 @@ class RootPackageComposite < View::Admin::PackageComposite
   include HtmlGrid::FormMethods
   include FormMethods
   TAG_METHOD = :multipart_form
-  LEGACY_INTERFACE = false
 	COMPONENTS = {
 		[0,0]	=>	:package_name,
 		[0,1]	=>	View::Admin::PackageForm,

@@ -20,7 +20,7 @@ class IndicationList < View::DescriptionList
 	SYMBOL_MAP = {
 		:description	=>	View::PointerLink,
 	}
-  def description(model, session)
+  def description(model, session= @session)
     link = View::PointerLink.new(:description, model, session)
     link.href = @lookandfeel._event_url(:indication, {:oid => model.oid})
     link

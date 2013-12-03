@@ -25,22 +25,22 @@ class YamlExportInnerComposite < HtmlGrid::Composite
 		[0,1,1,6]	=>	'list',
 	}
 	EXPORT_FILE = 'oddb.yaml'
-	def yaml_export_gz(model, session)
+	def yaml_export_gz(model, session = @session)
 		link_with_filesize("oddb.yaml.gz")
 	end
-	def yaml_export_zip(model, session)
+	def yaml_export_zip(model, session = @session)
 		link_with_filesize("oddb.yaml.zip")
 	end
-	def yaml_fachinfo_export_gz(model, session)
+	def yaml_fachinfo_export_gz(model, session = @session)
 		link_with_filesize("fachinfo.yaml.gz")
 	end
-	def yaml_fachinfo_export_zip(model, session)
+	def yaml_fachinfo_export_zip(model, session = @session)
 		link_with_filesize("fachinfo.yaml.zip")
 	end
-	def yaml_patinfo_export_gz(model, session)
+	def yaml_patinfo_export_gz(model, session = @session)
 		link_with_filesize("patinfo.yaml.gz")
 	end
-	def yaml_patinfo_export_zip(model, session)
+	def yaml_patinfo_export_zip(model, session = @session)
 		link_with_filesize("patinfo.yaml.zip")
 	end
 end

@@ -25,7 +25,7 @@ class PatinfoDeprivedSequencesList < HtmlGrid::List
 	SORT_DEFAULT = :name
 	STRIPED_BG = true
 	include View::AlphaHeader
-	def nr(model, session)
+	def nr(model, session = @session)
 		link = HtmlGrid::Link.new(:select_seq, model, session, self)
 		hash = { 
 			:pointer					=> model.pointer , 
@@ -42,7 +42,7 @@ class ShadowPatternForm < View::Form
 		[0,0,1]	=>	:submit,
 	}
 	LABELS = false
-	def pattern(model, session)
+	def pattern(model, session = @session)
 		HtmlGrid::InputText.new(:pattern, model, session, self)
 	end
 end

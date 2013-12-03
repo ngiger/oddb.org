@@ -14,7 +14,6 @@ class YusPrivileges < HtmlGrid::List
   COMPONENTS = {
     [0,0] =>  :checkbox,
   }
-  LEGACY_INTERFACE = false
   LABEL = true
   OMIT_HEADER = true
   SORT_DEFAULT = nil
@@ -47,7 +46,6 @@ class YusGroups < HtmlGrid::List
     [0,0] => :checkbox,
     [1,0] => :privileged_until, 
   }
-  LEGACY_INTERFACE = false
   LABEL = true
   OMIT_HEADER = true
   def init
@@ -96,7 +94,6 @@ class EntityForm < Form
   end
   include HtmlGrid::ErrorMessage
   LABELS = true
-  LEGACY_INTERFACE = false
   LOOKANDFEEL_MAP = {
     :name => :email, 
   }
@@ -179,7 +176,6 @@ class EntityForm < Form
   end
 end
 class EntityComposite < HtmlGrid::Composite
-  LEGACY_INTERFACE = false
   COMPONENTS = {
     [0,0] =>  :name,
     [0,1] =>  EntityForm,

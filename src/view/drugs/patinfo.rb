@@ -101,7 +101,7 @@ class PiChapterChooser < HtmlGrid::Composite
       []
     end
 	end
-	def full_text(model, session)
+	def full_text(model, session = @session)
 		if(@model.pointer.skeleton == [:create])
 			@lookandfeel.lookup(:patinfo_all)
 		else
@@ -188,7 +188,7 @@ class PatinfoPreviewComposite < HtmlGrid::Composite
 		[1,0] => 'th right',
 	}	
 	DEFAULT_CLASS = HtmlGrid::Value
-	def patinfo_name(model, session)
+	def patinfo_name(model, session = @session)
 		@lookandfeel.lookup(:patinfo_name, model.name) if model
 	end
 end
@@ -209,7 +209,7 @@ class PatinfoComposite < View::Drugs::PatinfoPreviewComposite
 		[1,0] => 'th right',
 		[0,2] => 'list',
 	}
-	def chapter_chooser(model, session)
+	def chapter_chooser(model, session = @session)
 		if(klass = self.class.const_get(:CHOOSER_CLASS))
 			klass.new(model, session, self)
 		end
@@ -217,7 +217,7 @@ class PatinfoComposite < View::Drugs::PatinfoPreviewComposite
 	def chapter_view(chapter, document)
 		View::Chapter.new(chapter, document, @session, self)
 	end
-	def document(model, session)
+	def document(model, session = @session)
 		document = model.send(session.language)
 		chapter = @session.user_input(:chapter)
 		if(chapter != nil)
@@ -226,7 +226,7 @@ class PatinfoComposite < View::Drugs::PatinfoPreviewComposite
 			View::Drugs::PatinfoInnerComposite.new(document, session, self)
 		end
 	end
-	def patinfo_name(model, session)
+	def patinfo_name(model, session = @session)
 		model = model.send(@session.language)
 		super(model, session)
 	end

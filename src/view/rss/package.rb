@@ -11,7 +11,6 @@ module ODDB
   module View
     module Rss
 class PackageTemplate < HtmlGrid::Template
-  LEGACY_INTERFACE = false
   COMPONENTS = {
     [0,0] => View::Drugs::PackageInnerComposite, 
     [0,1] => :package_feed_link,

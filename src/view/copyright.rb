@@ -20,7 +20,6 @@ module ODDB
 			COMPONENT_CSS_MAP = {
 				[0,0,5] => 'subheading',
 			}
-			LEGACY_INTERFACE = false
 			def oddb_version(model)
 				link = standard_link(:oddb_version, model)
 				link.href = 'http://scm.ywesee.com/?p=oddb.org/.git;a=summary'

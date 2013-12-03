@@ -20,7 +20,6 @@ class InvalidUserComposite < HtmlGrid::Composite
 		[0,0]	=>	'th',
 		[0,1]	=>	'list',
 	}
-	LEGACY_INTERFACE = false
 	def invalid_user_explain(model)
 		lkey = 'query_limit_poweruser_'
 		user = @session.user

@@ -11,7 +11,6 @@ module ODDB
   module View
     module Rss
 class FeedbackTemplate < HtmlGrid::Template
-  LEGACY_INTERFACE = false
   COMPONENTS = {
     [0,0] => :feedback, 
     [0,1] => :feedback_feed_link,

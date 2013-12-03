@@ -94,7 +94,6 @@ class FeedbacksComposite < HtmlGrid::Composite
 		[0,2] => 'top',
 		[1,2]	=> 'component border-left top'
 	}	
-	LEGACY_INTERFACE = false
 	def current_feedback(model)
 		FeedbackForm.new(model.current_feedback, @session, self)
 	end

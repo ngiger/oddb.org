@@ -49,25 +49,25 @@ class HelpComposite < HtmlGrid::Composite
 		[0,15]	=>	'section-title',
 		[0,17]	=>	'section-title',
 	}
-	def contact_email(model, session)
+	def contact_email(model, session = @session)
 		link = HtmlGrid::Link.new(:contact_email, model, session, self)
 		link.href = 'mailto:zdavatz@ywesee.com'
 		link.value = 'zdavatz at ywesee dot com'
 		link
 	end
-	def contact_phone(model, session)
+	def contact_phone(model, session = @session)
 		'01 350 85 86'
 	end
-	def help_agentsearch(model, session)
+	def help_agentsearch(model, session = @session)
 		owner_text(:help_agentsearch)
 	end
-	def help_compsearch(model, session)
+	def help_compsearch(model, session = @session)
 		owner_text(:help_compsearch)
 	end
-	def help_namesearch(model, session)
+	def help_namesearch(model, session = @session)
 		owner_text(:help_namesearch)
 	end
-	def help_possibilities(model, session)
+	def help_possibilities(model, session = @session)
 		owner_text(:help_possibilities)
 	end
 	def owner_text(key)

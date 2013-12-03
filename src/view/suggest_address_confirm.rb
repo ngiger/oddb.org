@@ -19,10 +19,10 @@ class AddressSent < HtmlGrid::Composite
 		[0,0,2] => 'confirm',
 		[0,1] => 'list',
 	}	
-	def address_sent(model, session)
+	def address_sent(model, session = @session)
 		@lookandfeel.lookup(:address_sent)
 	end
-	def go_back(model, session)
+	def go_back(model, session = @session)
 		link = HtmlGrid::Link.new(:address_back, model, session, self)
 		link.href = if doctor = model.address_pointer.parent.resolve(@session.app)
                   if ean13 = doctor.ean13

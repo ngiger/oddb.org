@@ -38,7 +38,6 @@ class DoctorList < HtmlGrid::List
 	DEFAULT_HEAD_CLASS = 'th'
 	SORT_DEFAULT = :name
 	SORT_REVERSE = false 
-	LEGACY_INTERFACE = false
 	def init
 		if(@session.state.paged?)
 			extend(View::AlphaHeader)
@@ -127,7 +126,7 @@ class EmptyResultForm < HtmlGrid::Form
 	SYMBOL_MAP = {
 		:search_query		=>	View::SearchBar,	
 	}
-	def title_none_found(model, session)
+	def title_none_found(model, session = @session)
 		query = session.persistent_user_input(:search_query)
 		@lookandfeel.lookup(:title_none_found, query)
 	end

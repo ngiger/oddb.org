@@ -22,7 +22,6 @@ class EntityList < HtmlGrid::FormList
   }
   DEFAULT_HEAD_CLASS = 'th'
   DEFAULT_CLASS = HtmlGrid::Value
-  LEGACY_INTERFACE = false
   SORT_DEFAULT = :name
   LOOKANDFEEL_MAP = {
     :name => :email, 

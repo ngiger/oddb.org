@@ -16,7 +16,6 @@ class ConfirmComposite < HtmlGrid::Composite
 		[0,1]	=>	'confirm',
 	}
 	CSS_CLASS = 'composite'
-	LEGACY_INTERFACE = false
 	def confirm(model)
 		@lookandfeel.lookup(model)
 	end

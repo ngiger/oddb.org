@@ -150,7 +150,6 @@ class BasketSubstrates < HtmlGrid::List
 	DEFAULT_CLASS = HtmlGrid::Value
 	SORT_DEFAULT = :substance
 	SUBHEADER = View::Interactions::BasketHeader
-  LEGACY_INTERFACE = false
   def atc_class(model, session=@session)
     atc_codes = model.atc_codes
   end
@@ -255,7 +254,7 @@ class BasketForm < View::Form
 		[0,3,1]	=>	'list bg',
 		[0,4]	=>	'explain',
 	}
-  def epha_3d_link(model, session)
+  def epha_3d_link(model, session = @session)
     atc_codes = []
     model.each do |check|
       atc_codes << check.atc_codes.gsub(/[^A-Z0-9,]/, '') if check.atc_codes
@@ -269,25 +268,25 @@ class BasketForm < View::Form
       button
     end
   end
-  def interaction_list(model, session)
+  def interaction_list(model, session = @session)
     button = HtmlGrid::Button.new(:interactions_button, @model, @session, self)
     url = @lookandfeel._event_url(:interactions, {})
     script = "document.location.href='#{url}';"
     button.set_attribute("onclick", script)
     button
   end
-	def interaction_basket_count(model, session)
+	def interaction_basket_count(model, session = @session)
 		count = session.interaction_basket_count
 		@lookandfeel.lookup(:interaction_basket_count, count)
 	end
-	def pub_med_search_link(model, session)
+	def pub_med_search_link(model, session = @session)
 		link = HtmlGrid::Link.new(:pub_med, @model, @session, self)
 		link.css_class = 'list'
 		link.target = '_blank'
 		link.href = 'http://www.pubmedcentral.nih.gov/'
 		link
 	end
-	def clear_interaction_basket(model, session)
+	def clear_interaction_basket(model, session = @session)
 		get_event_button(:clear_interaction_basket)
 	end
 end

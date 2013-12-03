@@ -57,7 +57,6 @@ class List < HtmlGrid::List
   }
   DEFAULT_CLASS = HtmlGrid::Value
   SORT_DEFAULT = nil
-  LEGACY_INTERFACE = false
   # TODO
   # Refactor encoding of Migel::Item, -Product
   # See also items.rb, additional_information.rb
@@ -216,7 +215,7 @@ class EmptyResultForm < HtmlGrid::Form
   SYMBOL_MAP = {
     :search_query => View::SearchBar,
   }
-  def title_none_found(model, session)
+  def title_none_found(model, session = @session)
     query = session.persistent_user_input(:search_query)
     @lookandfeel.lookup(:title_none_found, query)
   end

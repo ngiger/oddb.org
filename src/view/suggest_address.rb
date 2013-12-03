@@ -42,7 +42,6 @@ class SuggestAddressForm < View::Form
 	}
 	EVENT = :address_send
 	LABELS = true
-	LEGACY_INTERFACE = false
 	SYMBOL_MAP = {
 		:address_type				=> HtmlGrid::Select,
 		:canton							=> HtmlGrid::Select,
@@ -108,7 +107,6 @@ class SuggestAddressComposite < HtmlGrid::Composite
 	}
 	CSS_CLASS = 'composite'
 	DEFAULT_CLASS = HtmlGrid::Value
-	LEGACY_INTERFACE = false
 	def fullname(model)
 		if(parent = model.pointer.parent.resolve(@session))
 			parent.fullname

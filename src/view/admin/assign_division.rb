@@ -23,7 +23,7 @@ class AssignDivisionForm < View::Admin::AssignDeprivedSequenceForm
     [8,0]   => :atc_class,
   }
   EVENT = :assign
-  def division_pointer(model, session)
+  def division_pointer(model, session= @session)
     seq = @model.sequence
     if model == seq || !@session.allowed?('edit', model)
       # nothing
@@ -40,7 +40,7 @@ class AssignDivisionForm < View::Admin::AssignDeprivedSequenceForm
       check
     end
   end
-  def division_pointer_hidden(model, session)
+  def division_pointer_hidden(model, session= @session)
     seq = @model.sequence
     if model == seq || !@session.allowed?('edit', model)
       # nothing
@@ -66,7 +66,6 @@ class AssignDivisionComposite < HtmlGrid::Composite
     [0,0] => 'th',
   }
   DEFAULT_CLASS = HtmlGrid::Value
-  LEGACY_INTERFACE = false
   def init
     super
     error_message(1)
