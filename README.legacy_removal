@@ -1,0 +1,23 @@
+On December 2013 Niklaus Giger tried to remove all references to 
+LEGACY_INTERFACE = false in htmlgrid (1.0.7) and this branch of oddb.org.
+
+If you look at the commit 'Adapt to removal of LEGACY_INTERFACE. Problemtic!' you will find 129 removals of LEGACY_INTERFACE.
+
+On the other side I had to change about 300 occurrences of
+ a_view_name(model, session) to
+ a_view_name(model, session = @session) to
+ 
+In a few files like download_export it was easily possible to replace them bxy
+ a_view_name(model)
+ 
+But in many other places (.eg. src/view/admin/activeagent.rb) it would have meant that I have
+also to refacter the corresponding unit tests, where it proved to be more complicated than just
+removing the @session parameter.
+
+Looking at the history of htmlgrid I found out that the LEGACY_INTERFACE was present with the first commit.
+Therefore I got no clue why the new interface was introduced and why it is not in more widespread use at oddb.org.
+
+As I spend already about 4 hours with this problem. I decided to revert my work and figure it out later (hopefully?).
+
+
+
