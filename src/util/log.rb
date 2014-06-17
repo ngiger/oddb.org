@@ -38,7 +38,7 @@ module ODDB
         begin
           content = File.read(path)
           if iconv
-            content = Iconv.new(iconv, 'UTF-8').iconv content
+            content = content.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?")
           end
           attachments << { :filename => File.basename(path), :mime_type => mime, :content => content }
         rescue Errno::ENOENT => e

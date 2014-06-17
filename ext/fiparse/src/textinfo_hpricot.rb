@@ -391,7 +391,7 @@ class TextinfoHpricot
     found
   end
   def target_encoding(text)
-    text.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?").first
+    text.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?")
   rescue
     text
   end

@@ -15,6 +15,8 @@ class CGI
 		extend QueryExtension
     @params = {}
   end
+  def element_init
+  end
   def cookies
     {}
   end

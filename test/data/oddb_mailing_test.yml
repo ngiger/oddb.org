@@ -5,7 +5,7 @@ smtp_user:  admin@ywesee.com
 smtp_pass:  not_so_secret
 smtp_port: 587
 invoice_from: invoice_from_cfo@oddb.org
-mail_from:    default_mail_from@ywesee.com
+mail_from:    from_test_ywesee@ywesee.com
 mail_to:
   - to_test_ywesee@ywesee.com.com
 reply_to:     default_reply_to@ywesee.com

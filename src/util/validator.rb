@@ -571,7 +571,7 @@ module ODDB
 			begin
         result = validate_string(value).gsub(/\*/u, '')
 			  result.encode("UTF-8", 'ISO-8859-1')
-			rescue  Encoding::UndefinedConversion,  Encoding::InvalidByteSequenceErr, Iconv::InvalidCharacter, ArgumentError
+			rescue  Encoding::UndefinedConversion,  Encoding::InvalidByteSequenceErr, ArgumentError
         value  = value.encode('ISO-8859-1', "UTF-8", )
 			  result = result.encode('ISO-8859-1', "UTF-8", )
 			end
