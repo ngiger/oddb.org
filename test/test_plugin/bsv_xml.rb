@@ -388,7 +388,7 @@ module ODDB
     end
     def test_tag_start__error
       pac_data = flexmock('pac_data') do |pac|
-        pac.should_receive(:dup).and_raise(StandardError)
+        pac.should_receive(:dup).and_raise(RuntimeError)
       end
       @listener.instance_eval('@pac_data = pac_data')
       assert_raises(RuntimeError) do 
@@ -652,7 +652,7 @@ module ODDB
       end
       known_packages = {pointer => 'data'}
       @listener.instance_eval('@known_packages = known_packages')
-      assert_raises(RuntimeError) do 
+      assert_raises(StandardError) do 
         @listener.tag_end('Preparations')
       end
     end
