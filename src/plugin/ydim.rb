@@ -6,11 +6,9 @@ require 'plugin/plugin'
 require 'ydim/config'
 require 'ydim/client'
 require 'openssl'
-require 'iconv'
 
 module ODDB
 	class YdimPlugin < Plugin
-    ICONV = Iconv.new 'ISO-8859-1//TRANSLIT//IGNORE', 'UTF-8'
     class DebitorFacade
       attr_reader :invoice_email
       def initialize(email, app)
@@ -27,8 +25,8 @@ module ODDB
               end
         if res.is_a?(String)
           begin
-            res = ICONV.iconv res
-          rescue Iconv::IllegalSequence
+            res = res.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?")
+            rescue Encoding::InvalidByteSequenceError
           end
         end
         res
@@ -215,7 +213,7 @@ Die nächste Jahresrechnung wird am #{annual_date.strftime '%d.%m.%Y'} versandt.
 		end
     def latin1(text)
       if text.is_a?(String)
-        String.new ICONV.iconv(text)
+        text.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?")
       elsif text.is_a?(Hash)
         res = {}
         text.each do |key, value|
@@ -225,7 +223,7 @@ Die nächste Jahresrechnung wird am #{annual_date.strftime '%d.%m.%Y'} versandt.
       else
         text
       end
-    rescue Iconv::IllegalSequence
+    rescue Encoding::InvalidByteSequenceError
       String.new text
     end
 		def resolved_name(pointer)
