@@ -26,15 +26,16 @@ module ODDB
   class TextInfoPlugin < Plugin
     attr_reader :updated_fis, :updated_pis
     CharsNotAllowedInBasename = /[^A-z0-9,\s\- ]/
-    DefaultXml = File.join(ODDB.config.data_dir, 'xml', 'AipsDownload_latest.xml')
+		DataDir = defined?(ODDB.config.data_dir) ? ODDB.config.data_dir : File.join(File.dirname(__FILE__), '..', '..', 'test', 'data')
+    DefaultXml = File.join(DataDir, 'xml', 'AipsDownload_latest.xml')
 
     def initialize app, opts={}
       super(app)
       @options = opts
       @parser = DRb::DRbObject.new nil, FIPARSE_URI
       @dirs = {
-        :fachinfo => File.join(ODDB.config.data_dir, 'html', 'fachinfo'),
-        :patinfo  => File.join(ODDB.config.data_dir, 'html', 'patinfo'),
+        :fachinfo => File.join(DataDir, 'html', 'fachinfo'),
+        :patinfo  => File.join(DataDir, 'html', 'patinfo'),
       }
       @meta_packages ||= {}
       @updated_fis = 0
@@ -923,7 +924,7 @@ module ODDB
     def download_swissmedicinfo_xml
       setup_default_agent
       url  = "http://download.swissmedicinfo.ch/Accept.aspx?ReturnUrl=%2f"
-      dir  = File.join(ODDB.config.data_dir, 'xml')
+      dir  = File.join(DataDir, 'xml')
       FileUtils.mkdir_p dir
       name = 'swissmedicinfo'
       zip = File.join(dir, "#{name}.zip")
@@ -1033,7 +1034,7 @@ module ODDB
         html = Nokogiri::HTML(content.to_s).to_s
         detect_format(html)
         # save as tmp
-        path = File.join(ODDB.config.data_dir, 'html', type, info.lang.to_s)
+        path = File.join(DataDir, 'html', type, info.lang.to_s)
         dist = File.join(path, info.title.gsub(CharsNotAllowedInBasename, '_') + '_swissmedicinfo.html')
         temp = dist + '.tmp'
         FileUtils.makedirs(File.dirname(dist))
