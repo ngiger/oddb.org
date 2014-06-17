@@ -5,7 +5,6 @@
 # ODDB::View::AdditionalInformation -- oddb.org -- 09.12.2003 -- rwaltert@ywesee.com
 
 require 'view/drugs/atcchooser'
-require 'iconv'
 require 'plugin/comarketing'
 
 module ODDB
