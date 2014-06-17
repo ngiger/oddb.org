@@ -6,7 +6,6 @@
 
 require 'sbsm/validator'
 require 'model/ean13'
-require 'iconv'
 require 'cgi'
 
 module ODDB
@@ -488,8 +487,6 @@ module ODDB
 		]
 		ZONES = [:admin, :analysis, :doctors, :interactions, :drugs, :migel, :user, 
 			:hospitals, :substances, :companies]
-		@@latin1 = Iconv.new('ISO-8859-1', 'UTF-8')
-		@@utf8 = Iconv.new('UTF-8', 'ISO-8859-1')
 		def code(value)
 			pattern = /^[A-Z]([0-9]{2}([A-Z]([A-Z]([0-9]{2})?)?)?)?$/iu
 			if(valid = pattern.match(value.capitalize))
@@ -573,10 +570,10 @@ module ODDB
 		def search_query(value)
 			begin
         result = validate_string(value).gsub(/\*/u, '')
-			  @@latin1.iconv(result)
-			rescue Iconv::IllegalSequence, Iconv::InvalidCharacter, ArgumentError
-        value = @@utf8.iconv(value)
-			  result = @@utf8.iconv(result)
+			  result.encode("UTF-8", 'ISO-8859-1')
+			rescue  Encoding::UndefinedConversion,  Encoding::InvalidByteSequenceErr, Iconv::InvalidCharacter, ArgumentError
+        value  = value.encode('ISO-8859-1', "UTF-8", )
+			  result = result.encode('ISO-8859-1', "UTF-8", )
 			end
 			if(result.length > 2)
 				result
