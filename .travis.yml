@@ -1,10 +1,10 @@
 language: ruby
 bundler_args: --without debugger
 rvm:
-  - 1.9.3
+  - 2.1.2
 script:
   - rake quanty
-  - bundle exec ruby test/suite.rb  --seed 52211
+  - bundle exec ruby test/suite.rb
   - rake docs
 notifications:
   email:
