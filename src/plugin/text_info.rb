@@ -26,7 +26,7 @@ module ODDB
   class TextInfoPlugin < Plugin
     attr_reader :updated_fis, :updated_pis
     CharsNotAllowedInBasename = /[^A-z0-9,\s\- ]/
-		DataDir = defined?(ODDB.config.data_dir) ? ODDB.config.data_dir : File.join(File.dirname(__FILE__), '..', '..', 'test', 'data')
+    DataDir = File.expand_path(defined?(ODDB.config.data_dir) ? ODDB.config.data_dir : File.join(File.dirname(__FILE__), '..', '..', 'test', 'var'))
     DefaultXml = File.join(DataDir, 'xml', 'AipsDownload_latest.xml')
 
     def initialize app, opts={}

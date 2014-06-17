@@ -188,7 +188,7 @@ data/html/fachinfo/de/Zyloric__swissmedicinfo.html:<p class="s5"><span class="s8
       ]
       agent = setup_mechanize mapping
       page = nil
-#      @parser.should_receive(:parse_fachinfo_html).and_return FachinfoDocument.new
+      @parser.should_receive(:parse_fachinfo_html).and_return FachinfoDocument.new
       @parser.should_receive(:parse_patinfo_html).and_return PatinfoDocument.new
       skip("The whole test-suite should probably be removed, including test as we parse no swissmedicinfo_xml!")
       @plugin.import_company ['novartis'], agent, :both
@@ -289,7 +289,7 @@ data/html/fachinfo/de/Zyloric__swissmedicinfo.html:<p class="s5"><span class="s8
       expected = {}
       path = File.join @@vardir, 'html', 'fachinfo', 'de', 'Aclasta.html'
       expected.store :de, path
-      assert File.exist?(path)
+      assert File.exist?(path), "File #{path} should exist"
       path = File.join @@vardir, 'html', 'fachinfo', 'fr', 'Aclasta.html'
       expected.store :fr, path
       assert File.exist?(path)

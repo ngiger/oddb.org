@@ -4,6 +4,7 @@
 # OneDirSuite -- oddb -- 08.02.2011 -- mhatakeyama@ywesee.com
 
 buggy = [
+  'config.rb',
   'session.rb',
   'ipn.rb',
   'zlog.rb',

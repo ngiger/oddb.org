@@ -56,6 +56,8 @@ module ODBA
     def restore_collection(hash)
       hash
     end
+		def restore_named(param)
+		end
 	end
 	def ODBA.transaction
 		yield
