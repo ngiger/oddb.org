@@ -5,7 +5,6 @@
 # ODDB::FiParse::PatinfoHpricot -- oddb.org -- 17.08.2006 -- hwyss@ywesee.com
 
 require 'hpricot'
-require 'iconv'
 require 'ostruct'
 require 'util/oddbconfig'
 require 'util/hpricot'
@@ -392,7 +391,7 @@ class TextinfoHpricot
     found
   end
   def target_encoding(text)
-    Iconv.iconv(ENCODING + "//TRANSLIT//IGNORE", 'utf8', text).first
+    text.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?").first
   rescue
     text
   end

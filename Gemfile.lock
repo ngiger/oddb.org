@@ -117,7 +117,6 @@ GEM
     rdoc (4.1.1)
       json (~> 1.4)
     rmagick (2.13.2)
-    rpdf2txt (0.8.4)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -224,7 +223,6 @@ DEPENDENCIES
   rclconf (= 1.0.0)
   rdoc (= 4.1.1)
   rmagick (= 2.13.2)
-  rpdf2txt (= 0.8.4)
   rspec
   rubyXL (= 1.2.10)
   rubyzip (= 0.9.9)

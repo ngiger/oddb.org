@@ -10,13 +10,8 @@ require 'odba'
 require 'drb/drb'
 require 'util/oddbconfig'
 require 'fachinfo_writer'
-require 'fachinfo_pdf'
-require 'indications'
-require 'minifi'
 require 'fachinfo_hpricot'
 require 'patinfo_hpricot'
-# rpdf2txt will be retired soon. As it produces error when loading I exclude it while running unit tests 
-require 'rpdf2txt/parser' unless defined?(Minitest)
 require 'ydocx/document'
 require 'ydocx/templates/fachinfo'
 
@@ -200,12 +195,6 @@ module ODDB
       writer.lang   = lang
       writer.extract(Hpricot(src), :fi, title, styles)
     end
-		def parse_fachinfo_pdf(src)
-			writer = FachinfoPDFWriter.new
-			parser = Rpdf2txt::Parser.new(src, 'UTF-8')
-			parser.extract_text(writer)
-			writer.to_fachinfo
-		end unless defined?(Minitest)
 		def parse_patinfo_html(src, format=:documed, title='', styles = nil)
       lang = (src =~ /\/de\// ? 'de' : 'fr')
       if File.exist?(src)
@@ -221,7 +210,6 @@ module ODDB
     module_function :storage=
     module_function :parse_fachinfo_docx
     module_function :parse_fachinfo_html
-    module_function :parse_fachinfo_pdf  unless defined?(Minitest)
     module_function :parse_patinfo_html
 	end
 end
