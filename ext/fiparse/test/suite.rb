@@ -1,13 +1,11 @@
 #!/usr/bin/env ruby
 # suite.rb -- oddb -- 08.09.2006 -- hwyss@ywesee.com 
 
-require 'find'
+$: << File.expand_path(File.dirname(__FILE__))
 
-here = File.dirname(__FILE__)
-
-$: << File.expand_path(here)
-Find.find(here) { |file|
-  if /test_.*\.rb$/o.match(file) and File.file?(file)
-    require File.expand_path(file)
-  end
-} 
+buggy =  []
+require File.join(File.expand_path(File.dirname(File.dirname(__FILE__))), '../../test/helpers.rb')
+runner = OddbTestRunner.new(File.dirname(__FILE__), buggy)
+runner.run_isolated_tests
+runner.run_normal_tests
+runner.show_results_and_exit

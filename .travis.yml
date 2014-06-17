@@ -4,7 +4,7 @@ rvm:
   - 1.9.3
 script:
   - rake quanty
-  - bundle exec ruby test/suite.rb
+  - bundle exec ruby test/suite.rb  --seed 52211
   - rake docs
 notifications:
   email:
