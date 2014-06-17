@@ -137,8 +137,8 @@ GEM
       nokogiri (>= 1.4.0)
       nori (~> 1.0)
       wasabi (~> 2.0)
-    sax-machine (0.2.1)
-      nokogiri (~> 1.6.0)
+    sax-machine (0.1.0)
+      nokogiri (> 0.0.0)
     sbsm (1.2.5)
     selenium-webdriver (2.35.1)
       childprocess (>= 0.2.5)
@@ -153,6 +153,7 @@ GEM
     spreadsheet (0.9.7)
       ruby-ole (>= 1.0)
     swissmedic-diff (0.1.7)
+    syck (1.0.1)
     thread_safe (0.3.3)
     travis-lint (1.8.0)
       hashr (~> 0.0.22)
@@ -227,11 +228,12 @@ DEPENDENCIES
   rubyXL (= 1.2.10)
   rubyzip (= 0.9.9)
   savon (= 0.9.7)
-  sax-machine
+  sax-machine (= 0.1.0)
   sbsm (= 1.2.5)
   simplecov (~> 0.7.1)
   spreadsheet (= 0.9.7)
   swissmedic-diff (= 0.1.7)
+  syck
   travis-lint
   wasabi (= 2.3.0)
   watir
