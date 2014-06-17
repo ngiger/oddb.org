@@ -67,7 +67,10 @@ group :test do
   gem 'page-object'
 end
 
-group :debugger do
+group :debugger do # see also http://de.slideshare.net/LukeBergen/debugging-ruby-with-pry
   gem 'pry'
-  gem 'pry-debugger'
+  gem 'pry-nav'
+  gem 'pry-rescue'
+  gem 'pry-stack_explorer'
+  gem 'pry-doc'
 end
