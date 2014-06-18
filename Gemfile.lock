@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/ngiger/ruby-dbi
+  revision: dcd6239fd5f836418dba522b04267200df973f56
+  tag: dcd6239fd5f836418dba522b04267200df973f56
+  specs:
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -193,6 +199,7 @@ DEPENDENCIES
   bigdecimal (= 1.2.5)
   builder (= 3.2.2)
   dbd-pg (= 0.3.9)
+  dbi!
   deprecated (= 2.0.1)
   facets (= 1.8.54)
   fastthread (= 1.0.7)
