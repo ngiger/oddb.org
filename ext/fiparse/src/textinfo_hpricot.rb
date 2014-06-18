@@ -241,7 +241,7 @@ class TextinfoHpricot
           ptr.target = ptr.table
         else
           handle_all_children(child, ptr)
-          ptr.target << "\n"
+          ptr.target << "\n" if ptr.target
         end
       when 'td', 'th'
         if ptr.table

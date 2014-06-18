@@ -136,7 +136,7 @@ module ODDB
       end
     end
     def TextInfoPlugin::store_fachinfo(app, reg, languages)
-      $stdout.puts "store_fachinfo #{reg.inspect} #{languages.inspect}"
+      $stdout.puts "store_fachinfo #{reg.inspect} #{languages.keys}"
       existing = reg.fachinfo
       ptr = Persistence::Pointer.new(:fachinfo).creator
       if existing
@@ -1024,7 +1024,7 @@ module ODDB
     end
     def parse_and_update(item)
       # names eg. { :de => 'Alacyl'}
-      puts_sync "parse_and_update iksnr #{item.iksnr} #{item.inspect}"
+      LogFile.debug "parse_and_update iksnr #{item.iksnr} #{item.inspect}"
       iksnrs, info = extract_matched_content(item.iksnr, item.type, item.lang)
       if info
         type = item.type == 'pi' ? 'patinfo' : 'fachinfo'
@@ -1363,7 +1363,7 @@ module ODDB
                        }
                   }
       end
-      puts_sync "import_swissmedicinfo_by_companies will import #{@@toImport.size} items. Used #{@options[:xml_file]}"
+      puts_sync "import_swissmedicinfo_by_index will import #{@@toImport.size} items. Used #{@options[:xml_file]}"
       import_stuff(@@toImport, target)
       true # an import should return true or you will never send a report
     end

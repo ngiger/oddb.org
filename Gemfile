@@ -7,6 +7,7 @@ if /~2/.match(RUBY_VERSION)
   gem 'syck'
 else
   gem 'dbi', :git => 'https://github.com/ngiger/ruby-dbi', :tag => 'dcd6239fd5f836418dba522b04267200df973f56'
+  gem 'rpdf2txt', '0.8.4'
 end
 gem 'activesupport' # , '4.0.2'
 gem 'archive-tarsimple', '1.1.1'
