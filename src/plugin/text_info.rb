@@ -109,9 +109,11 @@ module ODDB
       LogFile.debug "read_packages found latest_name #{latest_name} with #{@meta_packages.size} packages"
     end
     def parse_fachinfo(path, styles=nil, format = :manual, title='')
+      LogFile.debug "parse_fachinfo html path #{path} format #{format} #{title}"
       @parser.parse_fachinfo_html(path, format, title, styles)
     end
     def parse_patinfo(path, styles=nil, format = :manual, title='')
+      LogFile.debug "parse_patinfo html path #{path} format #{format} #{title}"
       @parser.parse_patinfo_html(path, format, title, styles)
     end
     def postprocess
