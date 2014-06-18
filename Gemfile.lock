@@ -158,7 +158,6 @@ GEM
     spreadsheet (0.9.7)
       ruby-ole (>= 1.0)
     swissmedic-diff (0.1.7)
-    syck (1.0.1)
     thread_safe (0.3.3)
     travis-lint (1.8.0)
       hashr (~> 0.0.22)
@@ -242,7 +241,6 @@ DEPENDENCIES
   simplecov (~> 0.7.1)
   spreadsheet (= 0.9.7)
   swissmedic-diff (= 0.1.7)
-  syck
   travis-lint
   wasabi (= 2.3.0)
   watir

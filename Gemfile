@@ -1,6 +1,10 @@
 source "http://rubygems.org"
 # ruby "1.9.3" # don't specify a ruby version as I want to be able to test via travis using several versions
 
+if /~2/.match(RUBY_VERSION)
+  gem 'dbi', :git => 'https://github.com/ngiger/ruby-dbi'
+  gem 'syck'
+end
 gem 'activesupport' # , '4.0.2'
 gem 'archive-tarsimple', '1.1.1'
 gem 'bigdecimal', '1.2.5'
@@ -39,7 +43,6 @@ gem 'wasabi', '2.3.0'
 gem 'savon', '0.9.7'
 gem 'sbsm',  '1.2.5'
 gem 'sax-machine', '0.1.0'
-gem 'syck'
 gem 'spreadsheet', '0.9.7'
 gem 'swissmedic-diff', '0.1.7'
 # gem 'tmail' # wo wird das noch angezogen?
