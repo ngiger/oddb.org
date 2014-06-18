@@ -1,6 +1,11 @@
 source "http://rubygems.org"
 # ruby "1.9.3" # don't specify a ruby version as I want to be able to test via travis using several versions
 
+gem 'iconv' if /~1/.match(RUBY_VERSION)
+if /~2/.match(RUBY_VERSION)
+  gem 'dbi', :git => 'https://github.com/ngiger/ruby-dbi'
+  gem 'syck'
+end
 gem 'activesupport' # , '4.0.2'
 gem 'archive-tarsimple', '1.1.1'
 gem 'bigdecimal', '1.2.5'
@@ -33,13 +38,12 @@ gem 'pg', '0.17.1'
 gem 'rclconf', '1.0.0'
 gem 'rdoc', '4.1.1'
 gem 'rmagick', '2.13.2'
-gem 'rpdf2txt', '0.8.4'
 gem 'rubyXL', '1.2.10'
 gem 'rubyzip', '0.9.9'
 gem 'wasabi', '2.3.0'
 gem 'savon', '0.9.7'
 gem 'sbsm',  '1.2.5'
-gem 'sax-machine'
+gem 'sax-machine', '0.1.0'
 gem 'spreadsheet', '0.9.7'
 gem 'swissmedic-diff', '0.1.7'
 # gem 'tmail' # wo wird das noch angezogen?
@@ -67,7 +71,10 @@ group :test do
   gem 'page-object'
 end
 
-group :debugger do
+group :debugger do # see also http://de.slideshare.net/LukeBergen/debugging-ruby-with-pry
   gem 'pry'
-  gem 'pry-debugger'
+  gem 'pry-nav'
+  gem 'pry-rescue'
+  gem 'pry-stack_explorer'
+  gem 'pry-doc'
 end
