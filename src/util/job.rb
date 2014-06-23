@@ -4,6 +4,7 @@ require 'config'
 require 'util/oddbapp'
 require 'util/log'
 require 'etc/db_connection'
+require 'fileutils'
 
 module ODDB
   module Util
@@ -28,6 +29,7 @@ module Job
         log.notify("Duplicate Job: #{current_job[:basename]}")
       else
         if updater?
+          FileUtils.makedirs(File.dirname(PID_FILE))
           File.open(PID_FILE, 'w') { |fh|
             fh << [Process.pid, current_job[:basename], Time.now].join(',')
           }
@@ -45,7 +47,7 @@ module Job
       puts
     ensure
       if updater? and !running_job[:pid]
-        File.unlink(PID_FILE)
+        FileUtils.rm(PID_FILE) if File.exists?(PID_FILE)
         puts "#{PID_FILE} is deleted"
         system.unpeer_cache ODBA.cache unless opts[:readonly]  rescue Errno::ECONNREFUSED
       end
