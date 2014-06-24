@@ -3,9 +3,9 @@ bundler_args: --without debugger
 rvm:
   - 2.1.2
 script:
-  - rake quanty
+  - bundle exec rake quanty
   - bundle exec ruby test/suite.rb
-  - rake docs
+  - bundle exec rake docs
 notifications:
   email:
     recipients:
