@@ -237,7 +237,7 @@ class TextinfoHpricot
         if ptr.table
           ptr.table.next_row!
           handle_all_children(child, ptr)
-          ptr.target = ptr.table
+          ptr.target = ptr.table if ptr.target
         else
           handle_all_children(child, ptr)
           ptr.target << "\n"
