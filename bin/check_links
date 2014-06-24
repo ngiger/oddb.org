@@ -1,6 +1,16 @@
 #!/usr/bin/env ruby
 # check_links -- ODDB -- 27.11.2003 -- hwyss@ywesee.com
 
+# ODBA objects need YAML syck engine
+# see
+#   * odba/persistable.rb
+#   * odba/stub.rb
+require 'yaml'
+unless (old = YAML::ENGINE.yamler) == "syck"
+	require 'syck'
+	YAML::ENGINE.yamler = "syck"
+	puts "forced YAML::ENGINE.yamler from #{old} -> #{YAML::ENGINE.yamler} in #{__FILE__}:#{__LINE__}"
+end
 $: << File.expand_path('../src', File.dirname(__FILE__))
 
 require 'net/http'

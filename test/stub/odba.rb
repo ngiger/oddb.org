@@ -3,6 +3,13 @@
 # ODBAStub -- ODDB -- 09.04.2012 -- yasaka@ywesee.com
 # ODBAStub -- ODDB -- 16.09.2004 -- hwyss@ywesee.com
 
+require 'yaml'
+unless (old = YAML::ENGINE.yamler) == "syck"
+	require 'syck'
+	YAML::ENGINE.yamler = "syck"
+	puts "forced YAML::ENGINE.yamler from #{old} -> #{YAML::ENGINE.yamler} in #{__FILE__}:#{__LINE__}"
+end
+
 require 'odba'
 
 module ODBA

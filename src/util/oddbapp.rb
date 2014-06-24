@@ -4,8 +4,16 @@
 # OddbApp -- oddb.org -- 21.02.2012 -- mhatakeyama@ywesee.com
 # OddbApp -- oddb.org -- 21.06.2010 -- hwyss@ywesee.com
 
+# ODBA objects need YAML syck engine
+# see
+#   * odba/persistable.rb
+#   * odba/stub.rb
 require 'yaml'
-YAML::ENGINE.yamler = "syck"
+unless (old = YAML::ENGINE.yamler) == "syck"
+	require 'syck'
+	YAML::ENGINE.yamler = "syck"
+	puts "forced YAML::ENGINE.yamler from #{old} -> #{YAML::ENGINE.yamler} in #{__FILE__}:#{__LINE__}"
+end
 # next line to fix an error paypal-2.0.0/lib/notification.rb
 require 'active_support/core_ext/class/attribute_accessors'
 require 'odba'

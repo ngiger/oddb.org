@@ -1,5 +1,15 @@
 #!/usr/bin/env ruby
 # Admin -- oddb -- 09.07.2003 -- hwyss@ywesee.com 
+# ODBA objects need YAML syck engine
+# see
+#   * odba/persistable.rb
+#   * odba/stub.rb
+require 'yaml'
+unless (old = YAML::ENGINE.yamler) == "syck"
+	require 'syck'
+	YAML::ENGINE.yamler = "syck"
+	puts "forced YAML::ENGINE.yamler from #{old} -> #{YAML::ENGINE.yamler} in #{__FILE__}:#{__LINE__}"
+end
 
 $0 = "ch.oddb (Admin-Tool)"
 

@@ -1,4 +1,14 @@
 # encoding: utf-8
+# ODBA objects need YAML syck engine
+# see
+#   * odba/persistable.rb
+#   * odba/stub.rb
+require 'yaml'
+unless (old = YAML::ENGINE.yamler) == "syck"
+	require 'syck'
+	YAML::ENGINE.yamler = "syck"
+	puts "forced YAML::ENGINE.yamler from #{old} -> #{YAML::ENGINE.yamler} in #{__FILE__}:#{__LINE__}"
+end
 require 'drb'
 require 'config'
 require 'util/oddbapp'
