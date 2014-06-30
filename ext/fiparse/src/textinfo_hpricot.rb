@@ -190,7 +190,7 @@ class TextinfoHpricot
       when 'p'
         if ptr.table
           if ptr.target.is_a?(Text::MultiCell)
-            ptr.target.next_paragraph
+            ptr.target.next_paragraph unless ptr.table
           end
         else
           ptr.section ||= ptr.chapter.next_section
@@ -198,15 +198,9 @@ class TextinfoHpricot
         end
         handle_all_children(child, ptr, true)
       when 'span', 'em', 'strong', 'b', 'br'
-        if ptr.target.is_a?(Text::MultiCell)
-          unless ptr.table
-            ptr.target = ptr.target.next_paragraph
-          end
-        end
+        ptr.target = ptr.target.next_paragraph if ptr.target.is_a?(Text::MultiCell)
         if child.name == 'br'
-          if ptr.table
-            ptr.target << "\n"
-          end          
+          ptr.target << "\n" if ptr.table
         else
           ptr.target.augment_format(:italic) if has_italic?(child, ptr)
           if defined?(child.parent.attributes) and /untertitle/.match(child.parent.attributes['class'])
@@ -322,11 +316,10 @@ class TextinfoHpricot
     end
   end
   def handle_text(ptr, child)
-    # ptr.section ||= ptr.chapter.next_section
-    # unless ptr.target.is_a?(Text::Paragraph)
-      # p ptr.target.class
-      # ptr.target = ptr.section.next_paragraph
-    # end
+    # handling a situation found only in Baraclude® IKSNR 57'435/436
+    if child.to_s.match(/^span>/)
+      return
+    end
     return if child.parent.name.eql?('tbody') or child.parent.name.eql?('table')
     string = text(child)
     m = URI.regexp.match(string)
