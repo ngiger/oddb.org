@@ -23,8 +23,15 @@ describe "ch.oddb.org" do
     @browser.goto OddbUrl
   end
 
-  it "should work as show/reg for sinovial" do
-    url = "http://#{OddbUrl}/de/gcc/show/reg/1229109224/seq/09/pack/224"
+  it "should work as show/reg for sinovial as a sequence" do
+    url = "http://#{OddbUrl}/de/gcc/drug/reg/1229109224/seq/09"
+    @browser.goto url
+    @browser.text.should match RegExpSubstance
+  end
+
+  it "should work as show/reg for sinovial as a package" do
+    pending "The database does not give enough information for sinovial as a package"
+    url = "http://#{OddbUrl}/de/gcc/drug/reg/1229109224/seq/09/pack/224"
     @browser.goto url
     @browser.text.should match RegExpSubstance
   end
