@@ -1,5 +1,5 @@
 require 'rbconfig'
-include Config
+include RbConfig
 
 target  = 'quanty'
 sitedir = File.expand_path('../../src/util', File.dirname(__FILE__))
