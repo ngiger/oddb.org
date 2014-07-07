@@ -10,7 +10,7 @@ require 'util/persistence'
 require 'custom/lookandfeelbase'
 require 'date'
 require 'archive/tarsimple'
-require 'zip/zip'
+require 'zip'
 require 'fileutils'
 
 module ODDB
