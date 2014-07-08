@@ -197,7 +197,7 @@ GEM
     websocket (1.0.7)
     yard (0.8.7.4)
     ydim (1.0.0)
-    ydocx (1.2.4)
+    ydocx (1.2.5)
     yml_reader (0.3)
     yus (1.0.1)
 
@@ -266,5 +266,5 @@ DEPENDENCIES
   watir-webdriver
   webrobots (= 0.1.1)
   ydim (= 1.0.0)
-  ydocx (= 1.2.4)
+  ydocx (= 1.2.5)
   yus (= 1.0.1)

@@ -10,7 +10,6 @@ buggy = [
   'hayes.rb',
   'invoicer.rb',
   'medical_products.rb',
-  'flockhart.rb',
   'swissmedic.rb',
   'text_info.rb',
   'text_info_swissmedicinfo',

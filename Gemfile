@@ -46,7 +46,7 @@ gem 'spreadsheet', '0.9.7'
 gem 'swissmedic-diff', '0.1.8'
 gem 'webrobots', '0.1.1'
 gem 'ydim', '1.0.0'
-gem 'ydocx', '1.2.4'
+gem 'ydocx', '1.2.5'
 gem 'yus', '1.0.1'
 
 group :development, :test do
