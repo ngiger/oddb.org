@@ -12,14 +12,16 @@ module ODDB
   module View
   GET_TO_JS = %(
 function get_to(url) {
-  var url2 = url.replace(/(\\d{13})[/,]+(\\d{13})/, '$1,$2').replace('/,','/').replace(/\\?$/,'').replace('\\?,', ',');
-  if (window.location.href ==  url2) { return; }
+  var url2 = url.replace('/,','/').replace(/\\?$/,'').replace('\\?,', ',').replace('ean,', 'ean/').replace(/\\?$/, '');
+  console.log('get_to window.top.location.replace url '+ url + '\\n url2 ' + url2);
+  if (window.location.href == url2 || window.top.location.href == url2) { return; }
   var form = document.createElement("form");
   form.setAttribute("method", "GET");
   form.setAttribute("action", url2);
   document.body.appendChild(form);
   form.submit();
 }
+
 )
 
 module SearchBarMethods
@@ -38,6 +40,7 @@ module SearchBarMethods
 var query = this.form.#{name}.value;
 if (query != "#{val}" && query != "") {
   #{progressbar}
+  console.log('query.submit #{val} query is: '+query);
   this.form.submit();
 }
     JS
@@ -55,28 +58,36 @@ module InstantSearchBarMethods
   def xhr_request_init(keyword)
     target = keyword.intern
     id  = "#{target}_searchbar"
-    drugs = @session.persistent_user_input(:drugs)
-    drugs = drugs.keys if drugs
-    ean13 = @session.persistent_user_input(:ean)
-    base_url = @lookandfeel.base_url
-    splitted = @session.request_path.split(/#{base_url}\/(home_interactions|rezept\/ean)\/*/)
-    url = @lookandfeel._event_url(target == 'prescription' ? 'rezept/ean' : 'home_interactions', [])
-    url += drugs.join(',') if drugs
+    if /prescription/i.match(target.to_s)
+      @session.set_persistent_user_input(:drugs, {})
+      @session.set_persistent_user_input(:ean, nil)
+      url  = @session.request_path.gsub('/,','/') if @session.request_path
+    elsif
+      url = @session.create_search_url(:fachinfo_search, [:ean, @session.persistent_user_input(:drugs) ? @session.persistent_user_input(:drugs).keys : [] ].flatten )
+    else
+      url = @session.create_search_url(:home_interactions)
+    end
     val = @session.lookandfeel.lookup(:add_drug)
-    progressbar = ""
     if @container.respond_to?(:progress_bar)
       progressbar = "setTimeout('show_progressbar(\'#{id}\')', 10);"
     end
     @container.additional_javascripts.push <<-EOS
 #{GET_TO_JS}
 function xhrGet(arg) {
-  var ean13 = (arg.match(/^(\\d{13})$/)||[])[1];
+  var new_url = '#{url}';
+  var ean13 = arg.match(/(^\\d{13})/);
+  console.log('xhrGet arg '+ arg + ' ean13 ' + ean13 + ' for new_url ' + new_url);
   if(ean13) {
+    ean13 = ean13[0];
     var id = 'drugs';
-    var url = '#{url}';
-    if (url.match(/rezept\\/$/)) { url = url + 'ean/'; }
-    if (url.match(/(\\d{13})$/))  url = url + ',' + ean13; else url = url + '/' + ean13;
-    replace_element(id, url)
+    if (new_url.match(/\\/(prescription|fachinfo_search|rezept|zsr_[A-Z]\\d+)$/))
+    {
+      new_url = new_url + '/ean/' + ean13; 
+    } else {
+      new_url = new_url + ',' + ean13;
+    }
+    console.log('xhrGet call replace_element id '+ id + ' new_url '+new_url);
+    replace_element(id, new_url)
   }
 }
 function initMatches() {
@@ -98,6 +109,7 @@ function initMatches() {
     if(searchbar.value == '') { searchbar.value = '#{val}'; }
   });
 }
+
 function selectXhrRequest() {
   var popup = dojo.byId('#{target}_searchbar_popup');
   var searchbar = dojo.byId('#{id}');
@@ -105,16 +117,36 @@ function selectXhrRequest() {
     #{progressbar}
     if (searchbar && searchbar.value && window.location.href)
     {
+      console.log('selectXhrRequest: window.location.href ' + window.location.href + ' searchbar: ' + searchbar.value);
       var ean13 = (searchbar.value.match(/^(\\d{13})$/)||[])[1];
       var path = window.location.href;
-      xhrGet(searchbar.value);
-      searchbar.value = '';
-      var found = path.match(/home_interactions|rezept\\/ean/);
-      if(found && ean13) {
-        if (path.match(/(home_interactions|rezept\\/ean)$/)) (path = path + '/');
-        get_to(path + ',' + ean13);
+      if (path.match(/home_interactions/)) {
+        if (path.match(/\\/$/)) {
+          path = path + ean13;
+        } else if (path.match(/home_interactions$/)) {
+          path = path +  '/' + ean13;
+        } else {
+          path = path +  ',' + ean13;
+        }
+        get_to(path.replace('?/','/') );
+      } else if (path.match(/fachinfo_search|rezept/))
+      {
+        if (path.match(/ean/) == null) {
+          if (path.match(/\\/$/)) {
+            path = path +  'ean/' + ean13;
+          } else {
+            path = path +  '/ean/' + ean13;
+        }
+        } else { 
+           path = path + ',' + ean13;
+        }
+        searchbar.value = '';
+        get_to(path.replace('?/','/'));
+      } else { // neither home_interactions, fachinfo_search nor rezept
+        xhrGet(searchbar.value);
+        searchbar.value = '';
       }
-    } else console.log("selectXhrRequest cannot find enough information");
+    } else console.log('selectXhrRequest cannot find enough information');
   }
 }
 require(['dojo/ready'], function(ready) {
@@ -140,12 +172,26 @@ require(['dojo/ready'], function(ready) {
     if @container.respond_to?(:index_name) && (index = @container.index_name)
       args.push :index_name, index
     end
-    target = @session.lookandfeel._event_url(:ajax_matches, args)
-    html = context.div 'data-dojo-type' => 'dojox.data.JsonRestStore',
-                       'jsId'           => 'search_matches',
-                       'idAttribute'    => 'drug',
-                       'target'         => target
-    html << super(context)
+    @session.set_persistent_user_input(:drugs, @session.choosen_drugs)
+    if @session.request_path and @session.request_path.match(/fachinfo_search/)
+      if false and @session.choosen_drugs.size > 0
+        target = @session.lookandfeel._event_url(:fachinfo_search, [:ean, @session.choosen_drugs.keys, :ajax_matches, args ].flatten)
+      else
+        target = @session.lookandfeel._event_url(:ajax_matches, args)
+      end
+      html = context.div 'data-dojo-type' => 'dojox.data.JsonRestStore',
+                        'jsId'           => 'search_matches',
+                        'idAttribute'    => 'drug',
+                        'target'         => target
+      html << super(context)
+    else
+      target = @session.lookandfeel._event_url(:ajax_matches, args)
+      html = context.div 'data-dojo-type' => 'dojox.data.JsonRestStore',
+                        'jsId'           => 'search_matches',
+                        'idAttribute'    => 'drug',
+                        'target'         => target
+      html << super(context)
+    end
   end
 end
 class SearchBar < HtmlGrid::InputText
@@ -192,12 +238,7 @@ class AutocompleteSearchBar < HtmlGrid::InputText
     @searchbar_id ||= 'searchbar'
     @label_attr   ||= ''
     id  = @searchbar_id
-    if @session.flavor == 'just-medical' and
-       @session.zone == :interactions
-      val = @lookandfeel.lookup(:search_query_interactions)
-    else
-      val = @lookandfeel.lookup(@name)
-    end
+    val = @lookandfeel.lookup(@name)
     progressbar = ""
     if @container.respond_to?(:progress_bar)
       progressbar = "setTimeout('show_progressbar(\\'widget_searchbar\\')', 10);"
@@ -222,8 +263,7 @@ function initMatches() {
 function selectSubmit() {
   var popup = dojo.byId('#{id}_popup');
   var searchbar = dojo.byId('#{id}');
-  if (popup && popup.style.overflowX.match(/auto/) && searchbar.value != '') {
-    #{progressbar}
+  if (popup && (popup.style.overflowX.match(/auto/) || popup.style.overflowX.match(/hidden/)) && searchbar.value != '') {
     searchbar.form.submit();
   }
 }

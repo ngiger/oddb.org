@@ -30,6 +30,7 @@ mailing_list_ids:
   - password_lost
   - test
   - suggest_address
+  - test_no_anrede
 
 mail_recipients:
   - :email: ywesee_test@ywesee.com
@@ -65,3 +66,7 @@ mail_recipients:
     :lists:
       - oddb_csv
       - oddb_bsv_info
+
+  - :email: no_anrede@another_company.com
+    :lists:
+      - test_no_anrede

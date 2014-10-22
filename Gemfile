@@ -1,5 +1,12 @@
 source "http://rubygems.org"
-# ruby "1.9.3" # don't specify a ruby version as I want to be able to test via travis using several versions
+if /^2/.match(RUBY_VERSION)
+  ruby '2.1.2'
+  gem 'dbi', :git => 'https://github.com/ngiger/ruby-dbi'
+  gem 'syck'
+else
+  ruby "1.9.3"
+  gem 'dbi', :git => 'https://github.com/ngiger/ruby-dbi'
+end
 
 if /^2/.match(RUBY_VERSION)
   gem 'dbi', :git => 'https://github.com/ngiger/ruby-dbi'
@@ -68,10 +75,10 @@ group :test do
   gem 'page-object'
 end
 
-group :debugger do # see also http://de.slideshare.net/LukeBergen/debugging-ruby-with-pry
-  gem 'pry'
-  gem 'pry-nav'
-  gem 'pry-rescue'
-  gem 'pry-stack_explorer'
-  gem 'pry-doc'
+group :debugger do
+if /^2/.match(RUBY_VERSION)
+  gem 'pry-byebug'
+else
+  gem 'pry-debugger'
+end
 end

@@ -230,5 +230,36 @@ module ODDB
 		def sponsor
 			@app.sponsor(flavor)
 		end
+    ZsrAndEAN_Regexp = /(\/zsr_.+|)\/(ean|home_interactions)\/+([^\\?].+)/
+    def choosen_drugs
+      persistent = persistent_user_input(:drugs)
+      m = ZsrAndEAN_Regexp.match(request_path)
+      return {} unless m or persistent
+      ean13s = m ? m[3].split(/[,?\/]/) : []
+      drugs = {}
+      ean13s.each {
+        |ean13|
+        pack = @app.package_by_ean13(ean13)
+        drugs[ean13] = pack if pack
+      }
+      drugs.merge!(persistent) if persistent
+      drugs
+    end
+    def zsr_id
+      verified_id = nil
+      id = cookie_set_or_get(:zsr_id) || @persistent_user_input[:zsr_id]
+      if m = /\/zsr_([a-z][\d]+|)/i.match((request_path))
+        verified_id = m[1] if m[1].length == 7
+      end
+      if not verified_id and m = /([a-z][\d]+)/i.match(id)
+        verified_id =  m[1] if m[1].length == 7
+      end
+      @persistent_user_input[:zsr_id] = verified_id
+      verified_id
+    end
+    def create_search_url(prefix=:rezept, drugs=choosen_drugs)
+      drugs = drugs.keys if drugs.is_a?(Hash)
+      lookandfeel._event_url(prefix, [zsr_id ? "zsr_#{zsr_id}" : [] , (drugs and prefix != :home_interactions and drugs.size > 0) ? :ean : [], drugs].flatten).sub(/\/+$/, '')
+    end
   end
 end

@@ -17,8 +17,9 @@ module ODDB
 
    class TestLog <Minitest::Test
     include FlexMock::TestCase
-    TEST_SENDER   = 'from_test_ywesee@ywesee.com'
+    TEST_SENDER   = 'default_mail_from@ywesee.com'
     LOG_RECEIVER  = 'ywesee_test@ywesee.com' # as defined in test/data/oddb_mailing_test.yml
+    SUBJECT       = 'ch.ODDB.org Report - 08/1975'
     def setup
       Util.configure_mail :test
       Util.clear_sent_mails
@@ -30,7 +31,7 @@ module ODDB
       assert_equal(1, mails_sent.size)
       assert_equal([LOG_RECEIVER], mails_sent.first.to) # as defined in test/data/oddb_mailing_test.yml
       assert_equal([TEST_SENDER], mails_sent.first.from)
-      assert_equal('ch.ODDB.org Report - 08/1975', mails_sent.first.subject)
+      assert_equal(SUBJECT, mails_sent.first.subject)
       assert_equal('', mails_sent.first.body.to_s)
     end
     def test_notify
@@ -46,7 +47,7 @@ module ODDB
       assert_equal(1, mails_sent.size)
       assert_equal([LOG_RECEIVER], mails_sent.first.to) # as defined in test/data/oddb_mailing_test.yml
       assert_equal([TEST_SENDER], mails_sent.first.from)
-      assert_equal('ch.ODDB.org Report - 08/1975', mails_sent.first.subject)
+      assert_equal(SUBJECT, mails_sent.first.subject)
       assert_equal(hash[:report], mails_sent.first.body.to_s)
     end
     def test_notify_date_str
@@ -73,7 +74,7 @@ module ODDB
         :recipients => ['log'],
         :pointers =>   ['aPointer'],
         :report =>     "a lengthy report.\n",
-        :files =>      { file =>	'application/vnd.ms-excel' },
+        :files =>      { file => 'application/vnd.ms-excel' },
       }
       @log.update_values(hash)
       @log.notify
@@ -82,7 +83,31 @@ module ODDB
       assert_equal([TEST_SENDER], mails_sent.first.from)
       assert_equal([LOG_RECEIVER], mails_sent.first.to)
       assert_equal(hash[:report], mails_sent.first.body.to_s)
-      assert_equal('ch.ODDB.org Report - 08/1975', mails_sent.first.subject)
+      assert_equal(SUBJECT, mails_sent.first.subject)
+    end
+    def test_notify_parts
+      mail_body =  "We expected no SMeX/SL-Differences"
+      part_content = "SMeX/SL-Differences (Registrations) 10.09.2014  0
+SL hat anderen 5-Stelligen Swissmedic-Code als SMeX
+"
+      file = File.expand_path('../data/txt/log.txt', File.dirname(__FILE__))
+      File.open(file, 'w+') { |f| f.puts "Dummy content" }
+      hash = {
+        :recipients => ['log'],
+        :pointers =>   ['aPointer'],
+        :report =>     mail_body,
+        :parts  =>     [["text/plain", "SMeX_SL_Differences__Registrations__10.09.2014.txt", part_content]]
+      }
+      @log.update_values(hash)
+      @log.notify
+      mails_sent = Util.sent_mails
+      assert_equal(1, mails_sent.size)
+      assert_equal([TEST_SENDER], mails_sent.first.from)
+      assert_equal([LOG_RECEIVER], mails_sent.first.to)
+      assert_equal(mail_body, mails_sent.first.body.to_s)
+      assert_equal(SUBJECT, mails_sent.first.subject)
+      assert_equal(1, mails_sent.first.attachments.size)
+      assert_equal(part_content, mails_sent.first.attachments.first.body.decoded)
     end
   end
 end

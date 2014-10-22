@@ -12,9 +12,7 @@ require 'plugin/doctors'
 require 'plugin/dosing'
 require 'plugin/drugbank'
 require 'plugin/divisibility'
-require 'plugin/epha_interactions'
 require 'plugin/hospitals'
-require 'plugin/interaction'
 require 'plugin/lppv'
 require 'plugin/medwin'
 require 'plugin/medical_products'
@@ -205,19 +203,23 @@ module ODDB
 			end
       run_on_monthday(1) {
         update_interactions
+        update_analysis
       }
 		end
     def run_random
       # no task
     end
-		def update_analysis
-			klass = AnalysisPlugin
-			subj = 'Analysis'
-			wrap_update(klass, subj) {
-				plug = klass.new(@app)
-				plug.update
-			}
-		end
+    def update_analysis
+      klass = AnalysisPlugin
+      subj = 'Analysis'
+      wrap_update(klass, subj) {
+        plug = klass.new(@app)
+        plug.update
+        log = Log.new(@@today)
+        log.update_values(log_info(plug))
+        log.notify(subj)
+      }
+    end
     def update_atc_dosing_link
       update_notify_simple(DosingPlugin, 'ATC Class (dosing.de)', :update_ni_id)
     end
@@ -331,9 +333,6 @@ module ODDB
       update_notify_simple TextInfoPlugin,
                            "Patienteninfo '#{companies.join(', ')}'",
                            :import_company, [companies, nil, :pi]
-    end
-    def update_epha_interactions
-      update_notify_simple(EphaInteractionPlugin, 'Epha Interaktionen', :update)
     end
     def update_medical_products(opts)
       @options = opts
@@ -522,7 +521,7 @@ module ODDB
         else
 				  plug = klass.new(@app)
         end
-				if(plug.send(update_method, *args))
+				if (plug.send(update_method, *args))
 					log = Log.new(@@today)
 					log.update_values(log_info(plug))
 					log.notify(subj)

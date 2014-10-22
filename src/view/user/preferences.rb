@@ -1,8 +1,11 @@
 # encoding: utf-8
 # ODDB::View::User::Preferences -- oddb -- 04.10.2012 -- yasaka@ywesee.com
 
+require 'htmlgrid/form'
+require 'htmlgrid/inputradio'
 require 'view/publictemplate'
 require 'view/form'
+require 'view/zsr'
 
 module ODDB
   module View
@@ -14,7 +17,9 @@ class PreferencesForm < View::Form
     [0,3] => 'search_type_selection_description',
     [0,5] => :search_forms,
     [0,7] => :search_types,
-    [0,9] => :button,
+    [0,8] => :zsr_id,
+    [0,9] => View::ZsrDetails,
+    [0,10] => :button,
   }
   CSS_MAP = {
     [0,0] => 'subheading',
@@ -22,7 +27,9 @@ class PreferencesForm < View::Form
     [0,3] => 'subheading',
     [0,5] => 'list',
     [0,7] => 'list',
-    [0,9] => 'button',
+    [0,8] => 'list',
+    [0,9] => 'list',
+    [0,10] => 'button',
   }
   CSS_CLASS = 'composite'
   def styles(model, session=@session)
@@ -103,6 +110,20 @@ class PreferencesForm < View::Form
     label.value = (text ? text : name)
     label
   end
+  def zsr_id(model, session)
+    fields = []
+    fields << @lookandfeel.lookup(:zsr_id) + '&nbsp;'
+    input = HtmlGrid::InputText.new(:zsr_id, model, session, self)
+    zsr_id = session.get_cookie_input(:zsr_id)
+    input.value = zsr_id
+    ODDB::View::Helpers.saveFieldValueForLaterUse(input, :zsr_id, '')
+    js =  "require(['dojo/domReady!'], function(){ js_save_zsr_id();});"
+    input.onclick = js
+    input.set_attribute('onBlur', js)
+    input.set_attribute('onchange', js)
+    fields << input
+    fields
+  end  
   def button(model, session=@session)
     post_event_button(:update)
   end
@@ -122,6 +143,12 @@ end
 class Preferences < View::PublicTemplate
   CONTENT = View::User::PreferencesComposite
   HEAD    = View::LogoHead
+  JAVASCRIPTS = ['prescription']
+  private
+  def init
+    super
+    self.onload = "require(['dojo/domReady!'], function(){ js_get_zsr_id();});"
+  end
 end
     end
   end

@@ -2,7 +2,7 @@
 # encoding: utf-8
 # View::PrintTemplate -- ODDB -- 09.03.2004 -- hwyss@ywesee.com
 
-require 'htmlgrid/divtemplate'
+require 'view/publictemplate'
 
 module ODDB
 	module View
@@ -20,7 +20,7 @@ module ODDB
 				print(model, session, :print_edit)
 			end
 		end
-		class PrintTemplate < HtmlGrid::DivTemplate
+		class PrintTemplate < View::PublicTemplate
 			COMPONENTS = {
 				[0,0]		=>	:head,
 				[0,1]		=>	:content,

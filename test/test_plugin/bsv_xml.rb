@@ -839,7 +839,8 @@ module ODDB
       assert_equal(["oddb_bsv", "oddb_bsv_info"], log_info_bsv[:recipients])
       assert(log_info_bsv[:report].index('Dear Mr. Jones'), 'The report must contain a valid anrede for Mr. Jones   (see test/data/oddb_mailing_test.yml)')
       assert(log_info_bsv[:report].index('Dear Mrs. Smith'), 'The report must contain a valid anrede for Mrs. Smith (see test/data/oddb_mailing_test.yml)')
-      #assert_equal('', log_info_bsv)
+
+      assert_equal(8, log_info_bsv[:parts].size, 'Must have 8 attachements (aka parts)')
     end
     def test_report_bsv
       preparations_listener = flexmock('preparations_listener') do |p|
@@ -897,7 +898,7 @@ module ODDB
       flexmock(REXML::Document) do |xml|
         xml.should_receive(:parse_stream).and_return('parse_stream')
       end
-      assert_equal('parse_stream', @plugin.update_it_codes('io'))
+      assert_equal('parse_stream', @plugin.update_it_codes(StringIO.new('io')))
     end
     def test_update_preparations
       flexmock(REXML::Document) do |xml|
@@ -909,7 +910,7 @@ module ODDB
       flexmock(ODDB::BsvXmlPlugin::PreparationsListener) do |klass|
         klass.should_receive(:new).and_return(preparations_listener)
       end
-      assert_equal('change_flags', @plugin.update_preparations('io'))
+      assert_equal('change_flags', @plugin.update_preparations(StringIO.new('io')))
     end
   end
 
@@ -1925,11 +1926,12 @@ La terapia può essere effettuata soltanto con un preparato.&lt;br&gt;
         :name_base          => "Ponstan",
         :name_descr         => "Filmtabs 500 mg ",
         :swissmedic_no5_bag => "39271",
-        :swissmedic_no8_bag => "39271028",
-        :pharmacode_bag     => "703279",
-        :generic_type       => :original,
         :deductible         => :deductible_g,
+        :generic_type       => :original,
         :atc_class          => "M01AG01",
+        :pharmacode_bag     => "703279",
+        :swissmedic_no8_bag => "39271028",
+        :swissmedic_no5_oddb=>"39271"
       } ]
       assert_equal expected, listener.unknown_packages
       expected = []
@@ -2076,6 +2078,6 @@ La terapia può essere effettuata soltanto con un preparato.&lt;br&gt;
       session.should_receive(:search).and_return ['meddata-result']
       session.should_receive(:detail).and_return opts
     end
-  end if false
+  end
 end
 

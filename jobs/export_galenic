@@ -1,16 +1,16 @@
 #!/usr/local/bin/ruby193
 # must be scheduled in crontab to run as the same user as oddb
-
+# helper script to export the manually generated galenic group/forms etc.
 $: << File.expand_path('../src', File.dirname(__FILE__))
 $: << File.expand_path('..', File.dirname(__FILE__))
 
 require 'util/job'
-require 'util/updater'
+require 'util/exporter'
 
 module ODDB
   module Util
     Job.run do |system|
-      Updater.new(system).update_epha_interactions
+      Exporter.new(system).export_galenic
     end
   end
 end

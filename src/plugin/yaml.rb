@@ -22,9 +22,19 @@ module ODDB
 		def export_atc_classes(name='atc.yaml')
 			export_array(name, @app.atc_classes.values.sort_by { |atc| atc.code.to_s })
 		end
-		def export_doctors(name='doctors.yaml')
-			export_array(name, @app.doctors.values)
-		end
+    def export_doctors(name='doctors.yaml')
+      export_array(name, @app.doctors.values)
+    end
+    def export_galenic_forms(name='galenic_forms.yaml')
+      forms =  []
+      @app.each_galenic_form.sort.map { |key,value| forms << value} 
+      export_array(name, forms.values)
+    end
+    def export_galenic_groups(name='galenic_groups.yaml')
+      groups = []
+      @app.galenic_groups.sort.map { |key,value| groups << value }
+      export_array(name, groups)
+    end
     def check_infos(name, group, &block)
       # Check missing data of fachinfo/patinfo data
       no_descr = {'de' => [], 'fr' => []}
@@ -93,9 +103,6 @@ module ODDB
         end
       end
       export_array(name, @app.fachinfos.values)
-    end
-    def export_interactions(name='interactions.yaml')
-      export_array(name, @app.substances.inject([]) { |memo, sub| memo.concat sub.substrate_connections.values })
     end
 		def export_obj(name, obj)
 			EXPORT_SERVER.export_yaml([obj.odba_id], EXPORT_DIR, name)

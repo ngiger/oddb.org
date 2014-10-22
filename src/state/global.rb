@@ -73,6 +73,7 @@ require 'state/migel/items'
 require 'state/substances/init'
 require 'state/substances/result'
 require 'state/suggest_address'
+require 'state/zsr'
 require 'state/user/preferences'
 require 'state/user/download'
 require 'state/user/download_item'
@@ -210,6 +211,7 @@ module ODDB
           :sequences              => State::Drugs::Sequences,
           :shorten_path           => State::Drugs::ShortenPath,
           :vaccines               => State::Drugs::Vaccines,
+          :zsr                    => State::Zsr,
         }	
         HOME_STATE = State::Drugs::Init
         LIMITED = false
@@ -231,6 +233,7 @@ module ODDB
           [ :minifi ]                                                         => State::Drugs::MiniFi,
           [ :patinfo ]                                                        => State::Drugs::Patinfo,
           [ :rezept ]                                                         => State::Drugs::Prescription,
+          [ :zsr ]                                                            => State::Zsr,
         }	
         READONLY_STATES = RESOLVE_STATES.dup.update({
           [ :registration ]                       => State::Drugs::Registration,
@@ -517,15 +520,9 @@ module ODDB
 				end
 			end
       def print
-        ean13 = nil
-        pack = nil
-        ean13 = @session.user_input(:ean) if @session.user_input(:prescription)
-        pack = @session.app.package_by_ean13(ean13) if @session.user_input(:prescription) and ean13
-        $stdout.puts "state.global.print prescription #{@session.user_input(:prescription).inspect} ean13 #{ean13.inspect} pack #{pack.inspect} "
-        if @session.user_input(:prescription) and
-           ean13 = @session.user_input(:ean) and
-           pack = @session.app.package_by_ean13(ean13)
-          State::Drugs::PrescriptionPrint.new(@session, pack)
+        state = self.search
+        if @session.request_path.index("/print/rezept/")
+          State::Drugs::PrescriptionPrint.new(@session, nil)
         elsif @session.user_input(:pointer)
           self
         elsif iksnr = @session.user_input(:reg) and
@@ -570,7 +567,7 @@ module ODDB
 							price_mth = 'price'
 							duration_mth = 'duration'
 							if(months == '12')
-								price_mth = 'subscription_' << price_mth
+# 								price_mth = 'subscription_' << price_mth
 								duration_mth = 'subscription_' << duration_mth
 							end
 							klass = State::User::DownloadExport
@@ -1025,6 +1022,10 @@ module ODDB
 			def zone_navigation
 				self::class::ZONE_NAVIGATION
 			end
+      def zsr
+        model = nil
+        Zsr.new(@session, model)
+      end
 			private
 			def compare_entries(a, b)
 				@sortby.each { |sortby|

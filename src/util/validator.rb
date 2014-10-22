@@ -306,6 +306,7 @@ module ODDB
 			:vcard,
 			:wait,
 			:ywesee_contact,
+			:zsr,
 		]
 		FILES = [
 			:logo_file,
@@ -349,19 +350,8 @@ module ODDB
 			:price_exfactory,
 			:price_public,
       :prescription_sex,
-      :prescription_timing,
-      :prescription_term,
-      :prescription_quantity_morning,
-      :prescription_quantity_noon,
-      :prescription_quantity_evening,
-      :prescription_quantity_night,
-      :prescription_method_as_necessary,
-      :prescription_method_regulaly,
       :prescription_type_generic,
       :prescription_type_original,
-      :prescription_repetition,
-      :prescription_per_month,
-      :prescription_format,
       :prescription_non_dispensation,
       :ydim_id,
 			:year,
@@ -484,6 +474,7 @@ module ODDB
 			:unsubscribe,
 			:url,
 			:urls,
+      :zsr_id,
 		]
 		ZONES = [:admin, :analysis, :doctors, :interactions, :drugs, :migel, :user, 
 			:hospitals, :substances, :companies]

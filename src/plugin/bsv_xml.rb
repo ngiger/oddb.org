@@ -312,6 +312,7 @@ module ODDB
         raise
       end
       def tag_end name
+        already_disabled = GC.disable # to prevent method `method_missing' called on terminated object
         case name
         when 'Pack'
           if @pack.nil? && @completed_registrations[@iksnr] && !@out_of_trade
@@ -625,6 +626,8 @@ module ODDB
       rescue StandardError => e
         e.message << "\n@report: " << @report.inspect
         raise
+      ensure
+        GC.enable unless already_disabled                
       end
     end
     attr_reader :preparations_listener
@@ -996,11 +999,13 @@ Attachments:
     end
     def update_it_codes io
       listener = ItCodesListener.new @app
-      REXML::Document.parse_stream io, listener
+      as_utf_8 = StringIO.new(io.read.force_encoding('utf-8'))
+      REXML::Document.parse_stream as_utf_8, listener
     end
     def update_preparations io, opts={}
       @preparations_listener = PreparationsListener.new @app, opts
-      REXML::Document.parse_stream io, @preparations_listener
+      as_utf_8 = StringIO.new(io.read.force_encoding('utf-8'))
+      REXML::Document.parse_stream as_utf_8, @preparations_listener
       @change_flags = @preparations_listener.change_flags
     end
   end

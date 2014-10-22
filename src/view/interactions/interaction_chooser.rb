@@ -19,64 +19,6 @@ require 'view/chapter'
 module ODDB
   module View
     module Interactions
-    # see http://matrix.epha.ch/#/56751,61537,39053,59256
-    Ratings = {  'A' => 'Keine Massnahmen erforderlich',
-                  'B' => 'Vorsichtsmassnahmen empfohlen',
-                  'C' => 'Regelmässige Überwachung',
-                  'D' => 'Kombination vermeiden',
-                  'X' => 'Kontraindiziert',
-              }
-    # using the same color like https://raw.githubusercontent.com/zdavatz/AmiKo-Windows/master/css/interactions_css.css
-    Colors =  {  'A' => '#caff70',
-                 'B' => '#ffec8b',
-                 'C' => '#ffb90f',
-                 'D' => '#ff82ab',
-                 'X' => '#ff6a6a',
-                 }
-  def self.calculate_atc_codes(drugs)
-      atc_codes = []
-      ean13s    = []
-      if drugs and !drugs.empty?
-        drugs.each{ |ean, drug|
-          atc_codes << drug.atc_class.code if drug and drug.atc_class
-          ean13s << ean
-        }
-      end
-      @@ean13s    = ean13s
-      @@atc_codes = atc_codes
-    end
-    def self.atc_codes(session)
-      @@atc_codes
-    end
-    def self.get_interactions(my_atc_code, session, atc_codes=@@atc_codes)
-      results = []
-      idx=atc_codes.index(my_atc_code)
-      atc_codes[0..-1].combination(2).to_a.each {
-        |combination|
-        [ session.app.get_epha_interaction(combination[0], combination[1]),
-          session.app.get_epha_interaction(combination[1], combination[0]),
-        ].each{ 
-                |interaction|
-          next unless interaction
-          next unless interaction.atc_code_self.eql?(my_atc_code)
-          header = ''
-          header += interaction.atc_code_self  + ': ' + interaction.atc_name + ' => '
-          header += interaction.atc_code_other + ': ' + interaction.name_other
-          header += ' ' + interaction.info
-          text = ''
-          text += interaction.severity + ': ' + Ratings[interaction.severity]
-          text += '<br>' + interaction.action
-          text += '<br>' + interaction.measures + '<br>'
-              
-          results << { :header => header,
-                      :severity => interaction.severity,
-                    :color => Colors[interaction.severity],
-                    :text => text
-                    }
-        }
-      }
-      results.uniq.sort_by { |item| item[:severity] + item[:header]  }.reverse
-    end    
 class InteractionChooserDrugHeader < HtmlGrid::Composite
   include View::AdditionalInformation
   COMPONENTS = {
@@ -92,9 +34,13 @@ class InteractionChooserDrugHeader < HtmlGrid::Composite
     [3,0] => 'interaction-atc',
   }
   def init
+    @printing_active  = @session.request_path.index("/print/rezept/") != nil
     super
   end
   def fachinfo(model, session=@session)
+    if @printing_active
+      return
+    end
     if fi = super(model, session, 'square bold infos')
       fi.set_attribute('target', '_blank')
       fi
@@ -130,6 +76,7 @@ class InteractionChooserDrugHeader < HtmlGrid::Composite
   end
   
   def delete(model, session=@session)
+    return if @printing_active
     if @container.is_a? ODDB::View::Interactions::InteractionChooserDrug
       link = HtmlGrid::Link.new(:minus, model, session, self)
       link.set_attribute('title', @lookandfeel.lookup(:delete))
@@ -137,10 +84,21 @@ class InteractionChooserDrugHeader < HtmlGrid::Composite
       if model
         args = [:ean, model.barcode] if model
         url = @session.request_path.sub(model.barcode.to_s, '').sub('/,', '/').sub(/,$/, '')
-        if @session.persistent_user_input(:drugs).size == 0
+        if @session.choosen_drugs.size == 0
           ODDB::View::Interactions.calculate_atc_codes({})
         end
         link.onclick = %(
+        var element = document.getElementById('prescription_comment_0');
+        // innerText for IE, textContent for other browsers
+        if (element != null) {
+          var text = element.innerText || element.textContent;
+          // element.innerHTML = text;
+          console.log ("Text of prescription_comment_0 "+ text);
+          window.sessionStorage.setItem('comment', text);
+        } else {
+            console.log ("element is null. No text of prescription_comment_0");
+           window.sessionStorage.removeItem('comment');
+        }
         console.log ("Going to new url #{url} in interaction_chooser");
         window.location.href = '#{url}';
         )
@@ -156,15 +114,17 @@ class InteractionChooserDrug < HtmlGrid::Composite
   CSS_CLASS = 'composite'
   def init
     # When being called from rezept we should not display the heading
+    @printing_active  = @session.request_path.index("/print/rezept/") != nil
     @hide_interaction_headers = @session.request_path.match(/rezept/) != nil
     ean13 = @session.user_input(:search_query)
     path = @session.request_path
-    @drugs = @session.persistent_user_input(:drugs)
+    @drugs = @session.choosen_drugs
+    @interactions = ODDB::EphaInteractions.get_interactions(model.atc_class.code, @drugs)
     if @model.is_a? ODDB::Package
       nextRow = 0
       unless @hide_interaction_headers
         components.store([0,0], :header_info)
-        css_map.store([0,0], 'subheading')
+        css_map.store([0,0], 'subheading') unless @printing_active
         nextRow += 1
       end
       if @drugs and !@drugs.empty?
@@ -172,6 +132,7 @@ class InteractionChooserDrug < HtmlGrid::Composite
       end
       @attributes.store('id', 'drugs_' + @model.barcode)
     end
+    url = @session.create_search_url(:home_interactions, ean13)
     self.onsubmit = <<-JS
 function get_to(url) {
   var form = document.createElement("form");
@@ -181,35 +142,57 @@ function get_to(url) {
   form.submit();
 }
 var url = searchbar.baseURI + 'home_interactions/' + ean13;
+var url_new = '#{url}';
 window.location = url;
-// console.log('InteractionChooserDrug: get_to: ' + url);
+console.log('InteractionChooserDrug: get_to: ' + url + ' url_new??: ' url_new);
+window.top.location.replace(url);
 get_to(url);
 return false;
     JS
     super
   end
   def header_info(model, session=@session)
-    View::Interactions::InteractionChooserDrugHeader.new(model, session, self)
+    if @printing_active
+      return unless @interactions.size > 0
+      span = HtmlGrid::Span.new(model, session, self)
+      span.value = @lookandfeel.lookup(:interactions)
+      span.set_attribute('id', 'InteractionChooserDrug.header_info')
+      span.set_attribute('class', 'print bold')
+      span 
+    else
+      View::Interactions::InteractionChooserDrugHeader.new(model, session, self)
+    end
   end
   def text_info(model, session=@session)
+    @printing_active  = @session.request_path.index("/print/rezept/") != nil
     return nil unless model.atc_class
     list = HtmlGrid::Div.new(model, @session, self)
     list.value = []
-    ODDB::View::Interactions.get_interactions(model.atc_class.code, @session).each {
+    if @printing_active and @interactions.size > 0
+      span = HtmlGrid::Span.new(model, session, self)
+      span.value = @lookandfeel.lookup(:interactions)
+      span.set_attribute('id', 'InteractionChooserDrug.text_info')
+      span.set_attribute('class', 'print bold italic')
+      list.value << span
+    end
+    ODDB::EphaInteractions.get_interactions(model.atc_class.code, @session.choosen_drugs).each {
       |interaction|
       headerDiv = HtmlGrid::Div.new(model, @session, self)
       headerDiv.value = []
       headerDiv.value << interaction[:header]
-      headerDiv.set_attribute('class', 'interaction-header')
-      headerDiv.set_attribute('style', "background-color: #{interaction[:color]}")
+      unless @printing_active
+        headerDiv.set_attribute('class', 'interaction-header')
+        headerDiv.set_attribute('style', "background-color: #{interaction[:color]}")
+      end
       list.value << headerDiv
     
       infoDiv = HtmlGrid::Div.new(model, @session, self)
       infoDiv.value = []
       infoDiv.value << interaction[:text]
-      infoDiv.set_attribute('style', "background-color: #{interaction[:color]}")
+      infoDiv.set_attribute('style', "background-color: #{interaction[:color]}") unless @printing_active
       list.value << infoDiv                                                            
     }
+    list.css_class = 'print' if @printing_active
     list
   end  
 end
@@ -221,10 +204,9 @@ class InteractionChooserDrugList < HtmlGrid::List
   CSS_CLASS = 'composite'
   SORT_HEADER = false
   def initialize(model, session=@session, arg_self=nil)
-    @drugs = session.persistent_user_input(:drugs)
+    @drugs = session.choosen_drugs
     super # must come first or it will overwrite @value
     @value = []
-    ODDB::View::Interactions.calculate_atc_codes(@drugs)
     if @drugs and !@drugs.empty?
       @drugs.each{ |ean, drug|
         @value << InteractionChooserDrug.new(drug, @session, self)
@@ -237,7 +219,7 @@ class InteractionChooserDrugDiv < HtmlGrid::Div
   def init
     super
     @value = []
-    @drugs = @session.persistent_user_input(:drugs)
+    @drugs = @session.choosen_drugs
     if @drugs and !@drugs.empty?
       @value << InteractionChooserDrugList.new(@drugs, @session, self)
     end
@@ -293,7 +275,7 @@ class ExplainInteractionCodes < HtmlGrid::List
   OMIT_HEADER = true
   def init
     @entity = @model
-    @model = Ratings.keys
+    @model = ODDB::EphaInteractions::Ratings.keys
     super
     self.set_attribute('id', 'interaction_codes')
     self.set_attribute('style', 'display: none;')
@@ -301,8 +283,8 @@ class ExplainInteractionCodes < HtmlGrid::List
 
   def interaction_codes(model)
     txt = HtmlGrid::Div.new(model, @session, self)
-    txt.value =  model + ': ' + Ratings[model]
-    txt.set_attribute('style', "background-color: #{Colors[model]};")
+    txt.value =  model + ': ' + ODDB::EphaInteractions::Ratings[model]
+    txt.set_attribute('style', "background-color: #{ODDB::EphaInteractions::Colors[model]};")
     txt
   end
 
@@ -385,7 +367,7 @@ class InteractionChooserForm < View::Form
     link
   end
   def delete_all(model, session=@session)
-    @drugs = @session.persistent_user_input(:drugs)
+    @drugs = @session.choosen_drugs
     if @drugs and !@drugs.empty?
       delete_all_link = HtmlGrid::Link.new(:delete, @model, @session, self)
       delete_all_link.href  = @lookandfeel._event_url(:delete_all, [])

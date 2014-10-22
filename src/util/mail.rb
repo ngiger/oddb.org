@@ -47,7 +47,7 @@ module ODDB
       anreden = []
       lists = list_id.is_a?(Array) ? list_id : [list_id]
       lists.each{ |list_name|
-        @cfg[MailingRecipients].each { |recipient| anreden << recipient[:anrede] if recipient[:lists].index(list_name) and recipient[:anrede]}
+        @cfg[MailingRecipients].each { |recipient| anreden << recipient[:anrede] if recipient[:lists] and recipient[:lists].index(list_name) and recipient[:anrede]}
       }
       anreden.sort
     end
@@ -87,29 +87,31 @@ module ODDB
     end
 
     # Parts must be of form content_type => body, e.g. 'text/html; charset=UTF-8' => '<h1>This is HTML</h1>'
-    def Util.send_mail(list_and_recipients, mail_subject, mail_body, override_from = nil, parts = {})
+    def Util.send_mail(list_and_recipients, mail_subject, mail_body, override_from = nil)
       LogFile.append('oddb/debug', "Util.send_mail list_and_recipients #{list_and_recipients}", Time.now)
+      recipients = Util.check_and_get_all_recipients(list_and_recipients)
+      mail = Mail.new
+      mail.from    override_from ? override_from : Util.mail_from
+      mail.to      recipients
+      mail.subject mail_subject.respond_to?(:force_encoding) ?  mail_subject.force_encoding("utf-8") : mail_subject
+      mail.body    mail_body.  respond_to?(:force_encoding)  ?  mail_body.   force_encoding("utf-8") : mail_body
+      log_and_deliver_mail(mail)
+    rescue => e
+      msg = "Util.send_mail rescue: error is #{e.inspect} recipients #{recipients.inspect} #{caller.join("\n")}"
+      msg += "\n#{mail_subject}"
+      msg += "\n#{mail_body.to_s[0..160]}"
+      Util.debug_msg(msg)
+      raise e
+    end
+
+    def Util.send_mail_with_attachments(list_and_recipients, mail_subject, mail_body, attachments, override_from = nil)
+      LogFile.append('oddb/debug', "Util.send_mail send_mail_with_attachments #{list_and_recipients}", Time.now)
       recipients = Util.check_and_get_all_recipients(list_and_recipients)
       mail = Mail.new
       mail.from    override_from ? override_from : Util.mail_from
       mail.to      recipients
       mail.subject mail_subject
       mail.body    mail_body
-      log_and_deliver_mail(mail)
-    rescue => e
-      msg = "Util.send_mail rescue: error is #{e.inspect} recipients #{recipients.inspect} #{caller[0..10].inspect}"
-      Util.debug_msg(msg)
-      raise e
-    end
-
-    def Util.send_mail_with_attachments(list_and_recipients, subject, body, attachments, override_from = nil)
-      LogFile.append('oddb/debug', "Util.send_mail send_mail_with_attachments #{list_and_recipients}", Time.now)
-      recipients = Util.check_and_get_all_recipients(list_and_recipients)
-      mail = Mail.new
-      mail.from    override_from ? override_from : Util.mail_from
-      mail.to      recipients
-      mail.subject = subject
-      mail.body = body
       attachments.each { |attachment|
         mail.attachments[attachment[:filename]] = {
                                                   :mime_type => attachment[:mime_type],
@@ -152,7 +154,7 @@ module ODDB
         recipients = Util.get_mailing_list_receivers(list_and_recipients)
         foundList = recipients.size > 0
       end
-      raise "At least one recipient must be a list #{list_and_recipients}" unless foundList
+      raise "At least one recipient must be a list #{list_and_recipients.inspect}" unless foundList
       raise "No recipients defined for list_and_recipients #{list_and_recipients}" unless recipients.size > 0
       recipients.sort
     end

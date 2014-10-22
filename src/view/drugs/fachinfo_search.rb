@@ -29,7 +29,7 @@ class FachinfoSearchDrugHeader < HtmlGrid::Composite
     [2,0] => 'small',
   }
   def init
-    @drugs = @session.persistent_user_input(:drugs)
+    @drugs = @session.choosen_drugs
     @index = (@drugs ? @drugs.length : 0).to_s
     super
   end
@@ -73,6 +73,8 @@ class FachinfoSearchDrugHeader < HtmlGrid::Composite
       link.set_attribute('title', @lookandfeel.lookup(:delete))
       link.css_class = 'delete square'
       args = [:ean, model.barcode] if model
+      # set unique id for watir tests
+      link.set_attribute('id', "minus_#{model.name_base}") if model
       url = @session.lookandfeel.event_url(:ajax_delete_drug, args)
       link.onclick = "replace_element('drugs_#{model.barcode}', '#{url}');"
       link
@@ -99,7 +101,7 @@ class FachinfoSearchDrugDiv < HtmlGrid::Div
   def init
     super
     @value = []
-    @drugs = @session.persistent_user_input(:drugs)
+    @drugs = @session.choosen_drugs
     if @drugs and !@drugs.empty?
       @drugs.values.each do |pac|
         @value << FachinfoSearchDrug.new(pac, @session, self)
@@ -208,8 +210,11 @@ class FachinfoSearchForm < View::Form
   DEFAULT_CLASS = HtmlGrid::Value
   LABELS = true
   def buttons(model, session)
+    # set attribute id to a unique ID for watir tests
+    search_button = post_event_button(:search)
+    search_button.set_attribute('id', 'fi_search')
     [
-      post_event_button(:search),
+      search_button,
       '&nbsp;',
       '&nbsp;',
       post_event_button(:export_csv),
@@ -242,7 +247,7 @@ class FachinfoSearchTermHitList < HtmlGrid::List
   BACKGROUND_SUFFIX = ''
   LEGACY_INTERFACE = false
   def drug(model, session=@session)
-    drugs = @session.persistent_user_input(:drugs)
+    drugs = @session.choosen_drugs
     if pac = drugs[model[:ean13]]
       FachinfoSearchDrugHeader.new(pac, session, self)
     end
@@ -252,14 +257,14 @@ class FachinfoSearchTermHitList < HtmlGrid::List
     div.set_attribute('class', 'text')
     div.label = false
     text = model[:text]
-    if text.is_a? FachinfoDocument and
+    if (text.is_a?(FachinfoDocument) or text.is_a?(FachinfoDocument2001)) and
        type = @session.user_input(:fachinfo_search_type)
       # full chapter
       chapter = type.gsub(/^fi_/, '').intern
       div.value = View::Chapter.new(chapter, text, @session, self)
     else
       term = @session.user_input(:fachinfo_search_term)
-      text.gsub!(/#{term}/i, "<span class='highlight'>%s</span>" % term)
+      text.gsub!(/#{term.to_s}/i, "<span class='highlight'>%s</span>" % term.to_s) if term
       div.value = text
     end
     div
@@ -344,7 +349,7 @@ class FachinfoSearchCsv < HtmlGrid::Component
         'Search Match',
       ],
     ]
-    drugs = @session.persistent_user_input(:drugs)
+    drugs = @session.choosen_drugs
     @model.each do |model|
       if pac = drugs[model[:ean13]]
         if model[:text].is_a? FachinfoDocument

@@ -14,6 +14,7 @@ require 'util/today'
 require 'util/logfile'
 
 module ODDB
+  @@today = Date.new(2014,7,8)
   class TestYamlExporter <Minitest::Test
     include FlexMock::TestCase
     def stderr_null
@@ -66,11 +67,17 @@ module ODDB
         assert_equal('export_yaml', @plugin.export_doctors)
       end
     end
-    def test_export_interactions
-      substance = flexmock('substance', :substrate_connections => {'key' => 'value'})
-      flexmock(@app, :substances => [substance])
+    def test_export_galenic_forms
+      flexmock(@app, :galenic_forms => {'key' => 'galenic_forms'})
+      skip "Don't know how to stub each_galenic_form"
       replace_constant('ODDB::YamlExporter::EXPORT_SERVER', @server) do
-        assert_equal('export_yaml', @plugin.export_interactions)
+        assert_equal('export_yaml', @plugin.export_galenic_forms)
+      end
+    end
+    def test_export_galenic_groups
+      flexmock(@app, :galenic_groups => {'key' => 'galenic_groups'})
+      replace_constant('ODDB::YamlExporter::EXPORT_SERVER', @server) do
+        assert_equal('export_yaml', @plugin.export_galenic_groups)
       end
     end
     def test_check_infos__valid_fachinfo

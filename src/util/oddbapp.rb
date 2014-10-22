@@ -58,7 +58,7 @@ class OddbPrevalence
 	]
 	ODBA_SERIALIZABLE = [ '@currency_rates', '@rss_updates' ]
   attr_reader :address_suggestions, :atc_chooser, :atc_classes, :analysis_groups,
-    :companies, :divisions, :doctors, :epha_interactions, :experiences, :fachinfos, 
+    :companies, :divisions, :doctors, :experiences, :fachinfos, 
     :galenic_groups, :hospitals, :invoices, :last_medication_update, :last_update,
     :minifis, :notification_logger, :orphaned_fachinfos,
     :orphaned_patinfos, :patinfos, :patinfos_deprived_sequences,
@@ -78,10 +78,8 @@ class OddbPrevalence
 		@commercial_forms ||= {}
 		@companies ||= {}
 		@currency_rates ||= {}
-		@cyp450s ||= {}
     @divisions ||= {}
 		@doctors ||= {}
-    @epha_interactions ||= []
     @experiences ||= {}
 		@fachinfos ||= {}
     @feedbacks ||= {}
@@ -213,8 +211,11 @@ class OddbPrevalence
 		@analysis_groups[grpcd]
 	end
 	def analysis_positions
-		@analysis_groups.values.inject([]) { |memo, group| 
-			memo.concat(group.positions.values)
+		@analysis_groups ||= {}
+		@analysis_groups.values.inject([]) { |memo, group|
+			if group and group.positions
+				memo.concat(group.positions.values)
+			end
 		}
 	end
 	def atcless_sequences
@@ -334,12 +335,6 @@ class OddbPrevalence
 			inj
 		}
 	end
-	def cyp450(id)
-		@cyp450s[id]
-	end
-	def cyp450s
-		@cyp450s.values
-	end
 	def create_analysis_group(groupcd)
 		group = ODDB::Analysis::Group.new(groupcd)
 		@analysis_groups.store(groupcd, group)
@@ -370,20 +365,10 @@ class OddbPrevalence
     experience = ODDB::Experience.new
     @experiences.store(experience.oid, experience)
   end
-  def create_epha_interaction(atc_code_self, atc_code_other)
-    epha_interaction = ODDB::EphaInteraction.new
-    @epha_interactions ||= []
-    @epha_interactions << epha_interaction
-    epha_interaction
-  end
   def create_hospital(ean13)
     hospital = ODDB::Hospital.new(ean13)
     @hospitals.store(ean13, hospital)
   end
-	def create_cyp450(cyp_id)
-		cyp450 = ODDB::CyP450.new(cyp_id)
-		@cyp450s.store(cyp_id, cyp450)
-	end
 	def create_fachinfo
 		fachinfo = ODDB::Fachinfo.new
 		@fachinfos.store(fachinfo.oid, fachinfo)
@@ -486,11 +471,6 @@ class OddbPrevalence
 	def analysis_count
 		@analysis_count ||= analysis_positions.size
 	end
-  def delete_all_epha_interactions
-    @epha_interactions = []
-    @epha_interactions.odba_store
-    self.odba_store
-  end
   def delete_all_narcotics
     @narcotics.values.each do |narc|
       delete(narc.pointer)
@@ -518,12 +498,6 @@ class OddbPrevalence
 			@atc_classes.odba_isolated_store
 		end
 		atc
-	end
-	def delete_cyp450(cyp_id)
-		if(cyp = @cyp450s.delete(cyp_id))
-			@cyp450s.odba_isolated_store
-			cyp
-		end
 	end
 	def delete_commercial_form(oid)
 		if(form = @commercial_forms.delete(oid))
@@ -630,16 +604,10 @@ class OddbPrevalence
     @experiences[oid.to_i]
   end
   def get_epha_interaction(atc_code_self, atc_code_other)
-    @epha_interactions.each { |aInteraction|
-      return aInteraction if  aInteraction.atc_code_self == atc_code_self and aInteraction.atc_code_other == atc_code_other
-    }
-    nil
-  end
-  def epha_interaction(oid)
-    @epha_interactions[oid.to_i]
+    ODDB::EphaInteractions.get_epha_interaction(atc_code_self, atc_code_other)
   end
   def epha_interaction_count
-    @epha_interactions.size
+    ODDB::EphaInteractions.get.size
   end
   def hospital(ean13)
     @hospitals[ean13]
@@ -1122,9 +1090,6 @@ class OddbPrevalence
     result.search_type = type
     result.atc_classes = atc_classes.values
     result
-  end
-  def search_epha_interactions(key)
-    retrieve_from_index("epha_interaction_index", key)
   end
   def search_hospitals(key)
     retrieve_from_index("hospital_index", key)

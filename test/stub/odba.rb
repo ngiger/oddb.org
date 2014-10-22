@@ -65,6 +65,9 @@ module ODBA
     end
 		def restore_named(param)
 		end
+    def restore_named(name)
+      nil
+    end
 	end
 	def ODBA.transaction
 		yield
