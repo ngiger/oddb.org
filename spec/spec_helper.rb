@@ -200,7 +200,7 @@ end
 def run_bin_admin(cmd)
   ENV['RUBYOPT']=nil
   # puts "running bin/admin #{cmd}"
-  bin_admin = "/usr/local/bin/ruby /var/www/oddb.org/bin/admin"
+  bin_admin = "cd /var/www/oddb.org; bundle exec ruby2.4.0 bin/admin"
   full_cmd = "/bin/echo \"#{cmd}\" | #{bin_admin}"
   return `#{full_cmd}`
 end

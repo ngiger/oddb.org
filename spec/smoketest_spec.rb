@@ -228,6 +228,7 @@ describe "ch.oddb.org" do
   end unless ['just-medical'].index(Flavor)
 
   it "should have a link to the english language versions" do
+    @browser.goto "#{OddbUrl}/de"
     english = @browser.link(:text=>'English')
     english.wait_until_present
     english.click
@@ -236,11 +237,13 @@ describe "ch.oddb.org" do
   end unless ['just-medical'].index(Flavor)
 
   it "should have a link to the french language versions" do
+    @browser.goto "#{OddbUrl}/de"
     @browser.link(:text=>/Français|French/i).click; small_delay
     expect(@browser.text).to match /Comparez simplement et rapidement les prix des médicaments/
   end unless ['just-medical'].index(Flavor)
 
   it "should have a link to the german language versions" do
+    @browser.goto "#{OddbUrl}/de"
     @browser.link(:text=>/Deutsch|German/).click; small_delay
     expect(@browser.text).to match /Vergleichen Sie einfach und schnell Medikamentenpreise./
   end unless ['just-medical'].index(Flavor)
