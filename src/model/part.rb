@@ -15,6 +15,7 @@ module ODDB
       sequence ? sequence.active_agents : []
     end
     def comparable_size
+      return 0 unless @comparable_size
       ODDB::Dose.from_quanty(@comparable_size)
     end
     def multiplier
@@ -177,15 +178,27 @@ module ODDB
       @pointer = @package.pointer + [:part, @oid]
       odba_store
     end
+    def fix_doses
+      previous_ids = [ @measure.object_id, @scale.object_id, @multi.object_id]
+      @measure = Dose.quanty_to_ruby_units(@measure)
+      @scale = Dose.quanty_to_ruby_units(@scale)
+      @multi = Dose.quanty_to_ruby_units(@multi) if @multi.is_a?(Dose) # should be a Integer!
+      current_ids = [ @measure.object_id, @scale.object_id, @multi.object_id]
+      odba_store unless previous_ids == current_ids
+    end
     def size
       parts = []
-      multi = @multi.to_i
-      count = @count.to_i
-      add = @addition.to_i
-      if(multi > 1) 
-        parts.push(multi)
+      begin
+        multi = @multi.to_i
+        count = @count.to_i
+        add = @addition.to_i
+        if(multi > 1)
+          parts.push(multi)
+        end
+        @measure = nil if @measure == 1
+      rescue => e
+        require 'pry'; binding.pry
       end
-      @measure = nil if @measure == 1
       if(count > 0 && multi > 1 && !@measure)
         parts.push('x')
       end

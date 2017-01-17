@@ -52,6 +52,7 @@ class ActiveAgents < HtmlGrid::List
   end
   def dose(model)
     if model and model.dose
+      model.dose = Dose.quanty_to_ruby_units(model.dose)
       return nil if model.dose.qty.eql?(0)
       s = model.dose.to_s
       if model.chemical_substance

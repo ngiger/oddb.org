@@ -17,6 +17,7 @@ require 'view/additional_information'
 require 'view/admin/swissmedic_source'
 require 'view/inputdescription'
 require 'view/form'
+require 'model/dose'
 
 module ODDB
 	module View
@@ -56,6 +57,7 @@ module RegistrationSequenceList
         substance = if sub = act.substance and sub.respond_to?(lang.to_sym)
                       sub.send(lang)
                     end
+        act.dose = ODDB::Dose.quanty_to_ruby_units(act.dose)
         [substance, act.dose].compact.join ' '
       }.join ', '
       "#{galform} (#{agents})"

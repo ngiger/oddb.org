@@ -140,12 +140,17 @@ private
         prio = classified_group(package)
       end
       name_to_use = name_to_use.clone.downcase.sub(/\s+\d+.*/, '')
+      begin
+        dosis =  Dose.new(package.registration.name_base.downcase.sub(trademark.downcase, ''))
+      rescue => e
+        dosis = Dose.new(0)
+      end
       consider_trademark = a_session.lookandfeel.enabled?(:evidentia, false) &&
           trademark &&
           !package.out_of_trade &&
           !package.expired? &&
           (trademark.downcase.eql?(package.registration.name_base.downcase) ||
-           Dose.new(package.registration.name_base.downcase.sub(trademark.downcase, '')).qty != 0)
+           dosis.qty != 0)
       prio = add_generic_weight(prio, package, consider_trademark)
       # eg.g http://evidentia.oddb-ci2.dyndns.org/de/evidentia/search/zone/drugs/search_query/Cordarone/search_type/st_combined
       if DebugSort
@@ -153,6 +158,8 @@ private
             " #{trademark} TM? #{consider_trademark.inspect} pack #{package.iksnr}/#{package.seqnr}/#{package.ikscd} #{package.name_base} -> #{name_to_use} #{decode_package(package)} type #{package.sl_generic_type} expired? #{package.expired?.inspect}" +
             " out_of_trade #{package.out_of_trade.inspect} dose #{package.dose.inspect} #{package.sl_entry != nil} is_desitin #{is_desitin} prio #{prio.inspect}"
       end
+      return name_to_use, prio
+    rescue => e
       return name_to_use, prio
     end
     def classified_group(package)

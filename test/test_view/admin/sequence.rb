@@ -63,7 +63,7 @@ class TestRootActiveAgents <Minitest::Test
     assert_kind_of(HtmlGrid::Link, @agents.delete_composition('model'))
   end
   def test_dose
-    model = flexmock('model', :dose => @dose, :chemical_substance => nil)
+    model = flexmock('model', :dose => @dose, :dose= => @dose, :chemical_substance => nil)
     assert_kind_of(HtmlGrid::InputText, @agents.dose(model))
   end
   def test_galenic_form

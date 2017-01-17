@@ -755,7 +755,13 @@ public
       agent = nil
       substance = update_substance(parsed_substance.name)
 
+      begin
       dose = ODDB::Dose.new(parsed_substance.qty, parsed_substance.unit)
+      rescue => e
+        puts "Unable to parse dose from #{parsed_substance.qty} #{parsed_substance.unit}"
+        puts "composition.source: #{composition.source}"
+        dose = Dose.new(0)
+      end
       if active
         ptr = if (agent = composition.active_agent(parsed_substance.name))
           from = 'active_agent'

@@ -612,16 +612,20 @@ class TestSequence <Minitest::Test
       :dose	=>	[123, 'fjdsfjdksah'],
     }
     result = {}
-    result = @seq.adjust_types(values)
-    assert_equal(ODDB::Dose.new(123, nil), result[:dose])
+    assert_raises(ArgumentError) do
+      result = @seq.adjust_types(values)
+      assert_equal(ODDB::Dose.new(123, nil), result[:dose])
+    end
   end
   def test_robust_adjust_types_fuzzy_retry
     values = {
       :dose	=>	[123, 'mgkKo'],
     }
     result = {}
-    result = @seq.adjust_types(values)
-    assert_equal(ODDB::Dose.new(123, 'mg'), result[:dose])
+    assert_raises(ArgumentError) do
+      result = @seq.adjust_types(values)
+      assert_equal(ODDB::Dose.new(123, 'mg'), result[:dose])
+    end
   end
   def test_route_of_administration
     assert_nil @seq.route_of_administration

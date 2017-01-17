@@ -11,8 +11,8 @@ require 'view/dataformat'
 require 'htmlgrid/popuplink'
 require 'htmlgrid/value'
 require 'view/pointervalue'
-require 'util/quanty'
 require 'htmlgrid/span'
+require 'model/dose'
 
 module ODDB
   module View

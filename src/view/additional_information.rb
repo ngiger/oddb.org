@@ -23,7 +23,7 @@ module ODDB
       end
       def part_size(part, session=@session)
         parts = []
-        multi = part.multi.to_i
+        multi = ODDB::Dose.quanty_to_ruby_units(part.multi).to_i
         count = part.count.to_i
         if(multi > 1) 
           parts.push(multi)
@@ -34,7 +34,7 @@ module ODDB
         if(count > 1 || (count > 0 && multi > 1))
           parts.push(part.count)
         end
-        measure = part.measure
+        measure = ODDB::Dose.quanty_to_ruby_units(part.measure)
         measure = nil if measure == 1
         if(comform = part.commercial_form)
           parts.push(comform.send(@session.language))

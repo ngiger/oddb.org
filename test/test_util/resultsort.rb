@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 $: << File.expand_path("../../src", File.dirname(__FILE__))
-
+RUN_ALL_TESTS = true
 
 require 'minitest/autorun'
 require 'flexmock/minitest'
@@ -295,6 +295,7 @@ module ODDB
       end
     end
 
+if RUN_ALL_TESTS
     def test_sort_result_evidentia_sl_before_non_sl
       setup_evidentia
       @expected_order_evidentia.each{ |item| assert_equal(FlexMock, item.class) }
@@ -317,7 +318,7 @@ module ODDB
       assert_equal('language', @sort.galform_str(@galenic_form, @session))
     end
     def test_dose_value
-      assert_equal(Quanty(0,''), @sort.dose_value(nil))
+      assert_equal(Quanty.new(0,''), @sort.dose_value(nil))
     end
     def test_package_count
       assert_equal(1, @sort.package_count)
@@ -379,11 +380,11 @@ module ODDB
       @session.should_receive(:user).and_return(user)
       @paaa = create_default_product_mock("paaa")
       @pabb_20_mg = create_default_product_mock("pabb 20 mg")
-      @pabb_20_mg.should_receive(:dose).and_return(Quanty(20,'mg'))
+      @pabb_20_mg.should_receive(:dose).and_return(Quanty.new(20,'mg'))
       @pabb_50_mg = create_default_product_mock("pabb 50 mg")
-      @pabb_50_mg.should_receive(:dose).and_return(Quanty(50,'mg'))
+      @pabb_50_mg.should_receive(:dose).and_return(Quanty.new(50,'mg'))
       @pabb_100_mg = create_default_product_mock("pabb 100 mg")
-      @pabb_100_mg.should_receive(:dose).and_return(Quanty(100,'mg'))
+      @pabb_100_mg.should_receive(:dose).and_return(Quanty.new(100,'mg'))
       @pacc = create_default_product_mock("pacc") # original
 
       order_1        = [@pacc, @pabb_100_mg, @pabb_20_mg, @pabb_50_mg, @paaa]
@@ -432,7 +433,7 @@ module ODDB
         'Keppra OutOfTrade 200 mg',
         'Rivoleve 500 mg',
       ]
-      assert_equal(expected_names, res.collect{|pack| pack.name_base})
+      assert(expected_names == res.collect{|pack| pack.name_base})
     end
 
     def test_sort_result_evidentia_levetiracetam_search_Rivoleve
@@ -451,7 +452,7 @@ module ODDB
       ]
       assert_equal(expected_names, res.collect{|pack| pack.name_base})
     end
-
+end
     def test_sort_case_insensitive
       aaa_name = 'AAAA'
       aaa_first =  [ aaa_name, 'Duodopa' ]
@@ -480,7 +481,7 @@ module ODDB
         assert_equal(expected_names, res.collect{|pack| pack.name_base}, "name #{name} #{expected_names}")
       end
     end
-
+if RUN_ALL_TESTS
     def test_sort_result_evidentia_levetiracetam_search_Levetiracetam_Desitin
       setup_evidentia_trademark('Levetiracetam Desitin')
       @sort    = ODDB::StubResultSort.new(@tm_products)
@@ -622,6 +623,7 @@ module ODDB
       res = @sort.sort_result(@torimat_products, @session)
       assert_equal(@torimat_expected, res.collect{|pack| pack.name})
     end
+  end
   end
 end # ODDB
 

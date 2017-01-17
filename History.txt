@@ -1,3 +1,10 @@
+=== 1.0.3 / 17.01.2017
+Replaced Quanty by ruby-units. This induces the following semantic changes in ODDB::Dose
+* The used unit is returned by the methods units, as the method unit returns a concatenated string of qty and units
+* Comparing incompatible Doses (eg. ml and mg) raises ArgumentError (instead of returning -1)
+* Compatibility can be tested via dose.compatible?(other)
+* Ranges like '40-60 mg' are not handled
+
 === 1.0.2 / 15.02.2011
 
 * Updated a bunch of Testcases in ext

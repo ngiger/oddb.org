@@ -202,11 +202,17 @@ module ODDB
 			company.name if company
 		end
     def comparable?(bottom, top, pack)
+      return false unless bottom.is_a?(Unit) || bottom.is_a?(Dose)
+      return false unless top.is_a?(Unit) || top.is_a?(Dose)
+      res=  bottom.compatible?(top) && bottom.compatible?(pack.comparable_size) && !pack.basename.nil?
+      puts "comparable? #{bottom.to_s} t #{top} p #{pack.comparable_size} res #{res}"
+      return res
+      other = pack.comparable_size
       begin
         pack != self \
-          && (other = pack.comparable_size) \
           && bottom < other \
-          && top > other \
+          && top.compatible?(other) \
+          && top.base_scalar > other.base_scalar \
           && !pack.basename.nil?
       rescue RuntimeError => e
         false
@@ -232,11 +238,13 @@ module ODDB
       comparables.uniq
     end
     def comparable_size
-      @parts.collect { |part| part.comparable_size }.inject{ |a, b| a + b } or raise RuntimeError
-    rescue RuntimeError
-      @parts.inject(Dose.new(0)) { |comp, part|
-        ODDB::Dose.new(comp.qty + part.comparable_size.qty)
-      } rescue nil
+      return 0 if parts.size == 0
+      @parts.collect { |part|
+          part.comparable_size }.inject do |a, b|
+        # raise RuntimeError unless a.compatible?(b)
+        return 0 unless a.compatible?(b)
+        a + b
+      end
     end
     def create_part
       part = Part.new
@@ -308,6 +316,9 @@ module ODDB
 		end
     def dose
       @ddd_dose || (@sequence.dose if @sequence)
+    end
+    def fix_doses
+      @parts.each { |part| part.fix_doses }
     end
     def fix_pointers
       @pointer = @sequence.pointer + [:package, @ikscd]
@@ -443,7 +454,7 @@ module ODDB
     end
     def size
       unless @parts.nil?
-        @parts.collect { |part| part.size if part.respond_to?(:size)}.compact.join(' + ')
+         @parts.collect { |part| part.size if part.respond_to?(:size)}.compact.join(' + ')
       end
     end
 		def substances

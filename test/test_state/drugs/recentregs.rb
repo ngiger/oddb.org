@@ -26,6 +26,7 @@ class TestPackageMonth <Minitest::Test
   def setup
     galenic_form = flexmock('galenic_form', :language => 'language', :galenic_group => 'galenic_group')
     package = flexmock('package',
+                       :sl_entry => 'sl_entry',
                        :generic_type    => 'generic_type',
                        :galenic_forms   => [galenic_form],
                        :comparable_size => 'comparable_size',
@@ -69,6 +70,7 @@ class TestRecentRegs <Minitest::Test
     @model   = flexmock('model')
     galenic_form = flexmock('galenic_form', :language => 'language', :galenic_group => 'galenic_group')
     package  = flexmock('package',
+                       :sl_entry => 'sl_entry',
                        :generic_type    => 'generic_type',
                        :galenic_forms   => [galenic_form],
                        :comparable_size => 'comparable_size',

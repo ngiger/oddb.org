@@ -13,7 +13,6 @@ require 'stub/odba'
 require 'minitest/autorun'
 require 'model/package'
 require 'flexmock/minitest'
-
 module ODDB
   class PackageCommon
     check_accessor_list = {
@@ -206,7 +205,7 @@ class TestPackage <Minitest::Test
     part1 = flexmock :comparable_size => ODDB::Dose.new(5, 'ml')
     part2 = flexmock :comparable_size => ODDB::Dose.new(10, 'mg')
     @package.parts.push part1, part2
-    assert_equal ODDB::Dose.new(15, ''), @package.comparable_size
+    assert_equal 0, @package.comparable_size
   end
   def test_comparable_size__empty
     assert_equal [], @package.parts
@@ -342,6 +341,49 @@ class TestPackage <Minitest::Test
     @package.parts.push part
     assert_equal ODDB::Util::Money.new(1, 'CHF'), @package.ddd_price
   end
+  def test_ddd_dafalgan_kinder
+    # Tageskosten für Dafalgan Kinder
+    # Tagesdosis  3 g Publikumspreis  1.40 CHF
+    # Stärke  250 mg  Packungsgrösse  12 Sachet(s)
+    # Berechnung  ( 3 g / 250 mg ) x ( 1.40 / 12 Sachet(s) ) = 1.40 CHF / Tag
+    group = flexmock 'galenic_group'
+    group.should_receive(:match).and_return(true)
+    ddd = flexmock :dose => ODDB::Dose.new(3, 'g')
+    atc = flexmock :has_ddd? => true, :ddds => { 'O' => ddd }
+    seq = flexmock :atc_class => atc, :galenic_group => group,
+                   :dose => ODDB::Dose.new(250, 'mg'), :longevity => nil
+    @package.price_public = ODDB::Util::Money.new(1.40, 'CHF')
+    @package.sequence = seq
+    part = flexmock :comparable_size => ODDB::Dose.new(12, 'Sachet(s)')
+    @package.parts.push part
+    price = @package.ddd_price
+    # require 'pry'; binding.pry
+    assert_equal ODDB::Util::Money.new(1.40, 'CHF').to_s, @package.ddd_price.to_s
+  end
+  # Gemeldet von Herrn 823902 NITROGLYCERIN Streuli Kaukaps 0.8 mg 30 Stk C01DA02 7.40  1.54  0.77  0.77  100%  Bereits gemeldet
+  # IKSNR 36830
+  # http://ch.oddb.org/de/gcc/search/zone/drugs/search_query/NITROGLYCERIN%20Streuli%20Kaukaps%20/search_type/st_sequence#best_result
+  # zeigt Tageskosten von 1.54 an. Richtig wären 0.77
+  def test_ddd_NITROGLYCERIN
+    skip('test_ddd_NITROGLYCERIN not yet read')
+    # Tagesdosis  5 mg  Publikumspreis  7.40 CHF
+    # Stärke  0.8 mg  Packungsgrösse  30 Kapsel(n)
+    # Berechnung  ( 5 mg / 0.8 mg ) x ( 7.40 / 30 Kapsel(n) ) = 1.54 CHF / Tag
+    # Packungsnummer : 018 Packungsgrösse : 30 Handelsform/Einheit : Kapsel(n)
+    group = flexmock 'galenic_group'
+    group.should_receive(:match).and_return(true)
+    ddd = flexmock :dose => ODDB::Dose.new(5, 'g')
+    atc = flexmock :has_ddd? => true, :ddds => { 'O' => ddd }
+    seq = flexmock :atc_class => atc, :galenic_group => group,
+                   :dose => ODDB::Dose.new(250, 'mg'), :longevity => nil
+    @package.price_public = ODDB::Util::Money.new(1.40, 'CHF')
+    @package.sequence = seq
+    part = flexmock :comparable_size => ODDB::Dose.new(10, 'Tabletten')
+    @package.parts.push part
+    price = @package.ddd_price
+    assert_equal ODDB::Util::Money.new(1.40, 'CHF').to_s, @package.ddd_price.to_s
+  end
+
   def test_delete_part
     part = flexmock(:oid => 4)
     @package.parts.push part

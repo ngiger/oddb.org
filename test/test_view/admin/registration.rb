@@ -45,6 +45,7 @@ module TestSetup
     active_agent = flexmock('active_agent') do |a|
       a.should_receive(:substance).and_return(substance)
       a.should_receive(:dose).and_return('dose')
+      a.should_receive(:dose=).and_return('dose')
     end
     composition = flexmock('composition') do |c|
       c.should_receive(:galenic_form).and_return(galenic_form)
@@ -262,6 +263,7 @@ class TestRegistrationComposite <Minitest::Test
     active_agent = flexmock('active_agent') do |a|
       a.should_receive(:substance).and_return(substance)
       a.should_receive(:dose).and_return('dose')
+      a.should_receive(:dose=).and_return('dose')
     end
     composition = flexmock('composition') do |c|
       c.should_receive(:galenic_form).and_return(galenic_form)

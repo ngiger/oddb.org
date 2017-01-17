@@ -57,6 +57,7 @@ module ODDB
     end
     def to_s
       s =   @substance ? @substance.to_s : @substance_name
+      @dose = ODDB::Dose.quanty_to_ruby_units(@dose)
       s +=  (' ' + @dose.to_s) if @dose and @dose.to_g > 0
       s
     end
@@ -85,37 +86,41 @@ module ODDB
 				(od <=> @dose).nonzero? || (@substance <=> other.substance)
 			end
 		end
-		private
-		def adjust_types(values, app=nil)
-			values = values.dup
-			values.dup.each { |key, value| 
-				if(value.is_a?(Persistence::Pointer))
-					values.store(key, value.resolve(app))
-				else
-					case(key)
-					when :dose, :chemical_dose, :equivalent_dose
-						begin
-							values[key] = Dose.new(*value) unless(value.is_a? Dose)
-						rescue(StandardError)
-							values.delete(key)
-						end
-						if(value.nil?)
-							values[key] = nil
-						end
-					#deprecated
-					when :substance, :chemical_substance, :equivalent_substance
-						if(value)
-							values[key] = app.substance(value)
-						end
-						if(values[key].nil? && key == :substance)
-							values.delete(key) 
-						end
-					end
-				end
-			}
-			values
-		end
-	end
+    private
+    def adjust_types(values, app=nil)
+      values = values.dup
+      values.dup.each do |key, value|
+        if(value.is_a?(Persistence::Pointer))
+          values.store(key, value.resolve(app))
+        else
+          case(key)
+          when :dose, :chemical_dose, :equivalent_dose
+            if value.is_a?(Array) && value.empty?
+              values.delete(key)
+            else
+              begin
+                values[key] = Dose.new(*value) unless(value.is_a? Dose)
+              rescue(StandardError)
+                values.delete(key)
+              end
+              if(value.nil?)
+                values[key] = nil
+              end
+            end
+            #deprecated
+          when :substance, :chemical_substance, :equivalent_substance
+            if(value)
+              values[key] = app.substance(value)
+            end
+            if(values[key].nil? && key == :substance)
+              values.delete(key)
+            end
+          end
+        end
+      end
+      values
+    end
+  end
   class ActiveAgent < ActiveAgentCommon
     ODBA_PREFETCH = true
     def initialize(substance_name)

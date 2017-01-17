@@ -153,7 +153,7 @@ class TestActiveAgent <Minitest::Test
 			:substance	=>	'ACIDUM MEFENAMICUM',
 		}
 		expected = {
-			:dose				=>	ODDB::Dose.new(10),
+			:dose				=>	ODDB::Dose.new(10, 'mg'),
 			:substance	=>	subst,
 		}
 		assert_equal(expected, @agent.adjust_types(input, app))

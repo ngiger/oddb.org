@@ -20,24 +20,24 @@ module ODDB
       assert_equal([], @part.active_agents)
     end
     def test_comparable_size
-      assert_equal(Quanty(0,''), @part.comparable_size)
+      assert_equal(Quanty.new(0,''), @part.comparable_size)
     end
     def test_multiplier
       assert_in_delta(1.0, @part.multiplier, 1e-10)
     end
     def test_set_comparable_size
-      assert_equal(Quanty(1.0,''), @part.set_comparable_size!)
+      assert_equal(Quanty.new(1.0,''), @part.set_comparable_size!)
     end
     def test_parse_size_multi
-      expected = [0, Quanty(10,''), 1, Quanty(20,'ml'), Quanty(1,''), nil]
+      expected = [0, Quanty.new(10,''), 1, Quanty.new(20,'ml'), Quanty.new(1,''), nil]
       assert_equal(expected, @part.parse_size('10 x 20 ml'))
     end
     def test_parse_size_addition
-      expected = [10, Quanty(1,''), 1, Quanty(20,'g'), Quanty(1,''), nil]
+      expected = [10, Quanty.new(1,''), 1, Quanty.new(20,'g'), Quanty.new(1,''), nil]
       assert_equal(expected, @part.parse_size('10 + 20 g'))
     end
     def test_parse_size_tabletten
-      expected = [0, Quanty(1,''), 3, Quanty(1,''), Quanty(1,''), 'Tablette(n)']
+      expected = [0, Quanty.new(1,''), 3, Quanty.new(1,''), Quanty.new(1,''), 'Tablette(n)']
       assert_equal(expected, @part.parse_size('3 Tablette(n)'))
     end
     def test_size=
@@ -45,11 +45,11 @@ module ODDB
     end
     def test_dose_from_multi
       multi = [['123', 'ml']]
-      expected = Quanty(123,'ml')
+      expected = Quanty.new(123,'ml')
       assert_equal(expected, @part.dose_from_multi(multi))
     end
     def test_dose_from_multi__nil
-      expected = Quanty(1,'')
+      expected = Quanty.new(1,'')
       assert_equal(expected, @part.dose_from_multi(nil))
     end
     def test__composition_scale
@@ -104,7 +104,7 @@ module ODDB
         p.should_receive(:resolve).and_return('resolve')
       end
       values = {'key' => Persistence::Pointer.new, :measure => '1.0', :multi => '2.0'}
-      expected = {:measure=>Quanty(1,''), :multi=>2, "key"=>"resolve"}
+      expected = {:measure=>Quanty.new(1,''), :multi=>2, "key"=>"resolve"}
       assert_equal(expected, @part.instance_eval('adjust_types(values)'))
     end
   end
