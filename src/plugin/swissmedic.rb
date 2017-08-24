@@ -250,7 +250,7 @@ public
         LogFile.debug(msg)
         start_time = Time.new
         initialize_export_registrations agent
-        result = diff file2open, @latest_packungen, [:atc_class, :sequence_date]
+        result = diff(file2open, @latest_packungen, [:atc_class, :sequence_date]) if File.exist?(@latest_packungen)
         # check diff from stored data about date-fields of Registration
         check_date! unless @update_comps
         if @latest_packungen and File.exists?(@latest_packungen)
@@ -261,18 +261,18 @@ public
         LogFile.debug " @update_comps #{@update_comps}. opts #{opts}. Found #{@diff.news.size} news, #{@diff.updates.size} updates, #{@diff.replacements.size} replacements and #{@diff.package_deletions.size} package_deletions"
         LogFile.debug " changes: #{@diff.changes.size}"
         LogFile.debug " first news: #{@diff.news.first.inspect[0..250]}"
-        update_registrations(@diff.news + @diff.updates, @diff.replacements, opts)
+        update_registrations(@diff.news + @diff.updates, @diff.replacements, opts) if @diff
         set_all_export_flag_false
         update_export_sequences @export_sequences
         update_export_registrations @export_registrations
         sanity_check_deletions(@diff)
-        delete(@diff.package_deletions, true)
+        delete(@diff.package_deletions, true) if @diff
         # check the case in which there is a sequence or registration in Praeparateliste.xlsx
         # but there is NO sequence or registration in Packungen.xlsx
         #recheck_deletions @diff.sequence_deletions # Do not consider Preaparateliste_mit_WS.xlsx when setting the "deaktiviert am" date.
         #recheck_deletions @diff.registration_deletions # Do not consider Preaparateliste_mit_WS.xlsx when setting the "deaktiviert am" date.
-        deactivate @diff.sequence_deletions
-        deactivate @diff.registration_deletions
+        deactivate @diff.sequence_deletions if @diff
+        deactivate @diff.registration_deletions if @diff
         end_time = Time.now - start_time
         @update_time = (end_time / 60.0).to_i
         verify_packages(file2open)

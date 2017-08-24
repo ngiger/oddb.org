@@ -78,7 +78,8 @@ module ODDB
 		def atc_facades
 			@atc_facades ||= @atc_classes.collect { |atc_class|
 				AtcFacade.new(atc_class, @session, self)
-			}
+			} if @atc_classes
+      @atc_facades ||= []
 		end
 		def atc_sorted
 			@atc_sorted or begin 
@@ -139,7 +140,7 @@ module ODDB
       end
     end
     def overflow?
-      (@atc_classes.size > 1) && (package_count >= @display_limit)
+      @atc_classes && (@atc_classes.size > 1) && (package_count >= @display_limit)
     end
     def package_count
       @package_count ||= @atc_classes.inject(0) { |count, atc| 
