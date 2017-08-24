@@ -1498,18 +1498,37 @@ class OddbPrevalence
       end
     end
   end
-	private
-	def create_unknown_galenic_group
-		unless(@galenic_groups.is_a?(Hash) && @galenic_groups.size > 0)
-			@galenic_groups = {}
-			pointer = ODDB::Persistence::Pointer.new([:galenic_group])
-			group = create(pointer)
-			raise "Default GalenicGroup has illegal Object ID (#{group.oid})" unless group.oid == 1 or defined?(MiniTest)
-			update(group.pointer, {'de'=>'Unbekannt'})
-		end
-	end
+  private
+  def create_unknown_galenic_group
+    if (@galenic_groups.is_a?(Hash) && @galenic_groups.size > 0)
+      puts "@galenic_groups is a has with #{@galenic_groups.size} elements"
+    else
+      @galenic_groups = {}
+      group = nil
+      1.upto(20).each do|idx|
+        begin
+          group = ODBA.cache.fetch(idx)
+        rescue ODBA::OdbaError => error
+          puts "ODBA::OdbaError at #{idx}"
+          break
+        end
+        if group.is_a?(ODDB::GalenicGroup)
+          puts "oid is #{idx}"
+          break
+        end
+      end
+      if group.is_a?(ODDB::GalenicGroup)
+        @galenic_groups[group.oid] = group
+      else
+        pointer = ODDB::Persistence::Pointer.new([:galenic_group])
+        group = create(pointer)
+        raise "Default GalenicGroup has illegal Object ID (#{group.oid})" unless group.oid <= 20 # || defined?(MiniTest)
+        update(group.pointer, {'de'=>'Unbekannt'})
+      end
+      puts "Created unknown_galenic_group with oid #{group.inspect} keys are #{@galenic_groups.keys}"
+    end
+  end
 end
-
 module ODDB
 	class App < SBSM::App
 		include Failsafe
@@ -1562,6 +1581,7 @@ module ODDB
       @@last_start_time = (Time.now - start).to_i
     rescue => error
       puts "Error initializing #{error} with @@primary_server #{@@primary_server}"
+      puts error.backtrace.join("\n")
 		end
     def method_missing(m, *args, &block)
       @cache_mutex.synchronize do
