@@ -57,6 +57,7 @@ module ODDB
     IKSNR_WELEDA = "09232"
     EXPIRATION_DATE_ASPIRIN = Date.new(2017,5,9)
     def setup
+      puts "#{__LINE__}: #{Time.now} SwissmedicPluginTest"
       # @app = flexmock 'app'
       ODDB::GalenicGroup.reset_oids
       ODBA.storage.reset_id
@@ -645,6 +646,7 @@ if false
     end
     end
     def test_update_swissmedic
+        puts "#{__LINE__}: #{Time.now} starting test_update_swissmedic"
       expected = []
       company_ptr = Persistence::Pointer.new([:registration, '111'], [:sequence, '222'])
       seq = flexmock 'sequence'

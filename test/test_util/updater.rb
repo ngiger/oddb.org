@@ -559,6 +559,16 @@ module ODDB
       end
       assert_nil(@updater.run)
     end
+   def test_check_swissmedic_packages
+      logs = flexmock('logs') do |logs|
+        logs.should_receive(:newest_date).and_return(Date.new(2011,1,1))
+        logs.should_receive(:resolve).and_return(true)
+      end
+      flexstub(@app) do |app|
+        app.should_receive(:create).and_return(logs)
+      end
+      assert(@updater.check_swissmedic_packages != nil)
+    end
     def test_export_oddb2_csv
       setup_csv_export_plugin
       assert_equal('notify', @updater.export_oddb2_csv)

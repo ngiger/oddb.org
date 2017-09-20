@@ -1,5 +1,25 @@
 #!/usr/bin/env ruby
-# encoding: utf-8
+
+# This file is responsible for merging the actual content of the Packungen.xlsx from SwissMedic into the ODDB database.
+# Its features include
+#   * update/check can be limited to some IKSRN by passing opts[:iksnrs] (only used by jobs/import_swissmedic_only)
+#   * create a nice, human readable mail about the changes made
+#   * downlaods packungen.xlsx and Präparateliste.xlsx from the Swissmedic (see @index_url)
+#   * leaves exactly one copy of the downloaded packungen.xlxs in the format data/xls/Packungen-2017.09.07.xlsx
+#   * leaves exactly one copy of the downloaded Präparateliste.xlxs in the format data/xls/Präparateliste-2017.09.07.xlsx
+#   * ignore drugs only for veterinary use
+#   * reports missing fachinfos @missing_fis
+#   * delete inactive_agents
+#   * delete all packages, but not the sequences when a registration is no longer in the swissmedic packungen (means that the registration was revoked)
+#   * update all relevant fields, like name, compositions, expiration_date for the corresponding package, sequence and registration
+#   * updates existing compositions only if option update_compositions is given (TODO:????)
+#   * updated galenic_form only if option fix_galenic_form is given (TODO: ???)
+#   * optionally check all package (TODO: no longer necessary with new concept)
+#   * uses parslet/compositions from oddb2xml gem to create correct fields for compositions, size, unit, etc
+#   * atc_code using the best one available (epha, refdata, packungen.xlxs)
+#   * check whether the Gültigkeits-datum (column 'J') is present or not
+#   * updates the export_flag for packages and sequences as seen by reading data/xls/Präparateliste-latest.xlsx
+#   * limit its own memory useage to 16 GB
 
 require 'fileutils'
 require 'mechanize'
@@ -9,6 +29,7 @@ require 'pp'
 require 'util/persistence'
 require 'util/today'
 require 'swissmedic-diff'
+require 'diffy'
 require 'util/logfile'
 
 # Some monkey patching needed to avoid an error
@@ -49,6 +70,7 @@ public
       super app
       @index_url = 'https://www.swissmedic.ch/arzneimittel/00156/00221/00222/00230/index.html?lang=de'
       trace_msg("SwissmedicPlugin @index_url #{@index_url}")
+     @max_mbytes = 16 * 1024 # Good default is 16 GB, afterwards the server slows down a lot
       @archive = File.join archive, 'xls'
       FileUtils.mkdir_p @archive
       init_stats
@@ -128,6 +150,98 @@ public
       end
     end
 
+    def check_packages(opts = {}, target=get_latest_file(Mechanize.new))
+      raise "Missing  latest_packungen" unless @latest_packungen && File.exists?(@latest_packungen)
+      @check_packages = []
+      # puts "Latest #{@latest_packungen} #{File.size(@latest_packungen)} bytes"
+      workbook = Spreadsheet.open(@latest_packungen)
+      workbook.worksheets[0].each_with_index do
+        |row, row_nr|
+        next if row_nr <= 4
+        break unless row
+        iksnr   = "%05i" % cell(row, @target_keys.keys.index(:iksnr)).to_i
+        next if iksnr.to_i == 0
+        next if (cell(row, @target_keys.keys.index(:production_science)) == 'Tierarzneimittel')
+        check_package_in_database(row)
+      end
+    rescue => error
+      puts error
+      require 'pry'; binding.pry
+    end
+    def update_db_element(pointer, new_values)
+      @app.update pointer, new_values, :swissmedic
+    end
+    def check_element(element, row, columns_to_db_fields)
+      changes = {}
+      columns_to_db_fields.each do |column, name|
+        begin
+          db_value     = eval("element.#{name}")
+          require 'pry'; binding.pry unless @target_keys.keys.index(column)
+          binding.pry unless cell(row, @target_keys.keys.index(column))
+          next unless cell(row, @target_keys.keys.index(column))
+          col_text = cell(row, @target_keys.keys.index(column)).to_s
+          if db_value.is_a?(String)
+            column_value = col_text
+          elsif db_value.is_a?(Date)
+            column_value = Date.parse(col_text)
+          else
+            puts "Don't know how to handle #{db_value.class}"
+            next
+          end
+          puts "cv #{column_value} db #{db_value} eql? #{column_value.eql?(db_value)}"
+          changes[name] = column_value unless column_value.eql?(db_value)
+        rescue => error
+          require 'pry'; binding.pry
+        end
+      end
+      unless changes.empty?
+        puts "Applying #{changes} to #{ element.pointer}"
+        @check_packages << "Updated #{element.pointer} #{changes}"
+        @app.update element.pointer, changes, :swissmedic
+      end
+      changes
+    end
+    REG_COLUMNS_TO_DB_FIELDS = { :expiry_date => :expiration_date,
+                                 :company => 'company.name',
+                                 :index_therapeuticus => :ith_swissmedic,
+                                 :production_science => :production_science,
+                                 :registration_date => :registration_date,
+                                 :expiry_date => :expiration_date,
+                                 }
+    SEQ_COLUMNS_TO_DB_FIELDS = { :name_base => :name_base,
+                                 :sequence_date => :sequence_date,
+                                 }
+    PAC_COLUMNS_TO_DB_FIELDS = { :name_base => :name_base,
+                                 # :size =>  :size,
+                                 :ikscat => :ikscat,
+                               }
+    #  TODO: [cell(row, @target_keys.keys.index(:size)), cell(row, @target_keys.keys.index(:unit))].compact.join(' ')
+    # :ikscat_seq => /Abgabekategorie Dosisstärke/i,
+    #    :ikscat_preparation => /Abgabekategorie Präparat/i, # column-nr: 15
+    # Das sollt schon richtig laufen :substances, :composition
+    # update_registration handle indication_registration
+    # update_sequence indication_sequence
+    # Wird nirgend verwertet 
+    #  ** :gen_production => /Gentechnisch hergestellte Wirkstoffe/i, # column-nr 20
+    #  ** :insulin_category => /Kategorie bei Insulinen/i,
+    #  ** :drug_index       => /Verz. bei betäubunsmittel-haltigen Präparaten/i,
+
+    def check_package_in_database(row)
+      iksnr   = "%05i" % cell(row, @target_keys.keys.index(:iksnr)).to_i
+      seqnr   = "%02i" % cell(row, @target_keys.keys.index(:seqnr)).to_i
+      packnr  = "%03i" % cell(row, @target_keys.keys.index(:ikscd)).to_i
+      key = [iksnr, seqnr, packnr]
+      reg = @app.registration(iksnr)
+      seq = reg.sequence(seqnr) if reg
+      pack = seq.package(packnr) if reg && seq && seq.package(packnr)
+      if reg && seq && pack
+        LogFile.debug "check_package_in_database #{key}"
+        check_element(reg, row, REG_COLUMNS_TO_DB_FIELDS)
+      else
+        LogFile.debug "Missing package #{key}"
+      end
+    end
+
     def verify_packages(file2open)
       @deletes_packages = []
       @missing_fis = []
@@ -165,17 +279,19 @@ public
       end
     end
 
+    def show_memory_useage
+      bytes = File.read("/proc/#{$$}/stat").split(' ').at(22).to_i
+      @mbytes = (bytes / (2**20)).to_i
+      LogFile.debug("Using #{@mbytes} MB of memory. Limit is #{@max_mbytes}. Swissmedic_do_tracing #{$swissmedic_do_tracing.inspect}")
+    end
     def trace_memory_useage
-      max_mbytes = 16 * 1024 # Good default is 16 GB, afterwards the server slows down a lot
       while $swissmedic_do_tracing
-        bytes = File.read("/proc/#{$$}/stat").split(' ').at(22).to_i
-        mbytes = bytes / (2**20)
-        LogFile.debug("Using #{mbytes} MB of memory. Limit is #{max_mbytes}. Swissmedic_do_tracing #{$swissmedic_do_tracing.inspect}")
+        show_memory_useage
         startTime = Time.now
         # Check done every second
         0.upto(60) do |idx|
-          if mbytes > max_mbytes # Exit process if more than max_mbytes are used to avoid bringing the server down"
-            msg = "Aborting as using #{mbytes} MB of memory > than limit of #{max_mbytes}"
+          if @mbytes > @max_mbytes # Exit process if more than @max_mbytes are used to avoid bringing the server down"
+            msg = "Aborting as using #{@mbytes} MB of memory > than limit of #{max_mbytes}"
             LogFile.debug(msg)
             $swissmedic_memory_error = msg
             Thread.main.raise SystemExit
@@ -187,61 +303,81 @@ public
       end
     end
 
-    def update(opts = {}, agent=Mechanize.new, target=get_latest_file(agent))
+    def read_xlsx_into_array(xlsx_file)
+      workbook = Spreadsheet.open(xlsx_file)
+      csv_name = xlsx_file.sub('.xlsx', '.csv')
+      Util.check_column_indices(workbook.worksheets[0])
+      @target_keys = Util::COLUMNS_JULY_2015 if @target_keys.is_a?(Array)
+      result = []
+      workbook.worksheets[0][2..-1].each_with_index do |row, idx|
+        next unless row && row.cells.first.to_i > 0
+        array = []
+        row.cells.each_with_index do |cell, cell_idx|
+          val = cell && cell.value; 
+          array << val ? val : ''
+          break if idx > @target_keys.size
+        end
+        result << array
+      end
+      CSV.open(csv_name, "w+", {:col_sep => ';', :encoding => 'UTF-8'}) do |csv|
+        csv << @target_keys.keys
+        result.each { |row| csv << row }
+      end
+      LogFile.debug("Created #{csv_name} with #{File.size(csv_name)} bytes")
+      [ csv_name, result]
+    rescue => error
+      puts error
+      require 'pry'; binding.pry
+    end
+    def update(opts = {}, agent=Mechanize.new, file2open=get_latest_file(agent))
+      puts "#{__LINE__}: #{Time.now}"
       $swissmedic_do_tracing = true
       start_time = Time.new
-      cleanup_active_agents_with_nil
+      # cleanup_active_agents_with_nil  # Takes a long time
       require 'plugin/parslet_compositions' # We delay the inclusion to avoid defining a module wide method substance in Parslet
       init_stats
       @update_comps = (opts and opts[:update_compositions])
-      msg = "opts #{opts} @update_comps #{@update_comps} update target #{target.inspect}"
-      msg += " #{File.size(target)} bytes. " if target
-      msg += "Latest #{@latest_packungen} #{File.size(@latest_packungen)} bytes" if @latest_packungen and File.exists?(@latest_packungen)
+      msg = "opts #{opts} @update_comps #{@update_comps} update file2open #{file2open.inspect}"
+      msg += " #{File.size(file2open)} bytes. " if file2open
+      msg += "Latest #{@latest_packungen} #{File.size(@latest_packungen)} bytes" if @latest_packungen && File.exists?(@latest_packungen)
       LogFile.debug(msg)
-      file2open = target if target and File.exists?(target)
+      show_memory_useage
+      csv_today,    today    = read_xlsx_into_array(file2open)
+      show_memory_useage
+      csv_previous, previous = read_xlsx_into_array(@latest_packungen)
+      show_memory_useage
+      swissmedic_diff =  Diffy::Diff.new( IO.read(csv_today), IO.read(csv_previous), {
+                                          :diff                           => "-U 3",
+                                          :source                         => 'strings',
+                                          :include_plus_and_minus_in_html => true,
+                                          :include_diff_info              => false,
+                                          :context                        => 0,
+                                          :allow_empty_diff               => false,
+                                          }).to_s(:html)
+      #  Diffy::CSS see https://github.com/samg/diffy      
+      @diff_file = File.join(ARCHIVE_PATH, 'downloads', File.basename(csv_today).sub('.csv', '_diff.html'))
+      File.open(@diff_file, 'w+') do |f|
+        f.puts( %(<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<TITLE> my diff</TITLE>
+</STYLE><LINK rel="stylesheet" type="text/css" href="https://ch.oddb.org:443/resources/gcc/oddb.css">
+</head>
+<body>))
+        f.puts(swissmedic_diff)
+        f.puts('</body>')
+      end
+      show_memory_useage
+      LogFile.debug("Created #{@diff_file} with #{File.size(@diff_file)} bytes")
+      require 'pry'; binding.pry
       threads = []
       threads << Thread.new do
         threads.last.priority = threads.last.priority + 1
         trace_memory_useage
       end
       row_nr = 4
-      if @update_comps
-      @iksnrs_to_import =[]
-        opts[:fix_galenic_form] = true
-        last_checked = nil
-        file2open ||= @latest_packungen if @latest_packungen and File.exists?(@latest_packungen)
-        unless file2open and File.exists?(file2open)
-          LogFile.debug " unable to open #{file2open}. Checked #{target} and #{@latest_packungen}"
-        else
-          LogFile.debug("file2open #{file2open} checked #{target} and #{@latest_packungen}")
-          workbook = Spreadsheet.open(file2open)
-          Util.check_column_indices(workbook.worksheets[0])
-          @target_keys = Util::COLUMNS_JULY_2015 if @target_keys.is_a?(Array)
-          workbook.worksheets[0].each() do
-            |row|
-            row_nr += 1
-            next if row_nr <= 4
-            break unless row
-            next if (cell(row, @target_keys.keys.index(:production_science)) == 'Tierarzneimittel')
-            iksnr =  cell(row, @target_keys.keys.index(:iksnr)).to_i
-            seqnr =  cell(row, @target_keys.keys.index(:seqnr)).to_i
-            to_be_checked = [iksnr, seqnr]
-            next if last_checked == to_be_checked
-            last_checked = to_be_checked
-            to_consider = mustcheck(iksnr, opts)
-            # next if not iksnr == 488 and not iksnr == 46489
-            # next unless to_consider
-            # LogFile.debug " update #{row_nr} iksnr #{iksnr} seqnr #{seqnr} #{to_consider}"
-            already_disabled = GC.disable # to prevent method `method_missing' called on terminated object
-            reg = @app.registration("%05i" %iksnr)
-            seq = reg.sequence("%02i" %seqnr) if reg
-            update_all_sequence_info(row, reg, seq) if reg and seq
-            GC.enable unless already_disabled
-            trace_msg "update finished iksnr #{iksnr} seqnr #{seqnr} check #{reg == nil} #{seq == nil}"
-          end
-          @update_time = ((Time.now - start_time) / 60.0).to_i
-        end
-      elsif(file2open)
+      if(file2open)
+        choosen = false
+        update_export_flags(agent) if choosen
         LogFile.debug(msg)
         msg =  "#{__FILE__}: #{__LINE__} Comparing #{file2open} "
         msg +=  File.exists?(file2open) ? "#{File.size(file2open)} bytes " : " absent" if file2open
@@ -249,10 +385,12 @@ public
         msg +=  File.exists?(@latest_packungen) ? "#{File.size(@latest_packungen)} bytes " : " absent" if @latest_packungen
         LogFile.debug(msg)
         start_time = Time.new
-        initialize_export_registrations agent
-        result = diff file2open, @latest_packungen, [:atc_class, :sequence_date]
+        puts "#{__LINE__}: #{Time.now}"
+        result = diff file2open, @latest_packungen, [:atc_class, :sequence_date] # Takes a long time (3 minutes)
+        puts "#{__LINE__}: #{Time.now}"
         # check diff from stored data about date-fields of Registration
-        check_date! unless @update_comps
+        # check_date! unless @update_comps
+        puts "#{__LINE__}: #{Time.now}"
         if @latest_packungen and File.exists?(@latest_packungen)
           LogFile.debug " Compared #{file2open} #{File.size(file2open)} bytes with #{@latest_packungen} #{File.size(@latest_packungen)} bytes"
         else
@@ -261,10 +399,17 @@ public
         LogFile.debug " @update_comps #{@update_comps}. opts #{opts}. Found #{@diff.news.size} news, #{@diff.updates.size} updates, #{@diff.replacements.size} replacements and #{@diff.package_deletions.size} package_deletions"
         LogFile.debug " changes: #{@diff.changes.size}"
         LogFile.debug " first news: #{@diff.news.first.inspect[0..250]}"
+        out = File.open(file2open.sub('xlsx', 'swissmedic_diff'), 'w+')
+        [ :news, :updates, :replacements, :package_deletions, :changes].each do | item| 
+          size = eval("@diff.#{item}.size")
+          out.puts("Found #{item} #{size} items")
+          out.puts("first #{item} #{eval("@diff.#{item}.first.to_s[0..250]")}")
+        end
+        require 'pry'; binding.pry
+        out.puts(pp(result))
+        out.close
+        
         update_registrations(@diff.news + @diff.updates, @diff.replacements, opts)
-        set_all_export_flag_false
-        update_export_sequences @export_sequences
-        update_export_registrations @export_registrations
         sanity_check_deletions(@diff)
         delete(@diff.package_deletions, true)
         # check the case in which there is a sequence or registration in Praeparateliste.xlsx
@@ -273,6 +418,7 @@ public
         #recheck_deletions @diff.registration_deletions # Do not consider Preaparateliste_mit_WS.xlsx when setting the "deaktiviert am" date.
         deactivate @diff.sequence_deletions
         deactivate @diff.registration_deletions
+
         end_time = Time.now - start_time
         @update_time = (end_time / 60.0).to_i
         verify_packages(file2open)
@@ -287,42 +433,9 @@ public
           memo.store Persistence::Pointer.new([:registration, iksnr]), flags
           memo
         }
-      elsif opts[:check]
-        workbook = Spreadsheet.open(@latest_packungen)
-        Util.check_column_indices(workbook.worksheets[0])
-        @target_keys = Util::COLUMNS_JULY_2015 if @target_keys.is_a?(Array)
-        workbook.worksheets[0].each() do
-          |row|
-          row_nr += 1
-          next if row_nr <= 4
-          break unless row
-          next if (cell(row, @target_keys.keys.index(:production_science)) == 'Tierarzneimittel')
-          iksnr =  cell(row, @target_keys.keys.index(:iksnr)).to_i
-          seqnr =  cell(row, @target_keys.keys.index(:seqnr)).to_i
-          ikscd =  cell(row, @target_keys.keys.index(:ikscd)).to_i
-          already_disabled = GC.disable # to prevent method `method_missing' called on terminated object
-          reg = @app.registration("%05i" %iksnr)
-          seq = reg.sequence("%02i" %seqnr) if reg
-          pack = seq.package("%03i" %ikscd) if seq
-          if iksnr != 0 && !pack
-            LogFile.debug("Unable to find pack for #{iksnr}/#{seqnr}/#{ikscd}")
-            if reg and seq
-              update_package(reg, seq, row)
-              seq.packages.odba_store
-              seq.odba_store
-            end
-          end
-          GC.enable unless already_disabled
-          trace_msg"update finished iksnr #{iksnr} seqnr #{seqnr} check #{reg == nil} #{seq == nil}"
-        end
-        @update_time = ((Time.now - start_time) / 60.0).to_i
-        LogFile.debug "update check done"
-        true
-      else
-        LogFile.debug("file2open #{file2open} nothing to do for opts #{opts}")
-        false
       end
       LogFile.debug " done. #{@export_registrations.size} export_registrations @update_comps was #{@update_comps} with #{@diff ? "#{@diff.changes.size} changes" : 'no change information'}"
+      trace_memory_useage
       $swissmedic_do_tracing = false
       threads.map(&:join)
       sleep(1.1)
@@ -358,6 +471,12 @@ public
         end
       end
       @diff.updates.uniq!
+    end
+    def update_export_flags(agent)
+      initialize_export_registrations(agent) # Takes a long time (3 minutes)
+      set_all_export_flag_false
+      update_export_sequences @export_sequences
+      update_export_registrations @export_registrations
     end
     def set_all_export_flag_false
       LogFile.debug "set_all_export_flag_false for #{@app.registrations.size} registrations #{@known_export_registrations.size} known_export_registrations"
@@ -627,7 +746,10 @@ public
         "ODDB::SwissmedicPlugin - Report #{@@today.strftime('%d.%m.%Y')}",
         "Total time to update: #{"%.2f" % @update_time} [m]",
       ]
-      if @update_comps
+      if @check_packages
+        linees << "Changes #{@check_packages.size} elements"
+        lines += @check_packages
+      elsif @update_comps
         lines += [
                   "Checked compositions: #{@checked_compositions.size}",
                   "New compositions: #{@new_compositions.size}",

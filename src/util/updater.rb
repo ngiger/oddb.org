@@ -357,6 +357,23 @@ module ODDB
                             "Check all FI and PI for inconsistencies",
                             :check_swissmedicno_fi_pi
     end
+    def check_swissmedic_packages(opts={})
+      @options = opts
+      logs_pointer = Persistence::Pointer.new([:log_group, :swissmedic])
+      logs = @app.create(logs_pointer)
+      klass = SwissmedicPlugin
+      plug = klass.new(@app)
+      return_value_plug_update = nil
+      wrap_update(klass, "swissmedic") {
+        if(return_value_plug_update = plug.check_packages(*opts))
+          month = @@today << 1
+          pointer = logs.pointer + [:log, Date.new(month.year, month.month)]
+          log = @app.update(pointer.creator, log_info(plug))
+          log.notify('Checked Swissmedic XLSXS')
+        end
+      }
+      return return_value_plug_update
+    end
     def update_swissmedicno_fi_pi(opts=nil)
       @options = opts
       update_notify_simple TextInfoPlugin,
