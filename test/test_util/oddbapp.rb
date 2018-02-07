@@ -35,6 +35,8 @@ end
 class TestOddbApp <MiniTest::Unit::TestCase
   @@port_id ||= 19000
 	def setup
+    GC.start # start a garbage collection
+    puts "setup  #{__FILE__} with BC.start"
     ODDB::GalenicGroup.reset_oids
     ODBA.storage.reset_id
     @app = ODDB::App.new(server_uri: "druby://localhost:#{@@port_id}", unknown_user: ODDB::UnknownUser.new)

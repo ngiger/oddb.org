@@ -34,6 +34,8 @@ require 'util/latest'
 class TestOddbApp3 <MiniTest::Unit::TestCase
   @@port_id ||= 23000
 	def setup
+    GC.start # start a garbage collection
+    puts "setup  #{__FILE__} with BC.start"
     ODDB::GalenicGroup.reset_oids
     ODBA.storage.reset_id
     dir = File.expand_path('../data/prevalence', File.dirname(__FILE__))

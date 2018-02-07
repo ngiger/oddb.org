@@ -12,6 +12,7 @@ must_be_run_isolated = [
   'oddbapp.rb',
   'oddbapp_2.rb',
   'oddbapp_3.rb',
+  # oddbapp_3 works on oddb-ci2 but consistentyl fails on travis-ci with errors like  [BUG] rb_gc_mark(): 0x000000000361b590 is T_NONE
   'oddbapp_rss.rb',
   'persistence.rb',
   'resilient_loop.rb',
