@@ -7,6 +7,8 @@ in
 {
   packages = [ pkgs.git pkgs.libyaml pkgs.imagemagick pkgs.firefox pkgs-unstable.chromedriver
   pkgs.ruby.devEnv pkgs.chromium
+  pkgs.noto-fonts
+  pkgs.courier-prime
   ];
 
   enterShell = ''
@@ -20,7 +22,7 @@ in
   env.ODDB_URL = "127.0.0.1:8012"; # for running the watir spec tests
 
   languages.ruby.enable = true;
-  languages.ruby.versionFile = ./.ruby-version;
+  languages.ruby.version = "3.4";
   services.postgres = {
     enable = true;
     package = pkgs-old.postgresql_10;
