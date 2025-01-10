@@ -26,10 +26,10 @@ GEM
     bigdecimal (3.1.9)
     builder (3.3.0)
     chrono_logger (1.1.2)
-    clogger (2.4.0)
-      rack (>= 1.0, < 3.0)
+    clogger (1.3.0)
+      rack (> 0.9)
     cmath (1.0.0)
-    concurrent-ruby (1.3.4)
+    concurrent-ruby (1.3.5)
     connection_pool (2.5.0)
     crack (1.0.0)
       bigdecimal
@@ -39,9 +39,6 @@ GEM
       faker (>= 1.1.2)
       yml_reader (>= 0.6)
     date (3.4.1)
-    debug (1.10.0)
-      irb (~> 1.10)
-      reline (>= 0.3.8)
     deprecated (2.0.1)
     diff-lcs (1.5.1)
     docile (1.4.1)
@@ -67,7 +64,7 @@ GEM
       reline
     hpricot (0.8.6)
     htmlentities (4.3.4)
-    htmlgrid (1.2.4)
+    htmlgrid (1.2.2)
       sbsm (>= 1.2.7)
     http-cookie (1.0.8)
       domain_name (~> 0.5)
@@ -76,18 +73,18 @@ GEM
       mutex_m
       nkf
       rack (>= 2.0, < 4)
-    i18n (1.14.6)
+    i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     io-console (0.8.0)
-    irb (1.14.3)
-      rdoc (>= 4.0.0)
-      reline (>= 0.4.2)
     json (2.9.1)
-    language_server-protocol (3.17.0.3)
+    language_server-protocol (3.17.0.4)
     lint_roller (1.1.0)
-    logger (1.6.4)
-    mail (2.7.1)
+    logger (1.6.5)
+    mail (2.8.1)
       mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
     mechanize (2.14.0)
       addressable (~> 2.8)
       base64
@@ -136,7 +133,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nkf (0.2.0)
-    nokogiri (1.18.1)
+    nokogiri (1.18.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     nori (2.7.1)
@@ -146,7 +143,7 @@ GEM
     oddb2tdat (1.1.2)
     optimist (3.2.0)
     ostruct (0.6.1)
-    ox (2.14.19)
+    ox (2.14.21)
       bigdecimal (>= 3.0)
     page-object (2.3.1)
       page_navigation (>= 0.10)
@@ -154,31 +151,23 @@ GEM
     page_navigation (0.10)
       data_magic (>= 0.22)
     parallel (1.26.3)
-    parser (3.3.6.0)
+    parser (3.3.7.0)
       ast (~> 2.4.1)
       racc
     parslet (2.0.0)
     paypal (2.0.0)
       money (> 0.0.0)
     pg (1.5.9)
-    psych (5.2.2)
-      date
-      stringio
     public_suffix (6.0.1)
     racc (1.8.1)
-    rack (2.2.10)
+    rack (3.1.9)
     rack-test (2.2.0)
       rack (>= 1.3)
-    rackup (1.0.1)
-      rack (< 3)
-      webrick
+    rackup (2.2.1)
+      rack (>= 3)
     rainbow (3.1.1)
     rake (13.2.1)
-    rbs (3.8.1)
-      logger
     rclconf (1.0.0)
-    rdoc (6.10.0)
-      psych (>= 4.0.0)
     regexp_parser (2.10.0)
     reline (0.6.0)
       io-console (~> 0.5)
@@ -199,7 +188,7 @@ GEM
     rspec-support (3.13.2)
     rss (0.3.1)
       rexml
-    rubocop (1.69.2)
+    rubocop (1.70.0)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -209,7 +198,7 @@ GEM
       rubocop-ast (>= 1.36.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.37.0)
+    rubocop-ast (1.38.0)
       parser (>= 3.3.1.0)
     rubocop-performance (1.23.1)
       rubocop (>= 1.48.1, < 2.0)
@@ -233,13 +222,14 @@ GEM
       nori (~> 2.4)
       wasabi (>= 3.7, < 6)
     sax-machine (1.3.2)
-    sbsm (1.6.3)
-      mail (< 2.8.0)
+    sbsm (1.6.1)
+      chrono_logger
+      hpricot
+      mail
       mimemagic
-      nokogiri
       rack
     securerandom (0.4.1)
-    selenium-webdriver (4.27.0)
+    selenium-webdriver (4.28.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -254,10 +244,10 @@ GEM
     spreadsheet (1.3.3)
       bigdecimal
       ruby-ole
-    standard (1.43.0)
+    standard (1.44.0)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.0)
-      rubocop (~> 1.69.1)
+      rubocop (~> 1.70.0)
       standard-custom (~> 1.0.0)
       standard-performance (~> 1.6)
     standard-custom (1.0.2)
@@ -266,7 +256,6 @@ GEM
     standard-performance (1.6.0)
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.23.0)
-    stringio (3.1.2)
     swissmedic-diff (0.2.9)
       logger
       nokogiri
@@ -277,11 +266,9 @@ GEM
     timeout (0.4.3)
     travis-lint (2.0.0)
       json
-    typeprof (0.30.1)
-      rbs (>= 3.6.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (3.1.3)
+    unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
     uri (1.0.2)
@@ -301,13 +288,11 @@ GEM
     webrick (1.9.1)
     webrobots (0.1.2)
     websocket (1.2.11)
-    ydbd-pg (0.6.0)
+    ydbd-pg (0.5.9)
       pg
-      ydbi (= 0.6.0)
-    ydbi (0.6.0)
-      bigdecimal
+      ydbi (= 0.5.9)
+    ydbi (0.5.9)
       deprecated (= 2.0.1)
-      pg (>= 1.0.0)
     ydiffy (0.0.5)
     ydocx (1.2.6)
     yml_reader (0.7)
@@ -332,7 +317,6 @@ DEPENDENCIES
   clogger
   cmath
   csv
-  debug
   deprecated
   diff-lcs
   flexmock
@@ -340,7 +324,7 @@ DEPENDENCIES
   gruff (= 0.8)
   hpricot
   htmlentities
-  htmlgrid
+  htmlgrid (= 1.2.2)
   httpi
   i18n
   json
@@ -361,7 +345,7 @@ DEPENDENCIES
   net-smtp
   nokogiri
   observer
-  odba
+  odba (= 1.1.8)
   oddb2tdat
   optimist
   ox
@@ -374,7 +358,6 @@ DEPENDENCIES
   rack-test
   rackup
   rake
-  rbs
   rclconf
   rmagick (= 4.2.4)
   rspec
@@ -386,19 +369,19 @@ DEPENDENCIES
   rubyzip
   savon
   sax-machine
-  sbsm
+  sbsm (= 1.6.1)
   simplecov
   spreadsheet
   standard
   swissmedic-diff
   travis-lint
-  typeprof
   vcr
   watir
   webmock
   webrick
   webrobots
-  ydbd-pg
+  ydbd-pg (= 0.5.9)
+  ydbi (= 0.5.9)
   ydiffy
   ydocx
   yus
