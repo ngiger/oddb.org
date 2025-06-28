@@ -55,6 +55,7 @@ module ODDB
 Line 3\x06;\bT:\r@string2I\"(Some text
 Line 2 was changed
 Line 3\x06;\bT"
+require 'debug'; binding.break
       assert(result.index(expected) > 0)
     end
   end
