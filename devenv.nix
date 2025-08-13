@@ -70,6 +70,7 @@ in {
       iproute2 # for ss
       procps # for free in test/report_ci.fish
       lsb-release
+      gcc10
       chromedriver
     ];
 
