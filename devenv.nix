@@ -34,7 +34,6 @@
     end
   '';
   fEnsurePgRunning = ''
-        ${fPortIsOpen}
         wait_for_port -p ${toString ODDB_PSQL_PORT} -t 1
         if test 0 -eq $status
           echo "Postgres is running on port ${toString ODDB_PSQL_PORT} status $status"
@@ -259,7 +258,7 @@ in {
         if test -d migel
           echo assuming migel is installed | tee -a ci_run.log
         else
-          git clone https://github.com/zavatz/migel.git
+          git clone https://github.com/zdavatz/migel.git
           echo cloned migel | tee -a ci_run.log
         end
         ${fEnsurePgRunning}
@@ -343,12 +342,15 @@ in {
       '';
     };
 
-    dump_database.exec = ''
-      date
-      ${fEnsurePgRunning}
-      ${pkgs-old.postgresql_10}/bin/pg_dump -f my_db_backup ch_oddb
-      date
-    '';
+    dump_database = {
+      package = pkgs.fish;
+      exec = ''
+        date
+        ${fEnsurePgRunning}
+        ${pkgs-old.postgresql_10}/bin/pg_dump ch_oddb | bzip2 > my_db_backup.bz2
+        date
+      '';
+    };
 
     update_latest = {
       package = pkgs.fish;
@@ -416,6 +418,10 @@ in {
 
 #        run_and_log -l import_swissmedic_update.log -s 1 -c "bundle exec ruby jobs/import_swissmedic update_compositions"
 #        echo (date): Finished import_swissmedic_update status $status | tee -a ci_run.log
+        echo (date): Started dump_database status $status | tee -a ci_run.log
+        run_and_log -l dump_database.log -s 1 -c "dump_database"
+
+
         set dest ${ODDB_CI_ARCHIVE}'/run_'(date '+%Y-%m-%d-%H')
         mkdir -pv $dest
         mv -v ${ODDB_CI_LOG} $dest
