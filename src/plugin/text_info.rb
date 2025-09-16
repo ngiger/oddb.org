@@ -400,7 +400,8 @@ module ODDB
     def store_package_patinfo(package, lang, patinfo_lang)
       return unless package
       msg = "#{package.iksnr}/#{package.seqnr}/#{package.ikscd}: #{lang} #{patinfo_lang.name}"
-      if package&.patinfo.instance_of?(ODDB::Patinfo) && package.patinfo.descriptions && package.patinfo.descriptions[lang]
+      if package&.patinfo.instance_of?(ODDB::Patinfo) && package.patinfo.descriptions &&
+          package.patinfo.descriptions.instance_of?(ODDB::SimpleLanguage::Descriptions) && package.patinfo.descriptions[lang]
         old_ti = package.patinfo
         Languages.each do |old_lang|
           old_lang = old_lang.to_s
@@ -1582,7 +1583,7 @@ module ODDB
         if getFreeMemoryInMB < 1024 # < 512 was not enough!
           LogFile.debug "Stopping as only  #{getFreeMemoryInMB} MB memory left"
           break
-        end
+        end if false # deactivate stopping
         ODBA.cache.transaction do
           parse_textinfo(meta_info, idx)
         rescue => error
