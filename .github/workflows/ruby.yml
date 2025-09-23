@@ -25,7 +25,7 @@ jobs:
         ruby: [3.4]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
     - name: install rmagick development
       run: sudo apt install libmagickcore-dev graphicsmagick graphicsmagick-imagemagick-compat
 
